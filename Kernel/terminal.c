@@ -108,10 +108,8 @@ int getTerminalBuffer(char * buffer, uint32_t length){
 }
 
 void resetBuffer(){
-	cli();
 	bufferPosition = bufferStart;
 	bufferConsume = bufferStart;
-	sti();
 }
 
 

@@ -59,7 +59,7 @@ void schedule();
 void * switchUserToKernel(void * esp);
 void createProcess(void * entryPoint);
 /* returns next process from scheduler*/
-void * switchKernelToUser(void * esp);
+void * switchKernelToUser();
 void * fillStackFrame(void * entryPoint, void * userStack);
 
 #endif

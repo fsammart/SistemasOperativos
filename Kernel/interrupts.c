@@ -104,14 +104,14 @@ void timerTickHandlerC()
 
 void generalProtectionHandlerC(){
 	int i;
-	for(i=25; i>2;i--){
+	/*for(i=25; i>2;i--){
 		clearRow(i);
-	}
-	printMsg(3,0,"General Protection", 0x11);
-	setCursor(3,0);
-	mapModulesLogical(shellAddress);
+	}*/
+	printMsg(20,0,"General Protection", 0x11);
+	//setCursor(4,0);
+	/*mapModulesLogical(shellAddress);
 	updateCR3();
-	(*(EntryPointS)currentAddress)(1);
+	(*(EntryPointS)currentAddress)(1);*/
 }
 
 void pageFaultHandlerC(){

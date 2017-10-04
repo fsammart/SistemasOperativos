@@ -21,6 +21,7 @@ void test();
 void pageFaultHandler();
 void terminalInitialize();
 void cli();
+void finishStartup();
 
 void master();
 void slave();

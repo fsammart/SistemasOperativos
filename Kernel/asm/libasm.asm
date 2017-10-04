@@ -25,6 +25,8 @@ GLOBAL generalProtectionHandler
 EXTERN generalProtectionHandlerC
 extern switchUserToKernel
 extern switchKernelToUser
+global finishStartup
+extern getCurrentEntryPoint
 
 
 GLOBAL master
@@ -74,6 +76,18 @@ EXTERN spure
 
 section .text
 
+
+finishStartup:
+
+call switchKernelToUser
+
+mov rsp, rax
+
+call getCurrentEntryPoint
+
+sti
+
+jmp rax
 
 
 updateCR3:
@@ -148,7 +162,6 @@ keyboardHandler:
 	iretq
 
 timerTickHandler:
-	cli
 	push rbp
 	mov rbp, rsp
 
@@ -170,7 +183,6 @@ timerTickHandler:
 
 	mov rsp, rax
 
-	mov rdi,rsp
 	; schedule, get new process's RSP and load it
 	call switchKernelToUser
 	;xchg bx, bx
@@ -181,7 +193,6 @@ timerTickHandler:
 	out 20h, al	
 
 	popState
-	sti
 	iretq
 
 pageFaultHandler:

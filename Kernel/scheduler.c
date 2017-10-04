@@ -1,8 +1,9 @@
 #include "scheduler.h"
 
 ProcessSlot * current=NULL;
-void * kernel_stack=NULL;
-int i =0;
+
+static int i=0;
+static int j=0;
 
 ProcessSlot * newProcessSlot(Process * process){
 	ProcessSlot * newProcessSlot = malloc(sizeof(ProcessSlot));
@@ -17,8 +18,8 @@ void  createProcess(void * entryPoint){
 
 Process * getProcess(void * entryPoint){
 	Process * p = malloc(sizeof(Process));
-	StackFrame * userStack= malloc(100000);
-	StackFrame * kernelStack= malloc(100000);
+	StackFrame * userStack= malloc(1000);
+	StackFrame * kernelStack= malloc(1000);
 	StackFrame * stack= fillStackFrame(entryPoint, userStack);
 	p->userStack=stack;
 	p->entryPoint=entryPoint;
@@ -40,24 +41,23 @@ void addProcess(Process * process){
 //void removeProcess(Process * process); TODO
 void schedule(){
 	current=current->next;
+	
 }
 /* returns kernel stack*/
 void * switchUserToKernel(void * esp){
-	if(current!=NULL) {
 	Process * process = current->process;
 	process->userStack=esp;
 	return process->kernelStack;
-	}
-	return esp;
 }
 /* returns next process from scheduler*/
-void * switchKernelToUser(void * esp){
-
-	if(current!=NULL){
+void * switchKernelToUser(){
 	schedule();
 
 	return current->process->userStack;
-	}else {return esp;}
+}
+
+void * getCurrentEntryPoint(){
+	return current->process->entryPoint;
 }
 
 

@@ -104,14 +104,22 @@ void * initializeKernelBinary()
 
 void ProcessA(){
 	while(1){
-		putchar('a');
-		//printMsg(0,50,"ProcessA",0x0F);
+	putchar('a');
 	}
 }
 void ProcessB(){
-	while(1){
-		putchar('b');
-		//printMsg(0,50,"ProcessB",0x0F);
+		while(1){
+	putchar('b');
+	}
+}
+void ProcessC(){
+		while(1){
+	putchar('c');
+	}
+}
+void ProcessD(){
+		while(1){
+	putchar('d');
 	}
 }
 
@@ -158,19 +166,17 @@ int main()
 	 resetBuffer();
 
 	//Scheduler
-	createProcess(&ProcessB);
 	createProcess(&ProcessA);
-	//createProcess(&currentAddress)
+	createProcess(&ProcessB);
+	//createProcess(&ProcessC);
+	
+	//createProcess(currentAddress);
 	//while(1);
-	sti();
-	while(1);
 	//Scheduler
 
-	//memcpy((void*)0x700000, dummyAddress, 0x10000);
-	 
-	(*(EntryPointS)currentAddress)(0);
+	finishStartup();
 
-	sti();
+	//memcpy((void*)0x700000, dummyAddress, 0x10000)
 	
 	while(1);
 	
