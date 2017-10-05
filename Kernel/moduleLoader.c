@@ -45,7 +45,7 @@ static uint32_t readUint32(uint8_t ** address)
   void mapModulesLogical(void*  physical ){
 		uint64_t * PDbase= (uint64_t*) 0x10000;
 		uint64_t * userEntry= PDbase + 4;
-		*userEntry= (uint64_t)physical + 0x8F;// + 0x8B;
+		*userEntry= (uint64_t)physical | 0x8F;// + 0x8B;
 		return;
 
 }

@@ -41,7 +41,6 @@ void addProcess(Process * process){
 //void removeProcess(Process * process); TODO
 void schedule(){
 	current=current->next;
-	
 }
 /* returns kernel stack*/
 void * switchUserToKernel(void * esp){

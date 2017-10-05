@@ -102,27 +102,9 @@ void * initializeKernelBinary()
 	return getStackBase();
 }
 
-void ProcessA(){
-	while(1){
-	putchar('a');
-	}
+void processA(){
+	while(1);
 }
-void ProcessB(){
-		while(1){
-	putchar('b');
-	}
-}
-void ProcessC(){
-		while(1){
-	putchar('c');
-	}
-}
-void ProcessD(){
-		while(1){
-	putchar('d');
-	}
-}
-
 
 int main()
 {	
@@ -166,11 +148,12 @@ int main()
 	 resetBuffer();
 
 	//Scheduler
-	createProcess(&ProcessA);
-	createProcess(&ProcessB);
-	//createProcess(&ProcessC);
+	 //createProcess(processA);
+	 createProcess((void*)0xC00000);
+	 //createProcess(currentAddress);
 	
-	//createProcess(currentAddress);
+
+	
 	//while(1);
 	//Scheduler
 

@@ -79,15 +79,15 @@ section .text
 
 finishStartup:
 
-call switchKernelToUser
+	call switchKernelToUser
 
-mov rsp, rax
+	mov rsp, rax
 
-call getCurrentEntryPoint
+	call getCurrentEntryPoint
 
-sti
+	sti
 
-jmp rax
+	jmp rax
 
 
 updateCR3:
@@ -227,36 +227,42 @@ sys_callHandler:
 	cmp eax, 4
 	jne read
 	call sys_call_writeC
-	jp finish
+	jmp finish
 read:
 	cmp eax,3
 	jne clear
 	call sys_call_readC
+	jmp finish
 clear:
 	cmp eax,5
 	jne echo
 	call sys_call_clearC
+	jmp finish
 echo:
 	cmp eax,6
 	jne run
 	mov rdi,rcx
 	call sys_call_echoC
+	jmp finish
 run:
 	cmp eax, 7
 	jne moduleEnvironment
 	mov rdi,rcx
 	call sys_call_runC
+	jmp finish
 moduleEnvironment:
 	cmp eax, 8
 	jne undoBackwards
 	mov rdi,rdx
 	mov rsi,rcx
 	call sys_call_changeModuleEnvironmetC
+	jmp finish
 undoBackwards:
 	cmp eax, 9
 	jne finish
 	mov rdi,rdx
 	call sys_call_undoBackwardsC
+	jmp finish
 finish:
 	mov rdi,rax
 	mov al, 20h
