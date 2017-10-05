@@ -264,10 +264,6 @@ undoBackwards:
 	call sys_call_undoBackwardsC
 	jmp finish
 finish:
-	mov rdi,rax
-	mov al, 20h
-	out 20h, al
-	mov rax,rdi	
 	mov rsp, rbp
 	pop rbp
 	sti
