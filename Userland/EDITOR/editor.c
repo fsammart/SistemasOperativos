@@ -23,7 +23,7 @@ int main(){
 			}
 		}
 	}
-
+	sys_call(7,0,4);
 	return 0;
 }
 

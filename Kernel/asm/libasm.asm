@@ -248,7 +248,11 @@ run:
 	jne moduleEnvironment
 	mov rdi,rcx
 	call sys_call_runC
-	jmp finish
+	mov rsp, rbp
+	pop rbp
+	mov [rsp], rax
+	iretq
+	
 moduleEnvironment:
 	cmp eax, 8
 	jne undoBackwards

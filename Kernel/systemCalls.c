@@ -7,6 +7,7 @@
 #define DUMMY  1
 #define EDITOR 2
 #define FORTUNE 3
+#define SHELL 4
 static void * const dummyAddress = (void*)0xA00000;
 static void * const shellAddress = (void*)0xC00000;
 static void * const currentAddress = (void*)0x800000;
@@ -60,7 +61,7 @@ void sys_call_echoC(int on){
 
 }
 
-void sys_call_runC(int program){
+void *  sys_call_runC(int program){
 	void * moduleAdress;
 	switch(program){
 
@@ -74,14 +75,17 @@ void sys_call_runC(int program){
 		case FORTUNE:
 			moduleAdress=fortuneAddress;
 			break;	
+		case SHELL:
+			moduleAdress= shellAddress;
+			break;	
 	}
 	mapModulesLogical(moduleAdress);
 	updateCR3();
-	((EntryPoint)currentAddress)();
+	return currentAddress;
 
-	mapModulesLogical(shellAddress);
-	updateCR3();
-	((EntryPoint)currentAddress)();
+	//mapModulesLogical(shellAddress);
+	//updateCR3();
+	//((EntryPoint)currentAddress)();
 
 }
 
