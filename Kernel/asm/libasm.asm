@@ -218,7 +218,6 @@ generalProtectionHandler:
 
 
 sys_callHandler:
-	cli
 	push rbp
 	mov rbp, rsp
 	mov rdi,rbx
@@ -266,7 +265,6 @@ undoBackwards:
 finish:
 	mov rsp, rbp
 	pop rbp
-	sti
 	iretq
 
 
