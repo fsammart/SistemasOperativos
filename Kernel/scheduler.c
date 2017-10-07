@@ -3,6 +3,8 @@
 
 static ProcessSlot * current=NULL;
 
+static int cantProcesses=0;
+
 ProcessSlot * newProcessSlot(Process * process){
 	ProcessSlot * newProcessSlot = (ProcessSlot *) malloc(1000);
 	newProcessSlot->process=process;
@@ -11,8 +13,28 @@ ProcessSlot * newProcessSlot(Process * process){
 int i=0;
 void  createProcess(void * entryPoint){
 	Process * p=getProcess(entryPoint);
+	p->pid=pid++;
+	p->state=READY;
 	addProcess(p);
+	cantProcesses++;
 
+}
+int getCurrentPid() {
+	return current==NULL?-1:current->process->pid;
+}
+
+void changeProcessState(int pid, processState state) {
+
+	int i = 0;
+    ProcessSlot * slot = current;
+	for (; i < cantProcesses; i++) {
+		if (slot->process->pid == pid) {
+			slot->process->state = state;
+			return;
+		}
+		slot = slot->next;
+	}
+	return ; //pid doesnt exist
 }
 
 Process * getProcess(void * entryPoint){
@@ -37,9 +59,28 @@ void addProcess(Process * process){
 
 	}
 }
+
+void * next_process(int current_rsp) {
+	if (current == NULL) {
+		return current_rsp;
+	}
+	current->process->userStack = current_rsp;
+
+	schedule();
+    int ans=current->process->userStack;
+    return ans;
+}
 //void removeProcess(Process * process); TODO
 void schedule(){
-	current=current->next;
+	if(current->process->state == RUNNING)
+		current->process->state = READY;
+
+	current = current->next;
+	while (current->process->state != READY) {
+				current = current->next;
+		}
+
+	current->process->state = RUNNING;
 }
 /* returns kernel stack*/
 StackFrame * switchUserToKernel(void * esp){

@@ -104,10 +104,7 @@ void * initializeKernelBinary()
 
 void processA(){
 	while(1){
-		int j=0;
-		while(j<100000000){
-			j++;
-		}
+		sleep(100);
 		putchar('a');
 		putchar('n');
 		putchar('d');

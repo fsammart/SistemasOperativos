@@ -11,3 +11,6 @@ void sys_callHandler();
 void generalProtectionHandler();
 void generalProtectionHandlerC();
 void spure();
+void sleep(unsigned int time);
+void doneSleeping(int index);
+void deleteSleep(int index);

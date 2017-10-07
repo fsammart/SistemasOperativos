@@ -6,6 +6,10 @@
 
 #define NULL ((void *)0)
 
+static int pid=0;
+
+typedef enum processState_t {RUNNING, READY, BLOCKED, DEAD, SLEEPING} processState;
+
 typedef struct StackFrameS {
 	//Registers restore context
 	uint64_t gs;
@@ -39,6 +43,8 @@ typedef struct ProcessS {
 	StackFrame * userStack;
 	StackFrame * kernelStack;
 	void * entryPoint;
+	int pid;
+	processState state;
 
 }Process;
 
@@ -62,4 +68,6 @@ void createProcess(void * entryPoint);
 /* returns next process from scheduler*/
 StackFrame * switchKernelToUser();
 StackFrame * fillStackFrame(void * entryPoint, StackFrame * userStack);
+void changeProcessState(int pid, processState state);
+void * next_process(int current_rsp);
 #endif

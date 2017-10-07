@@ -6,10 +6,24 @@
 #include <mouse.h>
 #include <naiveConsole.h>
 #include <moduleLoader.h>
+#include <scheduler.h>
+
+#define MAX_LISTENERS 50
 
 void io_wait();
 static void * const shellAddress = (void*)0xC00000;
 static void * const currentAddress = (void*)0x800000;
+
+static intcounter = 0;
+static int timerListeners =0;
+static int sleepListeners =0;
+static int auxj=0;
+static int alarmEvents[MAX_LISTENERS];
+
+static int sleepPIDS[MAX_LISTENERS];
+static int sleepCounter[MAX_LISTENERS];
+static int alarmSleep[MAX_LISTENERS];
+
 
 #pragma pack(push)
 #pragma pack(1)
@@ -100,6 +114,40 @@ void timerTickHandlerC()
 	char time[9];
 	getTime(time);	
 	printMsg(2,0,time,0x20);
+
+	for(auxj=0;auxj < sleepListeners; auxj++){
+		sleepCounter[auxj]+=1;
+		if(sleepCounter[auxj] == alarmSleep[auxj]){
+			doneSleeping(auxj);
+            auxj--;
+		}
+	}
+}
+void deleteSleep(int index){
+	if(index >= sleepListeners) return;
+
+	alarmSleep[index] = alarmSleep[sleepListeners-1];
+	sleepPIDS[index] = sleepPIDS[sleepListeners-1];
+	sleepCounter[index] = sleepCounter[sleepListeners-1];
+    sleepListeners--;
+
+
+}
+
+void addSleep(int pid,int interval){
+	if(sleepListeners >= MAX_LISTENERS) return;
+
+	alarmSleep[sleepListeners] = interval;
+	sleepPIDS[sleepListeners] = pid;
+	sleepCounter[sleepListeners] = 0;
+	sleepListeners++;
+}
+
+void doneSleeping(int index){
+
+	changeProcessState(sleepPIDS[index],READY);
+	deleteSleep(index);
+
 }
 
 void generalProtectionHandlerC(){
@@ -124,6 +172,14 @@ void pageFaultHandlerC(){
 	mapModulesLogical(shellAddress);
 	updateCR3();
 	(*(EntryPointS)currentAddress)(4);
+}
+
+void sleep(unsigned int time){
+	char myPid=getCurrentPid();
+    addSleep(myPid,time);
+	changeProcessState(myPid,SLEEPING);
+    _yield();
+	return;
 }
 
 

@@ -28,6 +28,9 @@ extern switchKernelToUser
 global finishStartup
 extern getCurrentEntryPoint
 extern print
+extern next_process
+
+global _yield
 
 
 GLOBAL master
@@ -315,8 +318,36 @@ mouse_handler:
 cli:
 	cli
 	ret
+_yield:
+	mov rax,rsp
 
+	push QWORD 0
+	push QWORD 0
+	push rax
+	pushfq
+	push QWORD 0x008
+	push .ret
 
+	pushState
+
+	jmp to_next
+
+.ret:
+	ret
+
+to_next:
+	mov rdi, rsp
+	call next_process
+
+	mov rsp, rax
+
+    ;signal pic
+    mov al, 20h
+    out 20h, al
+
+    popState
+    sti
+    iretq
 
 section .data
 
