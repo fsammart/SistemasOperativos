@@ -9,7 +9,7 @@
 #include <interrupts.h>
 #include <mouse.h>
 #include <terminal.h>
-#include "scheduler.h"
+#include <scheduler.h>
 
 
 extern uint8_t text;
@@ -103,7 +103,22 @@ void * initializeKernelBinary()
 }
 
 void processA(){
-	while(1);
+	while(1){
+		int j=0;
+		while(j<100000000){
+			j++;
+		}
+		cli();
+		sti();
+		putchar('a');
+		putchar('n');
+		putchar('d');
+		putchar('a');
+	}
+}
+
+void print(){
+	putchar('p');
 }
 
 int main()
@@ -149,8 +164,8 @@ int main()
 
 	//Scheduler
 	 //createProcess(processA);
-	 createProcess((void*)0xC00000);
-	 //createProcess(currentAddress);
+	 createProcess(&processA);
+	 createProcess(currentAddress);
 	
 
 	

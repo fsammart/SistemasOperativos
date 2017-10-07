@@ -1,5 +1,5 @@
 #include <naiveConsole.h>
-
+#include <stdio.h>
 
 static char buffer[64] = { '0' };
 static uint8_t * const video = (uint8_t*)0xB8000;
@@ -12,7 +12,7 @@ void ncPrint(const char * string)
 	int i;
 
 	for (i = 0; string[i] != 0; i++)
-		ncPrintChar(string[i]);
+		putchar(string[i]);
 }
 
 void ncPrintChar(char character)
@@ -25,7 +25,7 @@ void ncNewline()
 {
 	do
 	{
-		ncPrintChar(' ');
+		putchar(' ');
 	}
 	while((uint64_t)(currentVideo - video) % (width * 2) != 0);
 }

@@ -27,6 +27,7 @@ extern switchUserToKernel
 extern switchKernelToUser
 global finishStartup
 extern getCurrentEntryPoint
+extern print
 
 
 GLOBAL master
@@ -88,6 +89,7 @@ finishStartup:
 	sti
 
 	jmp rax
+
 
 
 updateCR3:
@@ -162,6 +164,7 @@ keyboardHandler:
 	iretq
 
 timerTickHandler:
+		cli
 	push rbp
 	mov rbp, rsp
 
@@ -182,7 +185,7 @@ timerTickHandler:
 	;xchg bx, bx
 
 	mov rsp, rax
-
+	
 	; schedule, get new process's RSP and load it
 	call switchKernelToUser
 	;xchg bx, bx
@@ -193,6 +196,7 @@ timerTickHandler:
 	out 20h, al	
 
 	popState
+
 	iretq
 
 pageFaultHandler:

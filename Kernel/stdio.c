@@ -1,5 +1,6 @@
 #include "stdio.h"
 #include "stdioASM.h"
+#include <naiveConsole.h>
 #define LETTER  0
 #define FORMAT  1
 #define NULL 0
@@ -173,13 +174,14 @@ int scanFF(const char * format, char ** s, int * n){
 	return bufferindex == BUFFERSIZE;
 
 }
+	static char * position = 0x1000000;
 
-void * malloc(int bytes){
-	static void * position = 0x7A0000;
-	void * aux = position;
+char * malloc(long int bytes){
+	char * aux = position;
 	position+=bytes;
 	return aux;
 }
+char * getPosition(){return position;}
 
 int strcmp(char * str1, char * str2){
 	while((*str1 != 0) && (*str2 != 0)){

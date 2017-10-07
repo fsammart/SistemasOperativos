@@ -1,32 +1,30 @@
 #include "scheduler.h"
+#include <naiveConsole.h>
 
-ProcessSlot * current=NULL;
-
-static int i=0;
-static int j=0;
+static ProcessSlot * current=NULL;
 
 ProcessSlot * newProcessSlot(Process * process){
-	ProcessSlot * newProcessSlot = malloc(sizeof(ProcessSlot));
+	ProcessSlot * newProcessSlot = (ProcessSlot *) malloc(1000);
 	newProcessSlot->process=process;
 	return newProcessSlot;
 }
-
+int i=0;
 void  createProcess(void * entryPoint){
 	Process * p=getProcess(entryPoint);
 	addProcess(p);
+
 }
 
 Process * getProcess(void * entryPoint){
-	Process * p = malloc(sizeof(Process));
-	StackFrame * userStack= malloc(1000);
-	StackFrame * kernelStack= malloc(1000);
+	Process * p =(Process *) malloc(1000);
+	StackFrame * userStack= (StackFrame *) malloc(100000);
+	StackFrame * kernelStack= (StackFrame *) malloc(1000);
 	StackFrame * stack= fillStackFrame(entryPoint, userStack);
 	p->userStack=stack;
 	p->entryPoint=entryPoint;
 	p->kernelStack=kernelStack;
 	return p;
 }
-
 void addProcess(Process * process){
 	ProcessSlot * newProcess = newProcessSlot(process);
 	if(current==NULL){
@@ -35,7 +33,8 @@ void addProcess(Process * process){
 	}else{
 		ProcessSlot * next = current->next;
 		current->next=newProcess;
-		newProcess->next=next;
+		current->next->next=next;
+
 	}
 }
 //void removeProcess(Process * process); TODO
@@ -43,15 +42,15 @@ void schedule(){
 	current=current->next;
 }
 /* returns kernel stack*/
-void * switchUserToKernel(void * esp){
+StackFrame * switchUserToKernel(void * esp){
+
 	Process * process = current->process;
 	process->userStack=esp;
 	return process->kernelStack;
 }
 /* returns next process from scheduler*/
-void * switchKernelToUser(){
+StackFrame * switchKernelToUser(){
 	schedule();
-
 	return current->process->userStack;
 }
 
@@ -60,8 +59,8 @@ void * getCurrentEntryPoint(){
 }
 
 
-void * fillStackFrame(void * entryPoint, void * userStack){
-	StackFrame * frame = (StackFrame*)userStack - 1;
+StackFrame * fillStackFrame(void * entryPoint, StackFrame * userStack){
+	StackFrame * frame = userStack - 1;
 	frame->gs =		0x001;
 	frame->fs =		0x002;
 	frame->r15 =	0x003;

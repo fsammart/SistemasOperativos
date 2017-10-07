@@ -5,6 +5,7 @@
 #define SCHEDULER 0
 
 #define NULL ((void *)0)
+
 typedef struct StackFrameS {
 	//Registers restore context
 	uint64_t gs;
@@ -56,10 +57,9 @@ void addProcess(Process * process);
 //void removeProcess(Process * process);
 void schedule();
 /* returns kernel stack*/
-void * switchUserToKernel(void * esp);
+StackFrame * switchUserToKernel(void * esp);
 void createProcess(void * entryPoint);
 /* returns next process from scheduler*/
-void * switchKernelToUser();
-void * fillStackFrame(void * entryPoint, void * userStack);
-
+StackFrame * switchKernelToUser();
+StackFrame * fillStackFrame(void * entryPoint, StackFrame * userStack);
 #endif
