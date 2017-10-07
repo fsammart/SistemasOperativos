@@ -7,14 +7,14 @@
 
 
 int putchar(char c){
-	char * msg = malloc(1);
+	char  msg[1];
 	*msg = c;
 	writeC(msg,1);
 	return 0;
 }
 
 char getchar(){
-	char * buffer = malloc(1);
+	char  buffer[1];
 	*buffer = 0;
 	while( *buffer == 0){
 		readC(buffer,1);

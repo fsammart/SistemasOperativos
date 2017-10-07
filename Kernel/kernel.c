@@ -108,8 +108,6 @@ void processA(){
 		while(j<100000000){
 			j++;
 		}
-		cli();
-		sti();
 		putchar('a');
 		putchar('n');
 		putchar('d');
@@ -118,7 +116,14 @@ void processA(){
 }
 
 void print(){
-	putchar('p');
+	while(1){
+		int j=0;
+		while(j<100000000){
+			j++;
+		}
+		putchar('#');
+		putchar('#');
+	}
 }
 
 int main()
@@ -164,8 +169,9 @@ int main()
 
 	//Scheduler
 	 //createProcess(processA);
-	 createProcess(&processA);
+	createProcess(&processA);
 	 createProcess(currentAddress);
+	createProcess(&print);
 	
 
 	

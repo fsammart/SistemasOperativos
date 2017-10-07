@@ -17,7 +17,7 @@ typedef int (*EntryPoint)();
 
 //escribe en el file descriptor que le pasen.
 //solo tiene implementado para imprimir por salida estandar
-void sys_call_writeC(uint32_t stdout, char * msg, uint32_t length){
+void sys_call_writeC(uint32_t stdout, char * msg, int length){
 	if(stdout == 0){
 		while(length != 0){
 			if(*msg == '\n'){
@@ -34,7 +34,7 @@ void sys_call_writeC(uint32_t stdout, char * msg, uint32_t length){
 }
 //lee del file descriptor que le pasen.
 //solo tiene implementado para leer de la entrada estandar
-uint32_t sys_call_readC(uint32_t stdin, char * buffer, uint32_t length){
+uint32_t sys_call_readC(uint32_t stdin, char * buffer, int length){
 
 	if(stdin == 0){
 		return getTerminalBuffer(buffer, length);

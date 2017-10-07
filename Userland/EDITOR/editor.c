@@ -4,7 +4,7 @@
 int main(){
 	clearEditor();
 
-	char ** s = malloc(sizeof(char **));
+	char ** s = malloc(100);
 	char * editor = "chomp\n";
 	s[0]= editor;
 	printFF("%s",s, NULL);
@@ -13,8 +13,8 @@ int main(){
 	while(!exitFlag){
 		c = getchar();
 		if(c == '%'){
-			char ** ss = malloc(sizeof(char **));
-			char * sos = malloc(30);
+			char * ss [100];
+			char  sos [30];
 			ss[0] = sos;
 			scanFF("%s",ss, NULL);
 			if(strcmp(sos,"exit") == 0){
