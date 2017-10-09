@@ -2,6 +2,7 @@
 
 #include "stdio.h"
 #include "lib.h"
+#include "interrupts.h"
 #define SCHEDULER 0
 
 #define NULL ((void *)0)
@@ -45,6 +46,7 @@ typedef struct ProcessS {
 	void * entryPoint;
 	int pid;
 	processState state;
+	char * description;
 
 }Process;
 
@@ -64,10 +66,12 @@ void addProcess(Process * process);
 void schedule();
 /* returns kernel stack*/
 StackFrame * switchUserToKernel(void * esp);
-void createProcess(void * entryPoint);
+void createProcess(void * entryPoint, char * description);
 /* returns next process from scheduler*/
 StackFrame * switchKernelToUser();
 StackFrame * fillStackFrame(void * entryPoint, StackFrame * userStack);
 void changeProcessState(int pid, processState state);
 void * next_process(int current_rsp);
+void callProcess( void * entryPoint);
+Process * *  getCurrentProcesses(int * a);
 #endif

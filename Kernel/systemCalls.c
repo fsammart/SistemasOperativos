@@ -3,6 +3,8 @@
 #include <video.h>
 #include <lib.h>
 #include <moduleLoader.h>
+#include <scheduler.h>
+#include <systemCalls.h>
 
 #define DUMMY  1
 #define EDITOR 2
@@ -86,6 +88,42 @@ void *  sys_call_runC(int program){
 	//mapModulesLogical(shellAddress);
 	//updateCR3();
 	//((EntryPoint)currentAddress)();
+
+}
+
+void sys_call_printProcesses(){
+	int c=0;
+	int i;
+	char * state;
+	Process ** s= getCurrentProcesses(&c);
+	for(i=0; i<c; i++){
+		print("pid: ");
+		putNumber(s[i]->pid);
+		print("-->description: ");
+		print(s[i]->description);
+		print("-->state: ");
+		state=getStateFromNumber((char *)s[i]->state);
+		print(state);
+		putchar('\n');
+	}
+}
+
+char * getStateFromNumber(int state){
+	char * s;
+	switch(state){
+			case 0: s="RUNNING";
+					break;
+			case 1:s="READY";
+					break;
+			case 2:s= "BLOCKED";
+					break;
+			case 3: s="DEAD";
+					break;
+			case 4: s="SLEEPING";
+					break;
+			default: s="other";
+		}
+		return s;
 
 }
 

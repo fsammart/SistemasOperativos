@@ -48,6 +48,13 @@ void putNumber(int n){
 	
 }
 
+void print(char * s){
+	while(*s!=0){
+		putchar(*s);
+		s++;
+	}
+}
+
 
 void printFF(const char * format, char ** s, int * n){
  int state = LETTER;

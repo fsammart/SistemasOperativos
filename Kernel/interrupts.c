@@ -163,15 +163,18 @@ void generalProtectionHandlerC(){
 }
 
 void pageFaultHandlerC(){
-	int i;
-	for(i=25; i>2;i--){
-		clearRow(i);
-	}
+	//for(i=25; i>2;i--){
+	//	clearRow(i);
+	//}
+	uint64_t error= readCR2();
 	printMsg(3,0,"Page Fault", 0x11);
-	setCursor(3,0);
-	mapModulesLogical(shellAddress);
-	updateCR3();
-	(*(EntryPointS)currentAddress)(4);
+	putchar('+');
+	ncPrintHex(error);
+	putchar('+');
+	//setCursor(3,0);
+	//mapModulesLogical(shellAddress);
+	//updateCR3();
+	//(*(EntryPointS)currentAddress)(4);
 }
 
 void sleep(unsigned int time){

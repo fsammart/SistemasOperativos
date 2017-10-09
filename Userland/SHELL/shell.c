@@ -3,7 +3,7 @@
 
 void helpShell(){
 	char ** s = malloc(sizeof(char *));
-	char * help = "Help\n the commands are clear, help, echo, ls and man\n write man \"comand\" for more information";
+	char * help = "Help\n the commands are clear, help, echo, ls , ps and man\n write man \"comand\" for more information";
 	s[0]= help;
 	printFF("%s",s, NULL);
 	putchar('\n');
@@ -30,6 +30,9 @@ void man(char * buffer){
 	}
 	else if(!strcmp("ls", buffer)){
 		man = "LS\n display all modules";
+	}
+	else if(!strcmp("ps", buffer)){
+		man= "ps\n list all current processes";
 	}
 	else{
 		man = "invalid command for man";
@@ -89,6 +92,10 @@ void undoBackwards(){
 	sys_call(9,7,0);
 }
 
+void printProcesses(){
+	sys_call(10,0,0);
+}
+
 
 
 //shell
@@ -130,6 +137,10 @@ void parser(char * buffer){
 	}
 	if(!strcmp("clear", buffer)){
 		clearShell();
+		return;
+	}
+	if(!strcmp("ps", buffer)){
+		printProcesses();
 		return;
 	}
 	if(!strcmpN("echo", buffer,4)){

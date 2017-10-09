@@ -3,7 +3,7 @@
 
 static ProcessSlot * current=NULL;
 
-static int cantProcesses=0;
+static int cardinal_processes=0;
 
 ProcessSlot * newProcessSlot(Process * process){
 	ProcessSlot * newProcessSlot = (ProcessSlot *) malloc(1000);
@@ -11,12 +11,13 @@ ProcessSlot * newProcessSlot(Process * process){
 	return newProcessSlot;
 }
 int i=0;
-void  createProcess(void * entryPoint){
+void  createProcess(void * entryPoint, char * description){
 	Process * p=getProcess(entryPoint);
 	p->pid=pid++;
 	p->state=READY;
+	p->description=description;
 	addProcess(p);
-	cantProcesses++;
+	cardinal_processes++;
 
 }
 int getCurrentPid() {
@@ -27,7 +28,7 @@ void changeProcessState(int pid, processState state) {
 
 	int i = 0;
     ProcessSlot * slot = current;
-	for (; i < cantProcesses; i++) {
+	for (; i < cardinal_processes; i++) {
 		if (slot->process->pid == pid) {
 			slot->process->state = state;
 			return;
@@ -99,6 +100,27 @@ void * getCurrentEntryPoint(){
 	return current->process->entryPoint;
 }
 
+Process * *  getCurrentProcesses(int * a){
+	Process ** processes= (Process * *) malloc(cardinal_processes*sizeof(Process *));
+	ProcessSlot  * aux= current;
+	int i=0;
+	processes[i]=aux->process;
+	aux=aux->next;
+	while(i<cardinal_processes){
+		i++;
+		processes[i]=aux->process;
+		aux=aux->next;
+
+	}
+	*a=cardinal_processes;
+	return processes;
+}
+
+void callProcess( void * entryPoint) {
+	((int (*)(void))(entryPoint))();
+
+	//sys_leave(0, 0, 0, 0, 0);
+}
 
 StackFrame * fillStackFrame(void * entryPoint, StackFrame * userStack){
 	StackFrame * frame = userStack - 1;
@@ -119,7 +141,7 @@ StackFrame * fillStackFrame(void * entryPoint, StackFrame * userStack){
 	frame->rcx =	0x00F;
 	frame->rbx =	0x010;
 	frame->rax =	0x011;
-	frame->rip =	(uint64_t)entryPoint;
+	frame->rip =	entryPoint;
 	frame->cs =		0x008;
 	frame->eflags = 0x202;
 	frame->rsp =	(uint64_t)&(frame->base);

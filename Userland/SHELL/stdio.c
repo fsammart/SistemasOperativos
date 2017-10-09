@@ -176,8 +176,9 @@ int scanFF(const char * format, char ** s, int * n){
 
 }
 
-void * malloc(int bytes){
-	static void * position = 0x1000000;
+static void * position = 0x2000000;
+
+void * malloc(long int bytes){
 	void * aux = position;
 	position+=bytes;
 	return aux;

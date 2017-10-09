@@ -15,6 +15,7 @@ EXTERN sys_call_readC
 EXTERN sys_call_clearC
 EXTERN sys_call_echoC
 EXTERN sys_call_runC
+EXTERN sys_call_printProcesses
 EXTERN sys_call_changeModuleEnvironmetC
 EXTERN sys_call_undoBackwardsC
 GLOBAL cli
@@ -29,6 +30,7 @@ global finishStartup
 extern getCurrentEntryPoint
 extern print
 extern next_process
+global readCR2
 
 global _yield
 
@@ -94,7 +96,9 @@ finishStartup:
 	jmp rax
 
 
-
+readCR2:
+	mov rax,cr2
+	ret
 updateCR3:
 
 	mov rax, cr3
@@ -269,10 +273,15 @@ moduleEnvironment:
 	jmp finish
 undoBackwards:
 	cmp eax, 9
-	jne finish
+	jne printProcesses
 	mov rdi,rdx
 	call sys_call_undoBackwardsC
 	jmp finish
+printProcesses:
+	cmp eax,10
+	jne finish
+	call sys_call_printProcesses
+	jmp finish	
 finish:
 	mov rsp, rbp
 	pop rbp

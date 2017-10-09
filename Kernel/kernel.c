@@ -112,7 +112,7 @@ void processA(){
 	}
 }
 
-void print(){
+void processB(){
 	while(1){
 		int j=0;
 		while(j<100000000){
@@ -166,9 +166,9 @@ int main()
 
 	//Scheduler
 	 //createProcess(processA);
-	createProcess(&processA);
-	 createProcess(currentAddress);
-	createProcess(&print);
+	createProcess(&processA, "process A");
+	 createProcess(currentAddress, "SHELL");
+	createProcess(&processB, "process B");
 	
 
 	

@@ -28,5 +28,7 @@ void slave();
 void mouse_handler();
 void updateCR3();
 
+uint64_t readCR2();
+
 
 #endif
