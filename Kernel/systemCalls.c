@@ -92,39 +92,7 @@ void *  sys_call_runC(int program){
 }
 
 void sys_call_printProcesses(){
-	int c=0;
-	int i;
-	char * state;
-	Process ** s= getCurrentProcesses(&c);
-	for(i=0; i<c; i++){
-		print("pid: ");
-		putNumber(s[i]->pid);
-		print("-->description: ");
-		print(s[i]->description);
-		print("-->state: ");
-		state=getStateFromNumber((char *)s[i]->state);
-		print(state);
-		putchar('\n');
-	}
-}
-
-char * getStateFromNumber(int state){
-	char * s;
-	switch(state){
-			case 0: s="RUNNING";
-					break;
-			case 1:s="READY";
-					break;
-			case 2:s= "BLOCKED";
-					break;
-			case 3: s="DEAD";
-					break;
-			case 4: s="SLEEPING";
-					break;
-			default: s="other";
-		}
-		return s;
-
+	printProcesses();
 }
 
 void sys_call_changeModuleEnvironmetC(int i, int j){
@@ -134,4 +102,8 @@ void sys_call_changeModuleEnvironmetC(int i, int j){
 
 void sys_call_undoBackwardsC(int from){
 	changeStopBackwards(from);
+}
+
+void sys_call_kill(int pid){
+	removeProcess(pid);
 }

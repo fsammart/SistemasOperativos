@@ -72,6 +72,7 @@ StackFrame * switchKernelToUser();
 StackFrame * fillStackFrame(void * entryPoint, StackFrame * userStack);
 void changeProcessState(int pid, processState state);
 void * next_process(int current_rsp);
-void callProcess( void * entryPoint);
 Process * *  getCurrentProcesses(int * a);
+void callProcess( void * entryPoint) ;
+void beginScheduler() ;
 #endif

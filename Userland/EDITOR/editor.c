@@ -1,6 +1,7 @@
 #include <stdio.h>
 #include <editor.h>
 
+
 int main(){
 	clearEditor();
 

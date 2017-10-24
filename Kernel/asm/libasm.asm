@@ -31,8 +31,10 @@ extern getCurrentEntryPoint
 extern print
 extern next_process
 global readCR2
+extern sys_call_kill
 
 global _yield
+global _halt
 
 
 GLOBAL master
@@ -82,12 +84,7 @@ EXTERN spure
 
 section .text
 
-
 finishStartup:
-
-	call switchKernelToUser
-
-	mov rsp, rax
 
 	call getCurrentEntryPoint
 
@@ -279,9 +276,15 @@ undoBackwards:
 	jmp finish
 printProcesses:
 	cmp eax,10
-	jne finish
+	jne kill
 	call sys_call_printProcesses
-	jmp finish	
+	jmp finish
+kill:
+	cmp eax,11
+	jne finish
+	mov rdi,rdx
+	call sys_call_kill
+	jmp finish			
 finish:
 	mov rsp, rbp
 	pop rbp
@@ -357,6 +360,11 @@ to_next:
     popState
     sti
     iretq
+
+_halt:
+    hlt
+    ret
+
 
 section .data
 

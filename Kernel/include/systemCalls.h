@@ -5,4 +5,5 @@ void sys_call_echoC(int on);
 void * sys_call_runC(int program);
 void sys_call_changeModuleEnvironmetC(int i, int j);
 void sys_call_undoBackwardsC(int from);
+void sys_call_kill(int pid);
 char * getStateFromNumber(int state);

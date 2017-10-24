@@ -11,7 +11,6 @@
 #include <terminal.h>
 #include <scheduler.h>
 
-
 extern uint8_t text;
 extern uint8_t rodata;
 extern uint8_t data;
@@ -19,6 +18,7 @@ extern uint8_t bss;
 extern uint8_t endOfKernelBinary;
 extern uint8_t endOfKernel;
 
+int init();
 
 
 static const uint64_t PageSize = 0x1000;
@@ -36,7 +36,6 @@ static void * const currentAddress = (void*)0x800000;
 typedef int (*EntryPoint)();
 typedef int (*EntryPointS)(int);
 
-
 void read();
 void clearBSS(void * bssAddress, uint64_t bssSize)
 {
@@ -52,7 +51,12 @@ void * getStackBase()
 	);
 }
 
-
+int init(){
+	while(1) {
+		putchar('i');
+		_halt();
+	}
+}
 
 void * initializeKernelBinary()
 {
@@ -102,27 +106,18 @@ void * initializeKernelBinary()
 	return getStackBase();
 }
 
+void processB(){
+	while(1){
+		sleep(200);
+		putchar('%'); 
+	}
+}
 void processA(){
 	while(1){
 		sleep(100);
-		putchar('a');
-		putchar('n');
-		putchar('d');
-		putchar('a');
+		putchar('&'); 
 	}
 }
-
-void processB(){
-	while(1){
-		int j=0;
-		while(j<100000000){
-			j++;
-		}
-		putchar('#');
-		putchar('#');
-	}
-}
-
 int main()
 {	
 	// ncPrint("[Kernel Main]");
@@ -161,16 +156,16 @@ int main()
 	printMsg(0,0,"Arquitectura de computadoras",0x0F);
 	printMsg(1,0,"La hora local es:",0x0F);
 	mapModulesLogical((void*)0xC00000);
-	 updateCR3();
-	 resetBuffer();
+	updateCR3();
+	resetBuffer();
 
 	//Scheduler
-	 //createProcess(processA);
-	createProcess(&processA, "process A");
-	 createProcess(currentAddress, "SHELL");
-	createProcess(&processB, "process B");
-	
+	//createProcess(processA);
+	createProcess(&init, "init");
 
+	createProcess(currentAddress, "SHELL");
+	createProcess(&processB, "process B");
+	createProcess(&processA, "process A");
 	
 	//while(1);
 	//Scheduler

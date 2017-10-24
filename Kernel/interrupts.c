@@ -167,7 +167,7 @@ void pageFaultHandlerC(){
 	//	clearRow(i);
 	//}
 	uint64_t error= readCR2();
-	printMsg(3,0,"Page Fault", 0x11);
+	printMsg(10,0,"Page Fault", 0x11);
 	putchar('+');
 	ncPrintHex(error);
 	putchar('+');

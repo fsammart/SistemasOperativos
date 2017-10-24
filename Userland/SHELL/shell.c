@@ -96,6 +96,10 @@ void printProcesses(){
 	sys_call(10,0,0);
 }
 
+void killProcess(int pid){
+	sys_call(11,pid,0);
+}
+
 
 
 //shell
@@ -107,6 +111,9 @@ void printShellComand(){
 	printFF("%s",s,NULL);
 }
 int main(){
+	//*((char*)0xB8000)='a';
+	putchar('a');
+	putchar('a');
 	char ** ss = malloc(sizeof(char *));
 	char * sos = malloc(2500);
 	ss[0] = sos;
@@ -150,6 +157,11 @@ void parser(char * buffer){
 		}
 		echoShellOFF();
 		return;
+	}
+	if(!strcmpN("kill", buffer,4)){
+		killProcess(*(buffer + 5) - '0');
+		return;
+
 	}
 	if(*buffer == '.' && *(buffer+1) == '\\'){
 		run((buffer+2));
