@@ -3,6 +3,7 @@
 #include "stdio.h"
 #include "lib.h"
 #include "interrupts.h"
+#include "systemCalls.h"
 #define SCHEDULER 0
 
 #define NULL ((void *)0)
@@ -73,6 +74,6 @@ StackFrame * fillStackFrame(void * entryPoint, StackFrame * userStack);
 void changeProcessState(int pid, processState state);
 void * next_process(int current_rsp);
 Process * *  getCurrentProcesses(int * a);
-void callProcess( void * entryPoint) ;
+void callProcess( void * entryPoint, void * entryPoint2) ;
 void beginScheduler() ;
 #endif

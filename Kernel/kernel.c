@@ -53,7 +53,7 @@ void * getStackBase()
 
 int init(){
 	while(1) {
-		putchar('i');
+		//putchar('i');
 		_halt();
 	}
 }
@@ -108,15 +108,13 @@ void * initializeKernelBinary()
 
 void processB(){
 	while(1){
-		sleep(200);
+		sleep(50);
 		putchar('%'); 
 	}
 }
 void processA(){
-	while(1){
-		sleep(100);
+
 		putchar('&'); 
-	}
 }
 int main()
 {	
@@ -161,11 +159,20 @@ int main()
 
 	//Scheduler
 	//createProcess(processA);
-	createProcess(&init, "init");
-
+	createProcess(init, "init");
+	ncPrintHex(init);
+	putchar('\n');
+	createProcess(processA, "process A");
+	ncPrintHex(processA);
+	putchar('\n');
+	createProcess(processB, "process B");
+	ncPrintHex(processB);
+	putchar('\n');
 	createProcess(currentAddress, "SHELL");
-	createProcess(&processB, "process B");
-	createProcess(&processA, "process A");
+	ncPrintHex(currentAddress);
+	putchar('\n');
+	
+	
 	
 	//while(1);
 	//Scheduler

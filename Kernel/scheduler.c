@@ -42,9 +42,12 @@ void changeProcessState(int pid, processState state) {
 
 Process * getProcess(void * entryPoint){
 	Process * p =(Process *) malloc(1000);
-	StackFrame * userStack= (StackFrame *) malloc(100000);
-	StackFrame * kernelStack= (StackFrame *) malloc(1000);
+	StackFrame * userStack= ((StackFrame *) malloc(100000)) + 100000;
+	StackFrame * kernelStack= (StackFrame *) malloc(1000) + 1000;
 	StackFrame * stack= fillStackFrame(entryPoint, userStack);
+	putchar('_');
+	ncPrintHex(userStack);
+	putchar('_');
 	p->userStack=stack;
 	p->entryPoint=entryPoint;
 	p->kernelStack=kernelStack;
@@ -158,6 +161,10 @@ void printProcesses(){
 }
 
 void removeProcess(int pid) {
+	putchar('!');
+	putchar('!');
+	putchar('!');
+	putchar('!');
 	if (current == NULL) {
 		return;
 
@@ -188,22 +195,11 @@ void removeProcess(int pid) {
 
 static int pro=0;
 
-typedef (void (*EntryPointHandler) (void));
+typedef void (*EntryPointHandler) (void);
 
-void callProcess(void * entryPoint){
-	if (pro == 0) {
-		pro++;
-		while(1);
-	} else if (pro == 1) {
-		pro++;
-		while(1);
-	} else if (pro == 2) {
-		pro++;
-		//while(1);
-	}
-	printProcesses();
-
-	((EntryPointHandler)entryPoint)();
+void callProcess(void * entryPoint, void * entryPoint2){
+	((EntryPointHandler)entryPoint2)();
+	removeProcess(getCurrentPid());
 }
 
 void beginScheduler() {
@@ -211,7 +207,11 @@ void beginScheduler() {
 }
 
 StackFrame * fillStackFrame(void * entryPoint, StackFrame * userStack){
-	StackFrame * frame = userStack - 1;
+	putchar('-');
+	ncPrintHex(entryPoint);
+	putchar('-');
+	putchar('\n');
+	StackFrame * frame = userStack - 50;
 	frame->gs =		0x001;
 	frame->fs =		0x002;
 	frame->r15 =	0x003;
@@ -222,19 +222,24 @@ StackFrame * fillStackFrame(void * entryPoint, StackFrame * userStack){
 	frame->r10 =	0x008;
 	frame->r9 =		0x009;
 	frame->r8 =		0x00A;
-	frame->rsi =	0x00B;
-	frame->rdi =	entryPoint; //entryPoint;
+	frame->rsi =	(void * )entryPoint;
+	frame->rdi =	(void * )entryPoint; //entryPoint;
 	frame->rbp =	0x00D;
 	frame->rdx =	0x00E;
 	frame->rcx =	0x00F;
 	frame->rbx =	0x010;
 	frame->rax =	0x011;
-	frame->rip =	&callProcess; //(void*) &callProcess;
+	frame->rip =	(void*) &callProcess;
 	frame->cs =		0x008;
 	frame->eflags = 0x202;
+	frame->base =	userStack - 50 -1;
 	frame->rsp =	(uint64_t)&(frame->base);
 	frame->ss = 	0x000;
-	frame->base =	0x000;
+
+	putchar('^');
+	ncPrintHex(frame->rdi);
+	putchar('^');
+	
 
 	return frame;
 }
