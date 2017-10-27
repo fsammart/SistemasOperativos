@@ -178,7 +178,7 @@ void pageFaultHandlerC(){
 }
 
 void sleep(unsigned int time){
-	char myPid=getCurrentPid();
+	int myPid=getCurrentPid();
     addSleep(myPid,time);
 	changeProcessState(myPid,SLEEPING);
     _yield();

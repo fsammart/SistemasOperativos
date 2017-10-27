@@ -177,22 +177,15 @@ timerTickHandler:
 	mov rsp, rbp
 	pop rbp
 
-	; scheduler part
-
 	pushState
 	
-	; save current process's RSP
 	mov rdi, rsp
 
-	; enter kernel context by setting current process's kernel-RSP
 	call switchUserToKernel
-	;xchg bx, bx
 
 	mov rsp, rax
 	
-	; schedule, get new process's RSP and load it
 	call switchKernelToUser
-	;xchg bx, bx
 
 	mov rsp, rax
 

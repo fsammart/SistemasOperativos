@@ -108,6 +108,7 @@ void * initializeKernelBinary()
 
 void processB(){
 	while(1){
+
 		sleep(50);
 		putchar('%'); 
 	}
@@ -160,17 +161,9 @@ int main()
 	//Scheduler
 	//createProcess(processA);
 	createProcess(init, "init");
-	ncPrintHex(init);
-	putchar('\n');
 	createProcess(processA, "process A");
-	ncPrintHex(processA);
-	putchar('\n');
 	createProcess(processB, "process B");
-	ncPrintHex(processB);
-	putchar('\n');
 	createProcess(currentAddress, "SHELL");
-	ncPrintHex(currentAddress);
-	putchar('\n');
 	
 	
 	

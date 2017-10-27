@@ -1,12 +1,4 @@
- #include "scheduler.h"
-#include <naiveConsole.h>
-#include <lib.h>
-
-static ProcessSlot * current=NULL;
-
-static int cardinal_processes=0;
-
-int i=0;
+#include "scheduler.h"
 
 ProcessSlot * newProcessSlot(Process * process){
 	ProcessSlot * newProcessSlot = (ProcessSlot *) malloc(1000);
@@ -14,10 +6,8 @@ ProcessSlot * newProcessSlot(Process * process){
 	return newProcessSlot;
 }
 void  createProcess(void * entryPoint, char * description){
-	Process * p=getProcess(entryPoint);
-	p->pid=pid++;
-	p->state=READY;
-	p->description=description;
+	Process * p=getProcess(entryPoint, description);
+	
 	addProcess(p);
 	cardinal_processes++;
 
@@ -40,19 +30,6 @@ void changeProcessState(int pid, processState state) {
 	return ; //pid doesnt exist
 }
 
-Process * getProcess(void * entryPoint){
-	Process * p =(Process *) malloc(1000);
-	StackFrame * userStack= ((StackFrame *) malloc(100000)) + 100000;
-	StackFrame * kernelStack= (StackFrame *) malloc(1000) + 1000;
-	StackFrame * stack= fillStackFrame(entryPoint, userStack);
-	putchar('_');
-	ncPrintHex(userStack);
-	putchar('_');
-	p->userStack=stack;
-	p->entryPoint=entryPoint;
-	p->kernelStack=kernelStack;
-	return p;
-}
 void addProcess(Process * process){
 	ProcessSlot * newProcess = newProcessSlot(process);
 	if(current==NULL){
@@ -76,7 +53,7 @@ void * next_process(int current_rsp) {
     int ans=current->process->userStack;
     return ans;
 }
-//void removeProcess(Process * process); TODO
+
 void schedule(){
 	if(current->process->state == RUNNING)
 		current->process->state = READY;
@@ -88,10 +65,12 @@ void schedule(){
 
 	current->process->state = RUNNING;
 }
+
 /* returns kernel stack*/
 StackFrame * switchUserToKernel(void * esp){
 
 	Process * process = current->process;
+
 	process->userStack=esp;
 	return process->kernelStack;
 }
@@ -161,18 +140,14 @@ void printProcesses(){
 }
 
 void removeProcess(int pid) {
-	putchar('!');
-	putchar('!');
-	putchar('!');
-	putchar('!');
 	if (current == NULL) {
 		return;
 
 	} else if(eqProcess(current->process, current->next->process) && current->process->pid==pid) {
 		// process to remove is the current and only one process in list
-        current = NULL;
+       current = NULL;
        cardinal_processes--;
-        return;
+       return;
 	}
 
 	ProcessSlot * prevSlot = current;
@@ -183,63 +158,26 @@ void removeProcess(int pid) {
 		slotToRemove = slotToRemove->next;
 	}
 
-	if (eqProcess(slotToRemove->process, current->process)) {
-		// process to remove is the current
-		current = current->next;
-	}
-
 	prevSlot->next = slotToRemove->next;
 	cardinal_processes--;
 
+	if (eqProcess(slotToRemove->process, current->process)) {
+		_yield();
+	}
 }
-
-static int pro=0;
-
-typedef void (*EntryPointHandler) (void);
 
 void callProcess(void * entryPoint, void * entryPoint2){
 	((EntryPointHandler)entryPoint2)();
-	removeProcess(getCurrentPid());
+
+	int removePid = getCurrentPid();
+
+	removeProcess(removePid);
+
+	
 }
 
 void beginScheduler() {
 	((int (*)(void))(current->process->entryPoint))();
 }
 
-StackFrame * fillStackFrame(void * entryPoint, StackFrame * userStack){
-	putchar('-');
-	ncPrintHex(entryPoint);
-	putchar('-');
-	putchar('\n');
-	StackFrame * frame = userStack - 50;
-	frame->gs =		0x001;
-	frame->fs =		0x002;
-	frame->r15 =	0x003;
-	frame->r14 =	0x004;
-	frame->r13 =	0x005;
-	frame->r12 =	0x006;
-	frame->r11 =	0x007;
-	frame->r10 =	0x008;
-	frame->r9 =		0x009;
-	frame->r8 =		0x00A;
-	frame->rsi =	(void * )entryPoint;
-	frame->rdi =	(void * )entryPoint; //entryPoint;
-	frame->rbp =	0x00D;
-	frame->rdx =	0x00E;
-	frame->rcx =	0x00F;
-	frame->rbx =	0x010;
-	frame->rax =	0x011;
-	frame->rip =	(void*) &callProcess;
-	frame->cs =		0x008;
-	frame->eflags = 0x202;
-	frame->base =	userStack - 50 -1;
-	frame->rsp =	(uint64_t)&(frame->base);
-	frame->ss = 	0x000;
 
-	putchar('^');
-	ncPrintHex(frame->rdi);
-	putchar('^');
-	
-
-	return frame;
-}
