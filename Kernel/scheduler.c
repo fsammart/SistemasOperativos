@@ -1,5 +1,8 @@
 #include "scheduler.h"
 
+static int cardinal_processes=0;
+static ProcessSlot * current=NULL;
+
 ProcessSlot * newProcessSlot(Process * process){
 	ProcessSlot * newProcessSlot = (ProcessSlot *) malloc(1000);
 	newProcessSlot->process=process;
@@ -11,6 +14,19 @@ void  createProcess(void * entryPoint, char * description){
 	addProcess(p);
 	cardinal_processes++;
 
+}
+
+Process * getProcessById(int pid){
+	int i;
+	ProcessSlot * slot = current;
+
+	for(i=0; i < cardinal_processes ; i++){
+		if(slot->process->pid == pid){
+			return slot->process;
+		}
+	}
+
+	return NULL;
 }
 int getCurrentPid() {
 	return current==NULL?-1:current->process->pid;
@@ -55,8 +71,9 @@ void * next_process(int current_rsp) {
 }
 
 void schedule(){
-	if(current->process->state == RUNNING)
+	if(current->process->state == RUNNING){
 		current->process->state = READY;
+	}
 
 	current = current->next;
 	while (current->process->state != READY) {
@@ -133,7 +150,7 @@ void printProcesses(){
 		print("-->description: ");
 		print(s[i]->description);
 		print("-->state: ");
-		state=getStateFromNumber((char *)s[i]->state);
+		state=getStateFromNumber(s[i]->state);
 		print(state);
 		putchar('\n');
 	}

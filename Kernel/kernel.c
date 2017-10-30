@@ -1,5 +1,4 @@
 #include <stdint.h>
-//#include <string.h>
 #include <lib.h>
 #include <moduleLoader.h>
 #include <naiveConsole.h>
@@ -10,6 +9,7 @@
 #include <mouse.h>
 #include <terminal.h>
 #include <scheduler.h>
+#include "pipes.h"
 
 extern uint8_t text;
 extern uint8_t rodata;
@@ -35,8 +35,6 @@ static void * const currentAddress = (void*)0x800000;
 
 typedef int (*EntryPoint)();
 typedef int (*EntryPointS)(int);
-
-void read();
 void clearBSS(void * bssAddress, uint64_t bssSize)
 {
 	memset(bssAddress, 0, bssSize);
@@ -107,15 +105,29 @@ void * initializeKernelBinary()
 }
 
 void processB(){
+	Pipe * pipe = createPipe(0 , "prueba1");
 	while(1){
-
-		sleep(50);
-		putchar('%'); 
+		sleep(100);
+		write(pipe, "Emocion");
 	}
 }
 void processA(){
-
-		putchar('&'); 
+	putchar('r');
+	sleep(10);
+	Pipe * pipe2 = openPipe("prueba1");
+	char buffer[10];
+	int i;
+	while(1){
+		sleep(50);
+		int r =read(pipe2, buffer, -1);
+		putchar('=');
+		i=0;
+		while(i<r){
+			putchar(buffer[i]);
+			i++;
+		}
+		putchar('=');
+	}	
 }
 int main()
 {	

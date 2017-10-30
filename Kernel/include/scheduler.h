@@ -6,16 +6,11 @@
 #include "systemCalls.h"
 #include <naiveConsole.h>
 #include "process.h"
+#include "structs.h"
 
 #define SCHEDULER 0
 
 #define NULL ((void *)0)
-
-static int cardinal_processes=0;
-
-static int i=0;
-
-static int pro=0;
 
 typedef void (*EntryPointHandler) (void);
 
@@ -24,7 +19,6 @@ typedef struct ProcessSlotS {
 	Process * process;
 }ProcessSlot;
 
-static ProcessSlot * current=NULL;
 
 ProcessSlot * newProcessSlot(Process * process);
 

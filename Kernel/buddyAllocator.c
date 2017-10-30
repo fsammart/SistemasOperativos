@@ -4,6 +4,8 @@
 typeBuddyArray buddyArray;
 void * baseMemory;
 
+#define NULL (void *) 0
+
 typeBuddyArray creatHeap()
 {	
 	int i;
