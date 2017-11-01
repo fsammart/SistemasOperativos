@@ -112,8 +112,6 @@ void printShellComand(){
 }
 int main(){
 	//*((char*)0xB8000)='a';
-	putchar('a');
-	putchar('a');
 	char ** ss = malloc(sizeof(char *));
 	char * sos = malloc(2500);
 	ss[0] = sos;

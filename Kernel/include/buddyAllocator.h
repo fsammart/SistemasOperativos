@@ -3,6 +3,7 @@
 #define buddyAllocator_H
 
 #include <lib.h>
+#include "naiveConsole.h"
 //Constants of the System
 #define PAGE_SIZE ((1024)*4)
 #define MEMORY (PAGE_SIZE*16)
@@ -37,14 +38,14 @@ typedef struct
 
 //Prototype Functions--------------------------------
 //Heap and BuddyArray Functions
-typeBuddyArray creatHeap();
+typeBuddyArray createHeap();
 int isValid(void * page);
 void * getNextPageRecursive(int index, int currentLevel, int level);
 void * getBaseMemoryWithIndex(int i, int maxElementsInLevel, int elementNumber);
 void freeUpRecursive(int index);
 //Allocation Functions
 void * allocPage(uint64_t pages);
-int deallocPage(void * address);
+int deallocPage(char * address);
 int getLevel(uint64_t pages);
 void printHeap(typeBuddyArray buddyArray);
 

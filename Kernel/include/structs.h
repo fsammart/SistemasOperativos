@@ -10,6 +10,8 @@ typedef struct Pipe_s {
 	int position;
 	int end;
 	int * pipePids;
+	int * blocked;
+	int cardinalBlocked;
 	int connected;
 	char * pipe;
 	int readFlag;
@@ -53,6 +55,7 @@ typedef struct Process_s{
 	char * description;
 	int pipesLength;
 	int * pipePids;
+	int * blocked;
 	Pipe *  pipesStruct;
 	Pipe *  pipes;
 

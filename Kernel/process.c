@@ -2,7 +2,7 @@
 static int pid=0;
 
 StackFrame * fillStackFrame(void * entryPoint, StackFrame * userStack){
-	StackFrame * frame = userStack - sizeof(StackFrame) -50;
+	StackFrame * frame =userStack - 2;
 	frame->gs =		0x001;
 	frame->fs =		0x002;
 	frame->r15 =	0x003;
@@ -32,9 +32,18 @@ StackFrame * fillStackFrame(void * entryPoint, StackFrame * userStack){
 
 Process * getProcess(void * entryPoint , char * description){
 	Process * p =(Process *) malloc(1000);
-	StackFrame * userStack=(StackFrame *)( ( malloc(100000)) + 100000 - MAX_PIPES*PIPE_LENGTH -1 -10*sizeof(Pipe) -1 -5*sizeof(int) -1);
-	StackFrame * kernelStack= (StackFrame *) malloc(1000) + 1000;
+	void  * page1= allocPage(2);
+	void * page2 = allocPage(2);
+	ncPrintHex(page1);
+	ncPrint("?");
+	ncPrintDec(sizeof(StackFrame) + -1*(- MAX_PIPES*PIPE_LENGTH -1 -10*sizeof(Pipe) -1 -10*sizeof(int) -1));
+	ncPrint("?");
+	StackFrame * userStack=((char *)page1)+ 2*1024*4 - MAX_PIPES*PIPE_LENGTH -1 -10*sizeof(Pipe) -1 -10*sizeof(int) -1;
+	StackFrame * kernelStack= ((char *)page2) + 2*1024*4;
 	StackFrame * stack= fillStackFrame(entryPoint, userStack);
+	ncPrint("%%");
+	ncPrintHex(stack);
+	ncPrint("%%");
 	p->userStack=stack;
 	p->entryPoint=entryPoint;
 	p->kernelStack=kernelStack;
@@ -43,6 +52,15 @@ Process * getProcess(void * entryPoint , char * description){
 	p->pipes = userStack + 1;
 	p->pipesStruct=p->pipes +1;
 	p->pipePids  = p->pipesStruct +1;
+	p->blocked = p->pipePids + 1;
 	p->description=description;
 	return p;
+}
+
+int freeProcessPages(int pid)
+{
+	Process  * p = getProcessById(pid);
+	ncPrintDec(p->pid);
+	deallocPage(p->userStack);
+	deallocPage(p->kernelStack);
 }

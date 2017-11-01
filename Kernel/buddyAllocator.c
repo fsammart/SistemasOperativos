@@ -2,17 +2,17 @@
 
 
 typeBuddyArray buddyArray;
-void * baseMemory;
+char * baseMemory ;
 
-#define NULL (void *) 0
+#define NULL (void *) 0 
 
-typeBuddyArray creatHeap()
+typeBuddyArray createHeap()
 {	
 	int i;
 	int currentElementsInLevel;
 	int level;
 	int maxElementsInLevel;
-	baseMemory = malloc(MEMORY);
+	baseMemory = 0x10000000;
 	for(i = 0, level = 1, currentElementsInLevel = 0, maxElementsInLevel = 1; i< HEAPSIZE; i++, currentElementsInLevel++)
 	{
 		if(maxElementsInLevel == currentElementsInLevel){
@@ -121,11 +121,12 @@ int getLevel(uint64_t pages)
 }
 
 
-int deallocPage(void * page)
+int deallocPage(char * page)
 {
 	int ans;
 	if(isValid(page)){
 		int index = (page - baseMemory)/PAGE_SIZE;
+		ncPrintDec(index);
 		buddyArray.occupied[index+(HEAPSIZE/2)] = EMPTY;
 		freeUpRecursive((index+(HEAPSIZE/2))+1);
 		ans = 0;	

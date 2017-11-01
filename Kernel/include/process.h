@@ -10,12 +10,18 @@
 
 #include "stdio.h"
 
+#include "naiveConsole.h"
+
 #define PIPE_LENGTH 10
 
 Process * getProcess(void * entryPoint, char * description);
 
 StackFrame * fillStackFrame(void * entryPoint, StackFrame * userStack);
 
-void callProcess( void * entryPoint, void * entryPoint2) ;
+void callProcess( void * entryPoint, void * entryPoint2);
+
+int freeProcessPages(int pid);
+
+Process *  getProcessById(int pid);
 
 #endif

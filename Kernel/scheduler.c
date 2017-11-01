@@ -9,7 +9,7 @@ ProcessSlot * newProcessSlot(Process * process){
 	return newProcessSlot;
 }
 void  createProcess(void * entryPoint, char * description){
-	Process * p=getProcess(entryPoint, description);
+	Process * p = getProcess(entryPoint, description);
 	
 	addProcess(p);
 	cardinal_processes++;
@@ -21,8 +21,8 @@ Process * getProcessById(int pid){
 	ProcessSlot * slot = current;
 
 	for(i=0; i < cardinal_processes ; i++){
-		if(slot->process->pid == pid){
-			return slot->process;
+		if(slot[i].process->pid == pid){
+			return slot[i].process;
 		}
 	}
 
@@ -59,7 +59,12 @@ void addProcess(Process * process){
 	}
 }
 
-void * next_process(int current_rsp) {
+StackFrame * getCurrentUserStack()
+{
+	return current->process->userStack;
+}
+
+void * next_process(void * current_rsp) {
 	if (current == NULL) {
 		return current_rsp;
 	}
@@ -143,6 +148,7 @@ void printProcesses(){
 	int c=0;
 	int i;
 	char * state;
+	char * stack;
 	Process ** s= getCurrentProcesses(&c);
 	for(i=0; i<c; i++){
 		print("pid: ");
@@ -152,6 +158,10 @@ void printProcesses(){
 		print("-->state: ");
 		state=getStateFromNumber(s[i]->state);
 		print(state);
+		print("  UserStack:");
+		stack = s[i]->userStack;
+		ncPrintHex(stack);
+
 		putchar('\n');
 	}
 }
@@ -162,6 +172,8 @@ void removeProcess(int pid) {
 
 	} else if(eqProcess(current->process, current->next->process) && current->process->pid==pid) {
 		// process to remove is the current and only one process in list
+		if(pid==0) return;
+       freeProcessPages(pid);
        current = NULL;
        cardinal_processes--;
        return;

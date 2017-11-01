@@ -14,7 +14,7 @@ void io_wait();
 static void * const shellAddress = (void*)0xC00000;
 static void * const currentAddress = (void*)0x800000;
 
-static intcounter = 0;
+static int counter = 0;
 static int timerListeners =0;
 static int sleepListeners =0;
 static int auxj=0;
@@ -80,9 +80,6 @@ void loadIDT()
 	setIDTEntry((uint64_t) keyboardHandler,0x21);
 	setIDTEntry((uint64_t) mouse_handler,0x2C); 
 	
-	//sti();
-	
-
 }
 
 
@@ -171,15 +168,10 @@ void pageFaultHandlerC(){
 	putchar('+');
 	ncPrintHex(error);
 	putchar('+');
-	//setCursor(3,0);
-	//mapModulesLogical(shellAddress);
-	//updateCR3();
-	//(*(EntryPointS)currentAddress)(4);
 }
 
 void sleep(unsigned int time){
 	int myPid=getCurrentPid();
-	if(myPid==1) putchar('v');
     addSleep(myPid,time);
 	changeProcessState(myPid,SLEEPING);
     _yield();

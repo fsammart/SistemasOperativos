@@ -53,9 +53,11 @@ void unlockProcesses(char * name){
 		if(strcmp(pipeNames[i],name)==0){
 			Pipe * pi = pipes[i];
 			int j = 0;
-			for(j=0; j<pi->connected; j++){
-				changeProcessState(pi->pipePids[j] , READY);
+			for(j=0; j<pi->cardinalBlocked; j++){
+				changeProcessState(pi->blocked[j] , READY);
 			}
+			pi->cardinalBlocked=0;
+			return;
 		}
 		i++;
 	}
@@ -74,11 +76,12 @@ char * next( char * aux, Pipe * pipe)
 
 int read ( Pipe * p , char * result, int bytes)
 {
+	int currentPid;
 	if(p->position == p->end && p->readFlag == 0){
-		putchar('?');
-		ncPrintDec(getCurrentPid());
-		ncPrintDec(BLOCKED);
-		changeProcessState(getCurrentPid(), BLOCKED);
+		currentPid = getCurrentPid();
+		changeProcessState(currentPid, BLOCKED);
+		p->blocked[p->cardinalBlocked] = currentPid;
+		p->cardinalBlocked ++ ;
 		_yield();
 		return 0;
 	}
@@ -109,7 +112,11 @@ Pipe *  createPipe(int pid , char * name)
 	
 	if(name==NULL) return NULL;
 	p = getProcessById(pid);
-	if(p==NULL) return NULL;
+
+	if(p==NULL){
+		return NULL;
+
+	}	
 
 	pipe= createPipeStruct( p, name);
 
@@ -129,9 +136,11 @@ Pipe * createPipeStruct(Process * pro , char * name)
 	p->end=0;
 	p->readFlag=0;
 	p->connected=1;
-	p->pipePids = p->pipePids;
+	p->pipePids = pro->pipePids;
+	p->blocked = pro->blocked;
 	p->pipePids[0] = pro->pid;
 	p->position=0;
+	p->cardinalBlocked = 0;
 	p->pipe= &pro->pipes[lastPipeName];
 	return p;
 }

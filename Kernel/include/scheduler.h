@@ -30,7 +30,7 @@ void changeProcessState(int pid, processState state);
 
 void addProcess(Process * process);
 
-void * next_process(int current_rsp);
+void * next_process(void * current_rsp);
 
 void schedule();
 
@@ -53,4 +53,8 @@ void removeProcess(int pid);
 void callProcess( void * entryPoint, void * entryPoint2) ;
 
 void beginScheduler();
+
+StackFrame * getCurrentUserStack();
+
+
 #endif
