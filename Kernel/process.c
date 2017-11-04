@@ -38,23 +38,38 @@ Process * getProcess(void * entryPoint , char * description){
 	ncPrint("?");
 	ncPrintDec(sizeof(StackFrame) + -1*(- MAX_PIPES*PIPE_LENGTH -1 -10*sizeof(Pipe) -1 -10*sizeof(int) -1));
 	ncPrint("?");
-	StackFrame * userStack=((char *)page1)+ 2*1024*4 - MAX_PIPES*PIPE_LENGTH -1 -10*sizeof(Pipe) -1 -10*sizeof(int) -1;
+	StackFrame * userStack=((char *)page1)+ 2*1024*4 - MAX_PROCESS_PIPES*PIPE_LENGTH -1 -MAX_PROCESS_PIPES*sizeof(Pipe) -1 -MAX_PROCESS_PIPES*MAX_LISTENERS*sizeof(int) -1 - MAX_PROCESS_PIPES*sizeof(int) -MAX_PROCESS_PIPES*sizeof(int)-10;
 	StackFrame * kernelStack= ((char *)page2) + 2*1024*4;
 	StackFrame * stack= fillStackFrame(entryPoint, userStack);
 	ncPrint("%%");
 	ncPrintHex(stack);
-	ncPrint("%%");
-	p->userStack=stack;
-	p->entryPoint=entryPoint;
-	p->kernelStack=kernelStack;
-	p->pid=pid++;
-	p->state=READY;
-	p->pipes = userStack + 1;
-	p->pipesStruct=p->pipes +1;
-	p->pipePids  = p->pipesStruct +1;
-	p->blocked = p->pipePids + 1;
-	p->description=description;
+	ncPrint("%%"); 
+	p->userStack = stack;
+	p->entryPoint = entryPoint;
+	p->kernelStack = kernelStack;
+	p->pid = pid++;
+	p->state = READY;
+	p->pipes = userStack + 1; //array de char  *
+	p->pipesOpened = 0;
+	p->pipesStruct = (char * ) p->pipes + MAX_PROCESS_PIPES*sizeof(Pipe) + 1; //array de Pipesstruct
+	p->pipePids  = (char * )p->pipesStruct + MAX_PROCESS_PIPES*sizeof(int) +1; //array de pids
+	p->blocked = (char *)p->pipePids + MAX_PROCESS_PIPES*sizeof(int) +  1; //array de pids
+	p->occupiedPosition = (char *) p->blocked + MAX_PROCESS_PIPES*MAX_LISTENERS*sizeof(int) +  1; //array de int
+	p->description = description;
+
+	ncPrintHex(p->blocked);
+
+	initiatePipesForProcess(p->occupiedPosition);
+
 	return p;
+}
+
+void initiatePipesForProcess(int * occupiedPosition)
+{
+	int i = 0;
+	for(; i < MAX_PROCESS_PIPES ; i++){
+		occupiedPosition[i]=0;
+	}
 }
 
 int freeProcessPages(int pid)

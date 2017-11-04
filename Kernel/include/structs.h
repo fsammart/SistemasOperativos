@@ -9,6 +9,7 @@ typedef struct Pipe_s {
 	char * name;
 	int position;
 	int end;
+	int creator;
 	int * pipePids;
 	int * blocked;
 	int cardinalBlocked;
@@ -49,15 +50,17 @@ typedef struct StackFrame_s{
 typedef struct Process_s{
 	StackFrame * userStack;
 	StackFrame * kernelStack;
+	char * description;
 	void * entryPoint;
 	int pid;
 	processState state;
-	char * description;
-	int pipesLength;
+
+	int pipesOpened;
 	int * pipePids;
 	int * blocked;
+	int * occupiedPosition;
 	Pipe *  pipesStruct;
-	Pipe *  pipes;
+	char  *  pipes;
 
 }Process;
 

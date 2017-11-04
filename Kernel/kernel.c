@@ -9,7 +9,7 @@
 #include <mouse.h>
 #include <terminal.h>
 #include <scheduler.h>
-#include "pipes.h"
+#include "IPC.h"
 #include "buddyAllocator.h"
 
 extern uint8_t text;
@@ -32,6 +32,9 @@ static void * const shellAddress = (void*)0xC00000;
 static void * const editorAddress = (void*)0xE00000;
 static void * const currentAddress = (void*)0x800000;
 
+void processA();
+void processB();
+
 
 
 typedef int (*EntryPoint)();
@@ -51,6 +54,7 @@ void * getStackBase()
 }
 
 int init(){
+	ncPrint("soy INIT");
 	while(1) {
 		_halt();
 	}
@@ -104,32 +108,6 @@ void * initializeKernelBinary()
 	return getStackBase();
 }
 
-void processB()
-{
-	Pipe * pipe = createPipe(0 , "prueba1");
-	while(1){
-		sleep(100);
-		write(pipe, "Emocion");
-	}
-}
-void processA()
-{
-	char buffer[10];
-	int i;
-	int r;
-	Pipe * pipe2;
-	sleep(10); //wait until pipe is created
-	pipe2 = openPipe("prueba1");
-	while(1){
-		sleep(50);
-		r = read(pipe2, buffer, -1);
-		putchar('=');
-		for(i=0; i < r; i++){
-			putchar(buffer[i]);
-		}
-		putchar('=');
-	}	
-}
 int main()
 {	
 	
@@ -153,7 +131,9 @@ int main()
 	createProcess(init, "init");
 	createProcess(processA, "process A");
 	createProcess(processB, "process B");
-	createProcess(currentAddress, "SHELL");
+	//createProcess(currentAddress, "SHELL");
+
+	ncPrint("AKAKKAA");
 
 	finishStartup();
 	

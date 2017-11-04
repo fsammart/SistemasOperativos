@@ -4,7 +4,7 @@
 
 #include "lib.h"
 
-#include "pipes.h"
+#include "IPC.h"
 
 #include "structs.h"
 
@@ -23,5 +23,7 @@ void callProcess( void * entryPoint, void * entryPoint2);
 int freeProcessPages(int pid);
 
 Process *  getProcessById(int pid);
+
+void initiatePipesForProcess(int * occupiedPosition);
 
 #endif

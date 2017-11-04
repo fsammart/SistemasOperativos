@@ -1,4 +1,4 @@
-//pipes.h
+//IPC.h
 #ifndef PIPES
 
 #define PIPES 1 
@@ -6,6 +6,11 @@
 #define PIPE_LENGTH 10
 #define MAX_PIPES 50
 #define NULL (void*)0
+#define MAX_PROCESS_PIPES 3
+#define MAX_LISTENERS 2
+
+#define NO_SPACE_LEFT -1
+#define PIPE_NOT_FOUND -2
 
 #include "structs.h"
 #include "lib.h"
@@ -21,5 +26,9 @@ Process *  getProcessById(int pid);
 void unlockProcesses(char * name);
 void changeProcessState(int pid, processState state);
 int getCurrentPid();
+int getIndexForPipeStructure(Process * pro);
+void freeSpace(char * name , Process * pro);
+void closePipe(Pipe * pipe);
+int getPipeNameIndex(char * name);
 
 #endif

@@ -10,7 +10,6 @@ ProcessSlot * newProcessSlot(Process * process){
 }
 void  createProcess(void * entryPoint, char * description){
 	Process * p = getProcess(entryPoint, description);
-	
 	addProcess(p);
 	cardinal_processes++;
 
