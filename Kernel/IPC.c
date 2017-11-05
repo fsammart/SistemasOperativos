@@ -8,8 +8,6 @@
 
 int getPipeNameIndex(char * name){
 
-	ncPrint("ESTOY AQIII");
-
 	int i=0;
 
 	while(i < MAX_PIPES) {
@@ -18,8 +16,6 @@ int getPipeNameIndex(char * name){
 		}
 		i++;
 	}
-
-	ncPrint("QUE MALLLLLLL");
 
 	return PIPE_NOT_FOUND;
 }
@@ -35,10 +31,6 @@ Pipe *  openPipe(char * name)
 
 	pipes[i]->pipePids[pipes[i]->connected]=getCurrentPid();
 	pipes[i]->connected++;
-
-	ncPrint("$$$$$");
-	ncPrintHex(pipes[i]);
-	ncPrint("$$$$$");
 	
 	return pipes[i];
 
@@ -101,8 +93,6 @@ int read ( Pipe * p , char * result, int bytes)
 	if(p->position == p->end && p->readFlag == 0){
 		currentPid = getCurrentPid();
 		changeProcessState(currentPid, BLOCKED);
-		ncPrintDec(p->cardinalBlocked);
-		ncPrintHex(p->blocked);
 		p->blocked[p->cardinalBlocked] = currentPid;
 		p->cardinalBlocked ++ ;
 		_yield();
@@ -179,21 +169,11 @@ Pipe *  createPipe(int pid , char * name)
 
 	}	
 
-	ncPrint("antes de armar estructura");
-
 	pipe= createPipeStruct( p, name);
 
-	ncPrint("creo la estructura");
-
-	ncPrint("!!!");
-	ncPrintDec(lastPipeName);
-	ncPrint("!!!");
 	pipeNames[lastPipeName]=name;
 	pipes[lastPipeName]=pipe;
 	lastPipeName++;
-	ncPrint("#$#$#$#$");
-	ncPrintHex(pipes[lastPipeName]);
-	ncPrint("#$#$#$#$");
 
 	return pipe;
 
@@ -202,9 +182,6 @@ Pipe *  createPipe(int pid , char * name)
 int getIndexForPipeStructure(Process * pro)
 {
 	int i = 0;
-	ncPrint("%&%&%");
-	ncPrintHex(pro->pipesOpened);
-	ncPrint("%&%&%");
 	int current = pro->pipesOpened;
 	if (current > MAX_PROCESS_PIPES || pro->occupiedPosition[current] == 1){
 		while(i < MAX_PROCESS_PIPES){
@@ -224,9 +201,6 @@ int getIndexForPipeStructure(Process * pro)
 Pipe * createPipeStruct(Process * pro , char * name)
 {
 	int index = getIndexForPipeStructure(pro);
-	ncPrint("ALALA");
-	ncPrintDec(index);
-	ncPrint("ALALAL");
 	if(index == NO_SPACE_LEFT) return NULL;
 	pro->occupiedPosition[index] = 1;
 	Pipe * p = &(pro->pipesStruct[index]);
@@ -241,10 +215,6 @@ Pipe * createPipeStruct(Process * pro , char * name)
 	p->position=0;
 	p->cardinalBlocked = 0;
 	pro->pipesOpened=0;
-	ncPrint(pro->pipes);
 	p->pipe= (pro->pipes + index*PIPE_LENGTH);
-	ncPrint("//");
-	ncPrint("//");
-	ncPrint(p->pipe);
 	return p;
 }

@@ -54,7 +54,6 @@ void * getStackBase()
 }
 
 int init(){
-	ncPrint("soy INIT");
 	while(1) {
 		_halt();
 	}
@@ -131,9 +130,7 @@ int main()
 	createProcess(init, "init");
 	createProcess(processA, "process A");
 	createProcess(processB, "process B");
-	//createProcess(currentAddress, "SHELL");
-
-	ncPrint("AKAKKAA");
+	createProcess(currentAddress, "SHELL");
 
 	finishStartup();
 	

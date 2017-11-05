@@ -34,16 +34,9 @@ Process * getProcess(void * entryPoint , char * description){
 	Process * p =(Process *) malloc(1000);
 	void  * page1= allocPage(2);
 	void * page2 = allocPage(2);
-	ncPrintHex(page1);
-	ncPrint("?");
-	ncPrintDec(sizeof(StackFrame) + -1*(- MAX_PIPES*PIPE_LENGTH -1 -10*sizeof(Pipe) -1 -10*sizeof(int) -1));
-	ncPrint("?");
 	StackFrame * userStack=((char *)page1)+ 2*1024*4 - MAX_PROCESS_PIPES*PIPE_LENGTH -1 -MAX_PROCESS_PIPES*sizeof(Pipe) -1 -MAX_PROCESS_PIPES*MAX_LISTENERS*sizeof(int) -1 - MAX_PROCESS_PIPES*sizeof(int) -MAX_PROCESS_PIPES*sizeof(int)-10;
 	StackFrame * kernelStack= ((char *)page2) + 2*1024*4;
-	StackFrame * stack= fillStackFrame(entryPoint, userStack);
-	ncPrint("%%");
-	ncPrintHex(stack);
-	ncPrint("%%"); 
+	StackFrame * stack= fillStackFrame(entryPoint, userStack); 
 	p->userStack = stack;
 	p->entryPoint = entryPoint;
 	p->kernelStack = kernelStack;
@@ -56,8 +49,6 @@ Process * getProcess(void * entryPoint , char * description){
 	p->blocked = (char *)p->pipePids + MAX_PROCESS_PIPES*sizeof(int) +  1; //array de pids
 	p->occupiedPosition = (char *) p->blocked + MAX_PROCESS_PIPES*MAX_LISTENERS*sizeof(int) +  1; //array de int
 	p->description = description;
-
-	ncPrintHex(p->blocked);
 
 	initiatePipesForProcess(p->occupiedPosition);
 
