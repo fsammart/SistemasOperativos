@@ -34,12 +34,24 @@ Process * getProcess(void * entryPoint , char * description){
 	Process * p =(Process *) malloc(1000);
 	void  * page1= allocPage(2);
 	void * page2 = allocPage(2);
+	
+	Thread * t = (Thread *) malloc(1000);
+	
 	StackFrame * userStack=((char *)page1)+ 2*1024*4 - MAX_PROCESS_PIPES*PIPE_LENGTH -1 -MAX_PROCESS_PIPES*sizeof(Pipe) -1 -MAX_PROCESS_PIPES*MAX_LISTENERS*sizeof(int) -1 - MAX_PROCESS_PIPES*sizeof(int) -MAX_PROCESS_PIPES*sizeof(int)-10;
 	StackFrame * kernelStack= ((char *)page2) + 2*1024*4;
 	StackFrame * stack= fillStackFrame(entryPoint, userStack); 
-	p->userStack = stack;
-	p->entryPoint = entryPoint;
-	p->kernelStack = kernelStack;
+	
+	p->activeThread = 0;
+	p->numberOfThreads = 1;
+
+
+	initializeThreadArray(p->thread,3);
+
+	p->thread[0] = t;
+	p->thread[0]->userStack=stack;
+	p->thread[0]->entryPoint=entryPoint;
+	p->thread[0]->kernelStack=kernelStack;
+
 	p->pid = pid++;
 	p->state = READY;
 	p->pipes = userStack + 1; //array de char  *
@@ -55,6 +67,14 @@ Process * getProcess(void * entryPoint , char * description){
 	return p;
 }
 
+int freeProcessPages(int pid)
+{
+	Process  * p = getProcessById(pid);
+
+	deallocPage(p->thread[0]->userStack);
+	deallocPage(p->thread[0]->kernelStack);
+}
+
 void initiatePipesForProcess(int * occupiedPosition)
 {
 	int i = 0;
@@ -63,10 +83,11 @@ void initiatePipesForProcess(int * occupiedPosition)
 	}
 }
 
-int freeProcessPages(int pid)
+void initializeThreadArray(Thread * t[], int dim)
 {
-	Process  * p = getProcessById(pid);
-	ncPrintDec(p->pid);
-	deallocPage(p->userStack);
-	deallocPage(p->kernelStack);
+	int i;
+	for(int i = 0; i < dim; i++)
+	{
+		t[i] = NULL;
+	}		
 }

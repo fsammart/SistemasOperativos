@@ -1,5 +1,7 @@
 #include "scheduler.h"
 
+void terminateThread();
+
 static int cardinal_processes=0;
 static ProcessSlot * current=NULL;
 
@@ -31,6 +33,10 @@ int getCurrentPid() {
 	return current==NULL?-1:current->process->pid;
 }
 
+Process * getCurrentProcess(){
+	return current->process;
+}
+
 void changeProcessState(int pid, processState state) {
 
 	int i = 0;
@@ -60,17 +66,20 @@ void addProcess(Process * process){
 
 StackFrame * getCurrentUserStack()
 {
-	return current->process->userStack;
+		return current->process->thread[current->process->activeThread]->userStack;
+
 }
 
 void * next_process(void * current_rsp) {
 	if (current == NULL) {
 		return current_rsp;
 	}
-	current->process->userStack = current_rsp;
+	current->process->thread[current->process->activeThread]->userStack = current_rsp;
+
 
 	schedule();
-    int ans=current->process->userStack;
+    int ans=current->process->thread[current->process->activeThread]->userStack;
+
     return ans;
 }
 
@@ -87,22 +96,49 @@ void schedule(){
 	current->process->state = RUNNING;
 }
 
+int nextThread()
+{
+	int i = 1;
+	Process * p = getCurrentProcess();
+	while( p->thread[(p->activeThread + i )%(3)] == NULL){
+		i++;
+	}
+
+	return (p->activeThread + i )%(3); 
+}
 /* returns kernel stack*/
 StackFrame * switchUserToKernel(void * esp){
 
 	Process * process = current->process;
 
-	process->userStack=esp;
-	return process->kernelStack;
+	process->thread[process->activeThread]->userStack=esp;
+	return process->thread[process->activeThread]->kernelStack;
 }
 /* returns next process from scheduler*/
 StackFrame * switchKernelToUser(){
 	schedule();
-	return current->process->userStack;
+	int index = nextThread();
+
+	Process * p = getCurrentProcess();
+	if(p->pid == 1 )
+	{
+		ncPrint("Hola");
+		ncPrintDec(index);
+		ncPrintHex(p->thread[index]->userStack);
+		ncPrint('&&&');
+
+	}
+
+
+		
+	
+	current->process->activeThread = index;
+	return current->process->thread[index]->userStack;
 }
 
 void * getCurrentEntryPoint(){
-	return current->process->entryPoint;
+	return current->process->thread[current->process->activeThread]->entryPoint;
+
 }
 
 Process * *  getCurrentProcesses(int * a){
@@ -158,7 +194,7 @@ void printProcesses(){
 		state=getStateFromNumber(s[i]->state);
 		print(state);
 		print("  UserStack:");
-		stack = s[i]->userStack;
+		stack = s[i]->thread[0]->userStack;
 		ncPrintHex(stack);
 
 		putchar('\n');
@@ -196,16 +232,20 @@ void removeProcess(int pid) {
 
 void callProcess(void * entryPoint, void * entryPoint2){
 	((EntryPointHandler)entryPoint2)();
+Process * p = getCurrentProcess();
+	ncPrint("Soy");
+	ncPrintDec(p->activeThread);
+	ncPrint("era");
 
-	int removePid = getCurrentPid();
+	terminateThread();
 
-	removeProcess(removePid);
+	_yield();
 
 	
 }
 
 void beginScheduler() {
-	((int (*)(void))(current->process->entryPoint))();
+	((int (*)(void))(current->process->thread[0]->entryPoint))();
 }
 
 

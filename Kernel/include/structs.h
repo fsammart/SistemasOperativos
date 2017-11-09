@@ -1,11 +1,11 @@
 //structs.h
 #ifndef STRUCTS
-#define STRUCTS 0 
+#define STRUCTS 0
 #include "lib.h"
 
 typedef enum processState_t {RUNNING, READY, BLOCKED, DEAD, SLEEPING} processState;
 
-typedef struct Pipe_s { 
+typedef struct Pipe_s {
 	char * name;
 	int position;
 	int end;
@@ -47,21 +47,35 @@ typedef struct StackFrame_s{
 	uint64_t base;
 }StackFrame;
 
-typedef struct Process_s{
+typedef struct Thread_s{
 	StackFrame * userStack;
 	StackFrame * kernelStack;
-	char * description;
 	void * entryPoint;
+}Thread;
+
+
+typedef struct Process_s{
+
 	int pid;
 	processState state;
+	char * description;
 
-	int pipesOpened;
+	int activeThread;
+	int numberOfThreads;
+
+	Thread * thread[3];
+
 	int * pipePids;
 	int * blocked;
-	int * occupiedPosition;
 	Pipe *  pipesStruct;
-	char  *  pipes;
+	char *  pipes;
+
+	int pipesOpened;
+	
+	int * occupiedPosition;
+
 
 }Process;
+
 
 #endif

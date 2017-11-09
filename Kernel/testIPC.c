@@ -3,9 +3,14 @@
 #include <stdint.h>
 #include <lib.h>
 #include "naiveConsole.h"
-
+#include "threads.h"
 typedef struct Pipe * Pipe;
+void thread();
 
+void thread()
+{
+	putchar('d');
+}
 void processA()
 {
 	char buffer[10];
@@ -14,6 +19,7 @@ void processA()
 	Pipe  pipe2;
 	sleep(50); //wait until pipe is created
 	pipe2 = openPipe("prueba1");
+	createThread(thread);
 	while(1){
 		sleep(50);
 		r = read(pipe2, buffer, -1);
