@@ -33,9 +33,7 @@ void processA()
 
 void processB()
 {
-	Pipe  pipe = createPipe(0 , "prueba1");
-	while(1){
-		sleep(100);
-		write(pipe, "Emocion");
-	}
+	outputb(0x20, 0x20);
+	while(1);
+
 }

@@ -35,6 +35,12 @@ static void * const currentAddress = (void*)0x800000;
 void processA();
 void processB();
 
+void test1();
+void test2();
+
+void lock();
+void freeLock();
+
 
 
 typedef int (*EntryPoint)();
@@ -54,9 +60,7 @@ void * getStackBase()
 }
 
 int init(){
-	while(1) {
-		_halt();
-	}
+	while(1);
 }
 
 void * initializeKernelBinary()
@@ -107,6 +111,12 @@ void * initializeKernelBinary()
 	return getStackBase();
 }
 
+int givenAvariable();
+
+void whenTwoProcessTryToAccesItAtTheSameTime();
+
+int test; 
+
 int main()
 {	
 	
@@ -128,9 +138,14 @@ int main()
 	//Scheduler
 	//createProcess(processA);
 	createProcess(init, "init");
-	createProcess(processA, "process A");
-	createProcess(processB, "process B");
-	createProcess(currentAddress, "SHELL");
+	//createProcess(processA, "process A");
+	//createProcess(processB, "process B");
+	//createProcess(currentAddress, "SHELL");
+
+
+	test = givenAvariable();
+
+	whenTwoProcessTryToAccesItAtTheSameTime();
 
 	finishStartup();
 	
@@ -138,5 +153,35 @@ int main()
 	
 	
 	
+}
+
+void test1(){
+	lock();
+	ncPrint("*");
+	ncPrintDec(test);
+	ncPrint("*");
+	freeLock();
+}
+
+void test2(){
+	lock();
+	test--;
+	sleep(10);
+	ncPrint("+");
+	ncPrint(test);
+	ncPrint("+");
+	freeLock();
+}
+
+int givenAvariable(){
+	return 4;
+}
+
+void whenTwoProcessTryToAccesItAtTheSameTime(){
+	createProcess("test1" , test1 );
+	createProcess("test2" , test2 );
+
+
+
 }
 

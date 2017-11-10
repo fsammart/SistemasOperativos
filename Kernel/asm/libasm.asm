@@ -33,6 +33,10 @@ extern next_process
 global readCR2
 extern sys_call_kill
 
+global lock
+
+global freeLock
+
 global _yield
 global _halt
 
@@ -357,6 +361,10 @@ to_next:
 _halt:
     hlt
     ret
+    
+lock:
+	ret
+
 
 
 section .data
