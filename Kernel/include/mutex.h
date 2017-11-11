@@ -1,5 +1,9 @@
 //mutex.h
 
+#ifndef MUTEX
+
+#define MUTEX 0 
+
 #include "stdio.h"
 #include "lock.h"
 #include "scheduler.h"
@@ -8,7 +12,9 @@
 
 #define MAX_BLOCKED_QUEUE_SIZE 20
 #define MAX_MUTEX_PIDS 20
-#define MAX_MUTEXES 50
+
+#define MAX_MUTEXES 100
+
 #define FALSE 0
 #define TRUE 1
 #define MUTEX_NOT_FOUND -1
@@ -49,3 +55,5 @@ int getFreeSpotInUsingQueue(int * using , int length);
 void lockMutex(int mutex);
 void freeMutex (int mutex);
 void unblockProcess( int mutex );
+
+#endif
