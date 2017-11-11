@@ -1,11 +1,10 @@
 //IPC.h
-#ifndef PIPES
+#ifndef IPC_H
 
-#define PIPES 1 
+#define IPC_H
 
 #define PIPE_LENGTH 10
 #define MAX_PIPES 50
-#define NULL (void*)0
 #define MAX_PROCESS_PIPES 3
 #define MAX_LISTENERS 2
 
@@ -14,6 +13,7 @@
 
 #include "structs.h"
 #include "lib.h"
+#include "constants.h"
 
 Pipe *  createPipe(int pid , char * name);
 Pipe * createPipeStruct(Process * pro,char * name);

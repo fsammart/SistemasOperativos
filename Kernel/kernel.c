@@ -116,11 +116,11 @@ int givenAvariable();
 
 void whenTwoProcessTryToAccesItAtTheSameTime();
 
-int testMutex; 
+int testMutex;
 
 int main()
-{	
-	
+{
+
 	clear();
 
 	cli();
@@ -139,7 +139,7 @@ int main()
 	//Scheduler
 	//createProcess(processA);
 	createProcess(init, "init");
-	//createProcess(processA, "process A");
+	createProcess(processA, "process A");
 	//createProcess(processB, "process B");
 	createProcess(currentAddress, "SHELL");
 
@@ -150,11 +150,11 @@ int main()
 	whenTwoProcessTryToAccesItAtTheSameTime();
 
 	finishStartup();
-	
+
 	while(1);
-	
-	
-	
+
+
+
 }
 
 int value=0;
@@ -188,7 +188,7 @@ void test2(){
 	ncPrintDec(testMutex);
 	ncPrint("+");
 	freeMutex(mutex);
-	}	
+	}
 }
 
 int givenAvariable(){
@@ -202,4 +202,3 @@ void whenTwoProcessTryToAccesItAtTheSameTime(){
 
 
 }
-

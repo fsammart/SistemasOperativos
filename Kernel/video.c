@@ -8,7 +8,7 @@
 #define WIDTH 80
 #define HEIGHT 25
 
-static char video[HEIGHT][WIDTH] = {0};
+static char video[HEIGHT][WIDTH] = {{0}};
 static char attributes[HEIGHT][WIDTH];
 static int i=0; //posicion del cursor horizontal
 static int j=3;  // posicion del cursor vertical
@@ -29,9 +29,9 @@ static int stopBackWards = -1;
 // 		attributes[h/WIDTH][h%WIDTH]=(char) 0x11;
 // 	}
 // 	if(timeCount%40== 0){
-// 	attributes[h/WIDTH][h%WIDTH]=(char) DEFAULT;	
+// 	attributes[h/WIDTH][h%WIDTH]=(char) DEFAULT;
 // 	}
-	
+
 // 	timeCount++;
 
 // }
@@ -85,12 +85,12 @@ int getScreen(int f, int c){
 }
 
 void selection(int finit, int cinit, int ffin, int cfin){
- 
+
 	int i= finit*WIDTH+ cinit;
 	int fin= ffin*WIDTH+cfin;
 	copyMouse(i , fin);
 	while(validPosition(i/WIDTH,i%WIDTH) && i<=fin ){
-		
+
 		drawMouse(i/WIDTH,i%WIDTH);
 		i++;
 	}
@@ -101,7 +101,7 @@ void changeColor(int f, int c, char color){
 		char * screen = (char*)SCREEN;
 
 	*(screen + f*WIDTH*2 + c*2 + 1 )=(char)color;
-		
+
 
 }
 
@@ -109,7 +109,7 @@ void undoSelection(int finit, int cinit, int ffin, int cfin){
 	int i= finit*WIDTH+ cinit;
 	int fin= ffin*WIDTH+cfin;
 	while(validPosition(i/WIDTH,i%WIDTH) && i<=fin ){
-		
+
 		udrawMouse(i/WIDTH,i%WIDTH);
 		i++;
 	}
@@ -208,7 +208,7 @@ void backInLine(){
 		i--;
 
 	}
-}		
+}
 
 
 void printChar(int f, int c,  char a,  char color)
@@ -234,7 +234,7 @@ int validPosition(int f, int c){
 }
 
 void printMsg(int f, int c,  char*msg, char color)
-{	
+{
 	if(!validPosition(f,c)) return;
 	int i = f*WIDTH + c;
 	while(*msg)
@@ -259,7 +259,7 @@ void clear()
 {
 
 
-	
+
 	for(int f=0; f<HEIGHT; f++){
 		for(int c=0; c<WIDTH; c ++){
 			video[f][c]=' ';

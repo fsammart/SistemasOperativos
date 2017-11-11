@@ -14,11 +14,9 @@ void io_wait();
 static void * const shellAddress = (void*)0xC00000;
 static void * const currentAddress = (void*)0x800000;
 
-static int counter = 0;
-static int timerListeners =0;
 static int sleepListeners =0;
 static int auxj=0;
-static int alarmEvents[MAX_LISTENERS];
+
 
 static int sleepPIDS[MAX_LISTENERS];
 static int sleepCounter[MAX_LISTENERS];
@@ -60,26 +58,26 @@ void setIDTEntry(uint64_t offset, int entry)
 
 void loadIDT()
 {
-	
+
 	setIDTEntry((uint64_t) timerTickHandler,0x20);
-	setIDTEntry((uint64_t) master,0x23); 
-	setIDTEntry((uint64_t) master,0x24); 
-	setIDTEntry((uint64_t) master,0x25); 
-	setIDTEntry((uint64_t) master,0x26); 
-	setIDTEntry((uint64_t) master,0x27); 
-	setIDTEntry((uint64_t) slave,0x28); 
-	setIDTEntry((uint64_t) slave,0x29); 
-	setIDTEntry((uint64_t) master,0x2A); 
+	setIDTEntry((uint64_t) master,0x23);
+	setIDTEntry((uint64_t) master,0x24);
+	setIDTEntry((uint64_t) master,0x25);
+	setIDTEntry((uint64_t) master,0x26);
+	setIDTEntry((uint64_t) master,0x27);
+	setIDTEntry((uint64_t) slave,0x28);
+	setIDTEntry((uint64_t) slave,0x29);
+	setIDTEntry((uint64_t) master,0x2A);
 	setIDTEntry((uint64_t) master,0x2B);
-	setIDTEntry((uint64_t) master,0x2D); 
+	setIDTEntry((uint64_t) master,0x2D);
 	setIDTEntry((uint64_t) master,0x2E);
-	
-	setIDTEntry((uint64_t) generalProtectionHandler,0x0D); 
-	setIDTEntry((uint64_t) pageFaultHandler,0x0E); 
-	setIDTEntry((uint64_t) sys_callHandler,0x80); 
+
+	setIDTEntry((uint64_t) generalProtectionHandler,0x0D);
+	setIDTEntry((uint64_t) pageFaultHandler,0x0E);
+	setIDTEntry((uint64_t) sys_callHandler,0x80);
 	setIDTEntry((uint64_t) keyboardHandler,0x21);
-	setIDTEntry((uint64_t) mouse_handler,0x2C); 
-	
+	setIDTEntry((uint64_t) mouse_handler,0x2C);
+
 }
 
 
@@ -90,7 +88,7 @@ void enablePIC()
 
 	outputb(0x21,0xF8);
 	outputb(0xA1,0xEF);
-	
+
 }
 
 void io_wait()
@@ -109,7 +107,7 @@ void spure(){
 void timerTickHandlerC()
 {
 	char time[9];
-	getTime(time);	
+	getTime(time);
 	printMsg(2,0,time,0x20);
 
 	for(auxj=0;auxj < sleepListeners; auxj++){
@@ -135,7 +133,7 @@ void addSleep(int pid,int interval){
 	if(sleepListeners >= MAX_LISTENERS) {
 		ncPrint("_______________");
 		return;
-	}	
+	}
 
 	alarmSleep[sleepListeners] = interval;
 	sleepPIDS[sleepListeners] = pid;
@@ -151,21 +149,13 @@ void doneSleeping(int index){
 }
 
 void generalProtectionHandlerC(){
-	int i;
-	/*for(i=25; i>2;i--){
-		clearRow(i);
-	}*/
+
 	printMsg(20,0,"General Protection", 0x11);
-	//setCursor(4,0);
-	/*mapModulesLogical(shellAddress);
-	updateCR3();
-	(*(EntryPointS)currentAddress)(1);*/
+
 }
 
 void pageFaultHandlerC(){
-	//for(i=25; i>2;i--){
-	//	clearRow(i);
-	//}
+
 	uint64_t error= readCR2();
 	printMsg(10,0,"Page Fault", 0x11);
 	putchar('+');
@@ -180,12 +170,3 @@ void sleep(unsigned int time){
     _yield();
 	return;
 }
-
-
-
-
-
-
-
-
-

@@ -108,7 +108,7 @@ updateCR3:
 	mov rax, cr3
 	mov cr3, rax
 	ret
-	
+
 cpuVendor:
 	push rbp
 	mov rbp, rsp
@@ -185,19 +185,19 @@ timerTickHandler:
 	pop rbp
 
 	pushState
-	
+
 	mov rdi, rsp
 
 	call switchUserToKernel
 
 	mov rsp, rax
-	
+
 	call switchKernelToUser
 
 	mov rsp, rax
 
 	mov al, 20h
-	out 20h, al	
+	out 20h, al
 
 	popState
 
@@ -260,7 +260,7 @@ run:
 	pop rbp
 	mov [rsp], rax
 	iretq
-	
+
 moduleEnvironment:
 	cmp eax, 8
 	jne undoBackwards
@@ -284,7 +284,7 @@ kill:
 	jne finish
 	mov rdi,rdx
 	call sys_call_kill
-	jmp finish			
+	jmp finish
 finish:
 	mov rsp, rbp
 	pop rbp
@@ -309,15 +309,15 @@ test:
         mov al, 11101111b
 	out 0A1h,al
 	ret
-    
+
 mouse_handler:
 	cli
 	push rbp
 	mov rbp, rsp
 	call mouse_handlerC
 	mov al, 0x20
-		
-	
+
+
 	out 0xA0, al
 
 	out 0x20, al
@@ -368,11 +368,3 @@ _halt:
 section .data
 
 msg db "hola mundo",0
-
-
-
-
-
-
-
-

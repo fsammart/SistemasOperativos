@@ -7,12 +7,12 @@
 #include <naiveConsole.h>
 #include "process.h"
 #include "structs.h"
+#include "constants.h"
 
 #define SCHEDULER 0
 
-#define NULL ((void *)0)
 
-typedef void (*EntryPointHandler) (void);
+typedef void (*EntryPointHandler) (void*);
 
 typedef struct ProcessSlotS {
 	struct ProcessSlotS * next;
@@ -42,6 +42,8 @@ void * getCurrentEntryPoint();
 
 Process * *  getCurrentProcesses(int * a);
 
+Process * getCurrentProcess();
+
 int eqProcess(Process * a, Process * b);
 
 char * getStateFromNumber(int state);
@@ -50,7 +52,7 @@ void printProcesses();
 
 void removeProcess(int pid);
 
-void callProcess( void * entryPoint, void * entryPoint2) ;
+void callProcess( void * entryPoint, void * entryPoint2, void * args) ;
 
 void beginScheduler();
 

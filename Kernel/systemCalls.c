@@ -29,10 +29,10 @@ void sys_call_writeC(uint32_t stdout, char * msg, int length){
 				putChar(*msg);
 			}
 			msg++;
-			length--;	
+			length--;
 		}
 	}
-		
+
 }
 //lee del file descriptor que le pasen.
 //solo tiene implementado para leer de la entrada estandar
@@ -76,10 +76,10 @@ void *  sys_call_runC(int program){
 
 		case FORTUNE:
 			moduleAdress=fortuneAddress;
-			break;	
+			break;
 		case SHELL:
 			moduleAdress= shellAddress;
-			break;	
+			break;
 	}
 	mapModulesLogical(moduleAdress);
 	updateCR3();

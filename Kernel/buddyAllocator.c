@@ -1,18 +1,18 @@
 #include "buddyAllocator.h"
-
+#include "constants.h"
 
 typeBuddyArray buddyArray;
-char * baseMemory ;
+char * baseMemory;
 
-#define NULL (void *) 0 
+
 
 typeBuddyArray createHeap()
-{	
+{
 	int i;
 	int currentElementsInLevel;
 	int level;
 	int maxElementsInLevel;
-	baseMemory = 0x10000000;
+	baseMemory = (char*)0x10000000;
 	for(i = 0, level = 1, currentElementsInLevel = 0, maxElementsInLevel = 1; i< HEAPSIZE; i++, currentElementsInLevel++)
 	{
 		if(maxElementsInLevel == currentElementsInLevel){
@@ -25,21 +25,21 @@ typeBuddyArray createHeap()
 	}
 	buddyArray.heapLevel = level;
 	for (int i = 0; i < HEAPSIZE-1; i++)
-	{	
-		
+	{
+
 	}
 	return buddyArray;
 }
 
 //the first position of the array is 1
 void * getBaseMemoryWithIndex(int i, int maxElementsInLevel, int elementNumber)
-{	
+{
 	long memoryPortion = MEMORY/maxElementsInLevel;
 	return (memoryPortion*elementNumber) + baseMemory;
 }
 
 void * getNextPageRecursive(int index, int currentLevel, int level){
-	
+
 	if(buddyArray.occupied[index-1] == FULL){
 		return NULL;
 	}
@@ -67,7 +67,7 @@ void * getNextPageRecursive(int index, int currentLevel, int level){
 		}
 		return rchild;
 	}
-	
+
 	buddyArray.occupied[index-1] = PARTIALLY_FULL;
 	return lchild;
 
@@ -87,7 +87,7 @@ void * getNextPageRecursive(int index, int currentLevel, int level){
 
 
 void * allocPage(uint64_t pages)
-{	
+{
 	if(pages == 0 || pages > NUMBER_OF_PAGES)
 	{
 	return NULL;
@@ -95,9 +95,9 @@ void * allocPage(uint64_t pages)
 	int level = getLevel(pages);
 	if(level > buddyArray.heapLevel)
 	{
-		return NULL;	
+		return NULL;
 	}
-	return getNextPageRecursive(1,1,level); 
+	return getNextPageRecursive(1,1,level);
 
 }
 
@@ -128,12 +128,12 @@ int deallocPage(char * page)
 		int index = (page - baseMemory)/PAGE_SIZE;
 		buddyArray.occupied[index+(HEAPSIZE/2)] = EMPTY;
 		freeUpRecursive((index+(HEAPSIZE/2))+1);
-		ans = 0;	
+		ans = 0;
 	}
 	else{
 		ans = -1;
 	}
-	return 0;
+	return ans;
 }
 
 int isValid(void * page){
@@ -141,13 +141,13 @@ int isValid(void * page){
 }
 
 void freeUpRecursive(int index)
-{	
-	
+{
+
 	if(index == 1)
-	{	
+	{
 		// //Special case beacause Sibling is not working for index 1
 		// if(buddyArray.occupied[RCHILD(index)-1] == EMPTY && buddyArray.occupied[LCHILD(index)-1] == EMPTY)
-		// {	
+		// {
 		// 	buddyArray.occupied[index] = EMPTY;
 		// }
 		return;
@@ -161,7 +161,7 @@ void freeUpRecursive(int index)
 		buddyArray.occupied[PARENT(index)-1] = PARTIALLY_FULL;
 	}
 	else if(buddyArray.occupied[PARENT(index)-1] == PARTIALLY_FULL && buddyArray.occupied[SIBLING(index)-1] == EMPTY)
-	{	
+	{
 		buddyArray.occupied[PARENT(index)-1] = EMPTY;
 	}
 	freeUpRecursive(PARENT(index));

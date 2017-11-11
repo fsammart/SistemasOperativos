@@ -4,31 +4,33 @@
 #include <lib.h>
 #include "naiveConsole.h"
 #include "threads.h"
-typedef struct Pipe * Pipe;
+#include "stdio.h"
+
 void thread();
 
-void thread()
+void thread(void * args)
 {
+	char * dato = (char*)args;
+	for(int i = 0; i<10; i++)
+	{
+		putchar(dato[i]);
+	}
 	putchar('d');
+
 }
 void processA()
 {
 	char buffer[10];
 	int i;
-	int r;
-	Pipe  pipe2;
-	sleep(50); //wait until pipe is created
-	pipe2 = openPipe("prueba1");
-	createThread(thread);
-	while(1){
-		sleep(50);
-		r = read(pipe2, buffer, -1);
-		/*putchar('=');
-		for(i=0; i < r; i++){
-			putchar(buffer[i]);
-		}
-		putchar('=');*/
-	}	
+	char c = 'a';
+	for(i = 0; i<10; i++)
+	{
+		buffer[i] = c++;
+	}
+	createThread(thread, buffer);
+	putchar('a');
+	while(1);
+
 }
 
 void processB()

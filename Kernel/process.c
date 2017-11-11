@@ -1,16 +1,16 @@
 #include "process.h"
+#include "threads.h"
+#include "buddyAllocator.h"
 
 static int pid=0;
-
 
 
 #define MAX_PAGES_PER_PROCESS 10
 
 
+StackFrame * fillStackFrame(void * entryPoint, StackFrame * userStack, void * args){
 
-StackFrame * fillStackFrame(void * entryPoint, StackFrame * userStack){
-
-	StackFrame * frame =userStack - 2;
+	StackFrame * frame = userStack - 2;
 
 	frame->gs =		0x001;
 
@@ -38,7 +38,7 @@ StackFrame * fillStackFrame(void * entryPoint, StackFrame * userStack){
 
 	frame->rbp =	0x00D;
 
-	frame->rdx =	0x00E;
+	frame->rdx =	(uint64_t)args;
 
 	frame->rcx =	0x00F;
 
@@ -66,7 +66,7 @@ StackFrame * fillStackFrame(void * entryPoint, StackFrame * userStack){
 
 
 
-Process * getProcess(void * entryPoint , char * description){
+Process * getProcess(void * entryPoint , char * description, void * args){
 
 	Process * p =(Process *) malloc(1000);
 
@@ -74,19 +74,16 @@ Process * getProcess(void * entryPoint , char * description){
 
 	void * page2 = allocPage(2);
 
-	
 
-	Thread * t = (Thread *) malloc(1000);
+	Thread * t = (Thread *) allocPage(1);
 
-	
 
 	StackFrame * userStack=((char *)page1)+ 2*1024*4 - MAX_PROCESS_PIPES*PIPE_LENGTH -1 -MAX_PROCESS_PIPES*sizeof(Pipe) -1 -MAX_PROCESS_PIPES*MAX_LISTENERS*sizeof(int) -1 - MAX_PROCESS_PIPES*sizeof(int) -MAX_PROCESS_PIPES*sizeof(int)-10;
 
 	StackFrame * kernelStack= ((char *)page2) + 2*1024*4;
 
-	StackFrame * stack= fillStackFrame(entryPoint, userStack); 
+	StackFrame * stack= fillStackFrame(entryPoint, userStack, args);
 
-	
 
 	p->activeThread = 0;
 
@@ -94,9 +91,7 @@ Process * getProcess(void * entryPoint , char * description){
 
 
 
-
-
-	initializeThreadArray(p->thread,3);
+	initializeThreadArray(p->thread, MAX_THREADS);
 
 
 
@@ -129,9 +124,7 @@ Process * getProcess(void * entryPoint , char * description){
 	p->description = description;
 
 
-
 	initiatePipesForProcess(p->occupiedPosition);
-
 
 
 	return p;
@@ -140,66 +133,35 @@ Process * getProcess(void * entryPoint , char * description){
 
 
 
-int freeProcessPages(int pid)
-
-{
-
+int freeProcessPages(int pid){
 	Process  * p = getProcessById(pid);
-
-
-
-	deallocPage(p->thread[0]->userStack);
-
-	deallocPage(p->thread[0]->kernelStack);
-
+	deallocPage((char*)p->thread[0]->userStack);
+	deallocPage((char*)p->thread[0]->kernelStack);
 }
 
 
 
-void initiatePagesForProcess(void * pages[] , int length)
-
-{
-
+void initiatePagesForProcess(void * pages[] , int length){
 	int i;
-
 	for(i = 0 ; i < length ; i++){
-
 		pages[i] = NULL;
-
 	}
-
 }
 
 
 
-void initiatePipesForProcess(int * occupiedPosition)
-
-{
-
+void initiatePipesForProcess(int * occupiedPosition){
 	int i = 0;
-
 	for(; i < MAX_PROCESS_PIPES ; i++){
-
 		occupiedPosition[i]=0;
-
 	}
-
 }
 
 
 
-void initializeThreadArray(Thread * t[], int dim)
-
-{
-
+void initializeThreadArray(Thread * t[], int dim){
 	int i;
-
-	for(int i = 0; i < dim; i++)
-
-	{
-
+	for(i = 0; i < dim; i++){
 		t[i] = NULL;
-
-	}		
-
+	}
 }
