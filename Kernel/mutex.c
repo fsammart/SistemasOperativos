@@ -68,7 +68,7 @@ void addToUsing(int mutex , int pid)
 
 	if( index == NO_SPACE_LEFT){
 		// SHOULD BE KILLED
-		ncPrint("MUERTE");
+		ncPrint("MUERTE4");
 		return;
 	}
 
@@ -173,7 +173,7 @@ void addToBlocked( int  mutex , int pid)
 	if( index == NO_SPACE_LEFT){
 
 		//PROCESS SHOULD BE KILLED
-		ncPrint("MUERTE");
+		ncPrint("MUERTE5");
 		return;
 	}
 	m->queue[index] = pid;
@@ -205,17 +205,18 @@ void lockMutex(int mutex)
 
 	if(lock != ACQUIRED){
 
-		// MUTEX
+		lockMutex(adminMutex);
 
 		if(isQueueFull(mutex)){
 			//ERROR DEBERIAMOS MATAR EL PROCESO
-			ncPrint("JJJJJ");
 		}else{
 			
 			pid = getCurrentPid();
 			addToBlocked( mutex , pid );
 
 		}
+
+		freeMutex(adminMutex);
 
 		//MUTEX
 
@@ -224,17 +225,13 @@ void lockMutex(int mutex)
 		_yield();
 
 
-
 	}
 
 
 }
 
-void freeMutex (int mutex)
+void freeMutex(int mutex)
 {
-	ncPrint("<");
-	ncPrintDec(mutexes[mutex].mutex);
-	ncPrint(">");
 	if(!isValidMutex(mutex)){
 	 	return;
 	} 	
