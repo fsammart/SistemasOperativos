@@ -3,6 +3,7 @@
 #include <video.h>
 #include <lib.h>
 #include <moduleLoader.h>
+#include <naiveConsole.h>
 #include <scheduler.h>
 #include <systemCalls.h>
 
@@ -10,6 +11,8 @@
 #define EDITOR 2
 #define FORTUNE 3
 #define SHELL 4
+#define SYSTEM_CALL_COUNT 12
+
 static void * const dummyAddress = (void*)0xA00000;
 static void * const shellAddress = (void*)0xC00000;
 static void * const currentAddress = (void*)0x800000;
@@ -17,9 +20,15 @@ static void * const editorAddress = (void*)0xE00000;
 static void * const fortuneAddress = (void*)0x600000;
 typedef int (*EntryPoint)();
 
+typedef qword (*sys)(qword rsi, qword rdx, qword rcx, qword r8, qword r9);
+static sys sysCalls[SYSTEM_CALL_COUNT];
+
 //escribe en el file descriptor que le pasen.
 //solo tiene implementado para imprimir por salida estandar
-void sys_call_writeC(uint32_t stdout, char * msg, int length){
+qword sys_call_writeC(qword qstdout, qword qmsg, qword qlength, qword rcx, qword r8, qword r9){
+	uint32_t stdout = (uint32_t) qstdout;
+	char * msg = (char*) qmsg;
+	int length = (int) qlength;
 	if(stdout == 0){
 		while(length != 0){
 			if(*msg == '\n'){
@@ -29,15 +38,19 @@ void sys_call_writeC(uint32_t stdout, char * msg, int length){
 				putChar(*msg);
 			}
 			msg++;
-			length--;
+			length--;	
 		}
 	}
-
+	return 0;
+		
 }
 //lee del file descriptor que le pasen.
 //solo tiene implementado para leer de la entrada estandar
-uint32_t sys_call_readC(uint32_t stdin, char * buffer, int length){
+qword sys_call_readC(qword qstdin, qword qbuffer, qword qlength, qword rcx, qword r8, qword r9){
 
+	uint32_t stdin = (uint32_t) qstdin;
+	char * buffer = (char*) qbuffer;
+	int length = (int) qlength;
 	if(stdin == 0){
 		return getTerminalBuffer(buffer, length);
 	}
@@ -45,25 +58,28 @@ uint32_t sys_call_readC(uint32_t stdin, char * buffer, int length){
 	return 0;
 }
 
-void sys_call_clearC(){
+qword sys_call_clearC(qword rdi,qword rsi, qword rdx, qword rcx, qword r8, qword r9){
 	int i;
 	for(i=25; i>2;i--){
 		clearRow(i);
 	}
 	setCursor(3,0);
+	return 0;
 }
 
-void sys_call_echoC(int on){
+qword sys_call_echoC(qword qon,qword rsi, qword rdx, qword rcx, qword r8, qword r9){
+	int on = (int) qon;
 	if(on){
 		echoON();
 		return;
 	}
 	echoOF();
-	return;
+	return 0;
 
 }
 
-void *  sys_call_runC(int program){
+qword  sys_call_runC(qword qprogram, qword rsi, qword rdx, qword rcx, qword r8, qword r9){
+	int program = (int) qprogram;
 	void * moduleAdress;
 	switch(program){
 
@@ -76,13 +92,15 @@ void *  sys_call_runC(int program){
 
 		case FORTUNE:
 			moduleAdress=fortuneAddress;
-			break;
+			break;	
 		case SHELL:
 			moduleAdress= shellAddress;
-			break;
+			break;	
 	}
 	mapModulesLogical(moduleAdress);
 	updateCR3();
+	putChar(program+'0');
+	putChar('#');
 	return currentAddress;
 
 	//mapModulesLogical(shellAddress);
@@ -91,19 +109,60 @@ void *  sys_call_runC(int program){
 
 }
 
-void sys_call_printProcesses(){
+qword sys_call_printProcesses(qword rdi, qword rsi, qword rdx, qword rcx, qword r8, qword r9){
 	printProcesses();
+	return 0;
 }
 
-void sys_call_changeModuleEnvironmetC(int i, int j){
+qword sys_call_changeModuleEnvironmetC(qword qi, qword qj,qword rdx, qword rcx, qword r8, qword r9){
+	int i = (int) qi;
+	int j = (int) qj;
 	changeStartModule(i,j);
-	return;
+	return 0;
 }
 
-void sys_call_undoBackwardsC(int from){
+qword sys_call_undoBackwardsC(qword qfrom, qword rsi,qword rdx, qword rcx, qword r8, qword r9){
+	int from = (int) qfrom;
 	changeStopBackwards(from);
+	return 0;
 }
 
-void sys_call_kill(int pid){
+qword sys_call_kill(qword qpid, qword rsi,qword rdx, qword rcx, qword r8, qword r9){
+	int pid = (int) qpid;
 	removeProcess(pid);
+	return 0;
 }
+
+
+
+
+void setUpSystemCalls(){
+
+	sysCalls[4] = &sys_call_writeC;
+    sysCalls[3] = &sys_call_readC;
+    sysCalls[5] = &sys_call_clearC;
+    sysCalls[6] = &sys_call_echoC;
+    sysCalls[7] = &sys_call_runC;
+    sysCalls[10] = &sys_call_printProcesses;
+    sysCalls[8] = &sys_call_changeModuleEnvironmetC;
+    sysCalls[9] = &sys_call_undoBackwardsC;
+    sysCalls[11] = &sys_call_kill;
+}
+
+
+qword syscallHandler(qword rdi,qword rsi, qword rdx, qword rcx, qword r8, qword r9){
+
+    if(rdi < 0 || rdi >= SYSTEM_CALL_COUNT) {
+        return;
+    }
+    return sysCalls[rdi](rsi,rdx,rcx,r8,r9);
+}
+
+
+
+
+
+
+
+
+

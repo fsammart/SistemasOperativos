@@ -12,6 +12,7 @@
 #include "IPC.h"
 #include "buddyAllocator.h"
 #include "mutex.h"
+#include "systemCalls.h"
 
 extern uint8_t text;
 extern uint8_t rodata;
@@ -124,12 +125,14 @@ int main()
 	clear();
 
 	cli();
+	setUpSystemCalls();
 	terminalInitializeC();
 	loadIDT();
 	mouse_init();
 	enablePIC();
 
 	printMsg(0,0,"Arquitectura de computadoras",0x0F);
+	ncPrint("H");
 	printMsg(1,0,"La hora local es:",0x0F);
 	mapModulesLogical((void*)0xC00000);
 	updateCR3();

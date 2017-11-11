@@ -45,19 +45,19 @@ void man(char * buffer){
 
 void run(char * c){
 	if(!strcmp("dummy", c)){
-		sys_call(7,0,1);
+		sys_call(7,1,0);
 	}
 	else if(!strcmp("editor",c)){
-		sys_call(7,0,2);
+		sys_call(7,2,0);
 	}
 	else if(!strcmp("fortune",c)){
-		sys_call(7,0,3);
+		sys_call(7,3,0);
 	}
 	return;
 }
 
 void echoShellON(){
-	sys_call(6,0,1);
+	sys_call(6,1,0);
 }
 void echoShellOFF(){
 	sys_call(6,0,0);
