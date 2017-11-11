@@ -44,7 +44,7 @@ void initializeMutexes();
 int getIndex(char * mutexName);
 int getMutex(char * mutexName);
 void addToUsing(int mutex , int pid);
-static int createMutex(char * mutexName);
+int createMutex(char * mutexName);
 int getFreeSpot();
 void cleanMutex(int index);
 void clearArray(int * array , int length , int value);
