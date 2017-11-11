@@ -32,7 +32,7 @@ typedef struct {
     int mutex;
     int cardinalBlocked;
     int cardinalUsing;
-    int pidCreator
+    int pidCreator;
 }Mutex;
 
 
