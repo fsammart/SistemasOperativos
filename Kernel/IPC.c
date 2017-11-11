@@ -1,6 +1,7 @@
 #include "IPC.h"
 
 #include "naiveConsole.h"
+#include "stdio.h"
 
  char *  pipeNames[MAX_PIPES];
  Pipe *  pipes[MAX_PIPES];
@@ -31,7 +32,7 @@ Pipe *  openPipe(char * name)
 
 	pipes[i]->pipePids[pipes[i]->connected]=getCurrentPid();
 	pipes[i]->connected++;
-	
+
 	return pipes[i];
 
 }
@@ -74,12 +75,10 @@ void unlockProcesses(char * name){
 		}
 		i++;
 	}
-	return NULL;
 }
 
 char * next( char * aux, Pipe * pipe)
 {
-	int end= pipe->end;
 	aux++;
 	if(aux == pipe->pipe + PIPE_LENGTH ){
 		aux=pipe->pipe;
@@ -131,7 +130,7 @@ void closePipe(Pipe * pipe){
 	if(i == PIPE_NOT_FOUND) return;
 	Process * pro = getProcessById(pipe->creator);
 	if(pro->pid == currentPid){
-		pipes[i] == NULL;
+		pipes[i] = NULL;
 		freeSpace(pipes[i]->name, pro);
 
 	}
@@ -160,14 +159,14 @@ Pipe *  createPipe(int pid , char * name)
 	}
 	Process * p ;
 	Pipe * pipe;
-	
+
 	if(name==NULL) return NULL;
 	p = getProcessById(pid);
 
 	if(p==NULL){
 		return NULL;
 
-	}	
+	}
 
 	pipe= createPipeStruct( p, name);
 

@@ -3,22 +3,19 @@
 #include "scheduler.h"
 #include "threads.h"
 #include "buddyAllocator.h"
+#include "stdioASM.h"
 #define NULL (void*)0
 
 
-int createThread(void * entryPoint, void * args)
+int createThread(void * entryPoint, void * args, Process * p)
 {
-
-  Thread * t = (Thread*)allocPage(1);
+  Thread * t = (Thread*) allocPage(1);
   void * page1 = allocPage(2);
   void * page2 = allocPage(2);
 
-
-  StackFrame * userStack=((char *)page1)+ 2*1024*4 - MAX_PIPES*PIPE_LENGTH -1 -10*sizeof(Pipe) -1 -10*sizeof(int) -1;
-	StackFrame * kernelStack= ((char *)page2) + 2*1024*4;
+  StackFrame * userStack=(StackFrame*)(((char *)page1)+ 2*1024*4 - MAX_PIPES*PIPE_LENGTH -1 -10*sizeof(Pipe) -1 -10*sizeof(int) -1);
+	StackFrame * kernelStack= (StackFrame*)(((char *)page2) + 2*1024*4);
   StackFrame * stack= fillStackFrame(entryPoint, userStack, args);
-
-  Process * p = getCurrentProcess();
 
   int index = findNextSpot(p->thread, 3);
 
@@ -75,4 +72,10 @@ void freeThreadPages(Thread * t)
   deallocPage((char*)t->userStack);
   deallocPage((char*)t->kernelStack);
   deallocPage((char*)t);
+}
+
+void thread_create(void * entryPoint, void * args)
+{
+    Process * p = getCurrentProcess();
+    createThread(entryPoint, args, p);
 }
