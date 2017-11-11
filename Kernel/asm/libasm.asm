@@ -23,6 +23,7 @@ extern getCurrentEntryPoint
 extern print
 extern next_process
 global readCR2
+extern printrsi
 
 EXTERN syscallHandler
 
@@ -221,9 +222,19 @@ generalProtectionHandler:
 sys_callHandler:
 	push rbp
 	mov rbp, rsp
+	cmp rdi,7
+	je sysCallRun
 	call syscallHandler
 	mov rsp, rbp
 	pop rbp
+	iretq
+
+sysCallRun:
+	mov rdi,7
+	call syscallHandler
+	mov rsp, rbp
+	pop rbp
+	mov [rsp], rax
 	iretq
 
 

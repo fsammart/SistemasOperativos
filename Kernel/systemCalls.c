@@ -71,7 +71,7 @@ qword sys_call_echoC(qword qon,qword rsi, qword rdx, qword rcx, qword r8, qword 
 	int on = (int) qon;
 	if(on){
 		echoON();
-		return;
+		return 0;
 	}
 	echoOF();
 	return 0;
@@ -99,8 +99,6 @@ qword  sys_call_runC(qword qprogram, qword rsi, qword rdx, qword rcx, qword r8, 
 	}
 	mapModulesLogical(moduleAdress);
 	updateCR3();
-	putChar(program+'0');
-	putChar('#');
 	return currentAddress;
 
 	//mapModulesLogical(shellAddress);
@@ -153,12 +151,15 @@ void setUpSystemCalls(){
 qword syscallHandler(qword rdi,qword rsi, qword rdx, qword rcx, qword r8, qword r9){
 
     if(rdi < 0 || rdi >= SYSTEM_CALL_COUNT) {
-        return;
+        return 0;
     }
     return sysCalls[rdi](rsi,rdx,rcx,r8,r9);
 }
 
-
+void printrsi(qword rsi){
+	ncPrintHex(rsi);
+	while(1);
+}
 
 
 
