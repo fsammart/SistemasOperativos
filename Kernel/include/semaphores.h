@@ -16,11 +16,10 @@ typedef struct {
 	int used;
     char * name;
     int queue[MAX_BLOCKED_QUEUE_SIZE];
-    int usingPids[MAX_MUTEX_PIDS];
     int semaphore;
     int cardinalBlocked;
-    int cardinalUsing;
    	int mutex;
+   	int pidCreator;
 }Semaphore;
 
 
@@ -44,8 +43,6 @@ int createSemaphore(char * semName , int start);
 
 int getFreePositionSemaphores();
 
-void addSemToUsing(int sem , int pid);
-
 void addToBlockedQueueSemaphore( int  sem , int pid);
 
 void unblockProcessSemaphore( int sem);
@@ -59,5 +56,7 @@ void signal(int semaphore);
 int semOpen(char * name);
 
 int semCreate(char * name , int start);
+
+void semClose(int index); 
 
 #endif

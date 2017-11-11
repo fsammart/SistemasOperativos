@@ -22,11 +22,9 @@ void cleanSemaphore(int i)
 
 	sem->used = FALSE;
 	sem->semaphore = 0;
-	sem->cardinalUsing = 0;
 	sem->cardinalBlocked = 0;
 
 	clearArray(sem->queue , MAX_BLOCKED_QUEUE_SIZE , NO_BLOCKED_QUEUE_VALUE);
-	clearArray(sem->usingPids , MAX_SEMAPHORE_PIDS , NO_PID_VALUE);
 }
 
 int isValidSemaphore(int index)
@@ -86,12 +84,23 @@ int semOpen(char * name)
 		return ERROR;
 	}
 
-	pid = getCurrentPid();
-
-	addSemToUsing(index , pid);
-
 	return index;
 
+
+}
+
+void semClose(int index)
+{
+	int pid; 
+	int pidIndex;
+
+	if(!isValidSemaphore(index)) return;
+
+	pid = getCurrentPid();
+
+	if(pid == semaphores[index].pidCreator ){
+		semaphores[index].used = FALSE;
+	}
 
 }
 
@@ -118,6 +127,8 @@ int semCreate(char * name , int start)
 
 int createSemaphore(char * semName , int start)
 {
+	int pid = getCurrentPid();
+
 	int index = getFreePositionSemaphores();
 
 	if(index == NO_SPACE_LEFT) return ERROR;
@@ -130,7 +141,7 @@ int createSemaphore(char * semName , int start)
 
 	semaphores[index].semaphore = start;
 
-	semaphores[index].cardinalUsing = 1;
+	semaphores[index].pidCreator = pid ;
 
 	return index;
 }
@@ -146,24 +157,6 @@ int getFreePositionSemaphores()
 	}
 
 	return NO_SPACE_LEFT;
-
-}
-
-void addSemToUsing(int sem , int pid)
-{
-	Semaphore * s = &semaphores[sem];
-
-	int index = getFreeSpotInUsingQueue(s->usingPids , MAX_SEMAPHORE_PIDS);
-
-	if( index == NO_SPACE_LEFT){
-		// SHOULD BE KILLED
-		ncPrint("MUERTE1");
-		return;
-	}
-
-	s->usingPids[index] = pid;
-
-
 
 }
 

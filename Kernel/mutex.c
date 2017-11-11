@@ -48,11 +48,6 @@ int getMutex(char * mutexName)
 
 		index = createMutex(mutexName);
 
-	}else{
-		pid = getCurrentPid();
-
-		addToUsing(index , pid);
-
 	}
 
 	freeMutex(adminMutex);
@@ -60,26 +55,10 @@ int getMutex(char * mutexName)
 	return index;
 }
 
-void addToUsing(int mutex , int pid)
-{
-	Mutex * m = &mutexes[mutex];
-
-	int index = getFreeSpotInUsingQueue(m->usingPids , MAX_MUTEX_PIDS);
-
-	if( index == NO_SPACE_LEFT){
-		// SHOULD BE KILLED
-		ncPrint("MUERTE4");
-		return;
-	}
-
-	m->usingPids[index] = pid;
-
-
-
-}
-
 static int createMutex(char * mutexName)
 {
+	int pid= getCurrentPid();
+
 	int index = getFreeSpot();
 
 	if(index == NO_SPACE_LEFT) return ERROR;
@@ -88,7 +67,7 @@ static int createMutex(char * mutexName)
 
 	mutexes[index].name = mutexName;
 
-	mutexes[index].cardinalUsing = 1;
+	mutexes[index].pidCreator = pid;
 
 	return index;
 }
@@ -116,11 +95,9 @@ void cleanMutex(int index)
 	m->used = FALSE;
 	m->name = NULL;
 	m->cardinalBlocked = 0;
-	m->cardinalUsing = 0;
 	m->mutex = 0 ; 
 
 	clearArray(m->queue , MAX_BLOCKED_QUEUE_SIZE , NO_BLOCKED_QUEUE_VALUE);
-	clearArray(m->usingPids , MAX_MUTEX_PIDS , NO_PID_VALUE);
 
 }
 
@@ -258,6 +235,22 @@ void unblockProcess( int mutex )
 			m->queue[i] = NO_BLOCKED_QUEUE_VALUE;
 			return;
 		}
+	}
+
+}
+
+
+void closeMutex(int index)
+{
+	int pid; 
+	int pidIndex;
+
+	if(!isValidMutex(index)) return;
+
+	pid = getCurrentPid();
+
+	if(pid == mutexes[index].pidCreator ){
+		mutexes[index].used = FALSE;
 	}
 
 }
