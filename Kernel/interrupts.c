@@ -132,7 +132,10 @@ void deleteSleep(int index){
 }
 
 void addSleep(int pid,int interval){
-	if(sleepListeners >= MAX_LISTENERS) return;
+	if(sleepListeners >= MAX_LISTENERS) {
+		ncPrint("_______________");
+		return;
+	}	
 
 	alarmSleep[sleepListeners] = interval;
 	sleepPIDS[sleepListeners] = pid;

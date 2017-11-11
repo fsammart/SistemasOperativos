@@ -209,6 +209,7 @@ void lockMutex(int mutex)
 
 		if(isQueueFull(mutex)){
 			//ERROR DEBERIAMOS MATAR EL PROCESO
+			ncPrint("JJJJJ");
 		}else{
 			
 			pid = getCurrentPid();
@@ -231,12 +232,16 @@ void lockMutex(int mutex)
 
 void freeMutex (int mutex)
 {
+	ncPrint("<");
+	ncPrintDec(mutexes[mutex].mutex);
+	ncPrint(">");
 	if(!isValidMutex(mutex)){
 	 	return;
 	} 	
 
 	if(mutexes[mutex].cardinalBlocked > 0 ){
 			unblockProcess(mutex);
+			mutexes[mutex].cardinalBlocked--;
 	}else{
 		mutexes[mutex].mutex=0;
 	}
@@ -252,9 +257,9 @@ void unblockProcess( int mutex )
 
 	for( i = 0 ; i < MAX_BLOCKED_QUEUE_SIZE ; i++){
 		if(m->queue[i] != NO_BLOCKED_QUEUE_VALUE){
-		}
-		if(m->queue[i] != NO_BLOCKED_QUEUE_VALUE){
 			changeProcessState( m->queue[i] , READY );
+			m->queue[i] = NO_BLOCKED_QUEUE_VALUE;
+			return;
 		}
 	}
 
