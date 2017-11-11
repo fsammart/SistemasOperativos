@@ -55,7 +55,7 @@ int getMutex(char * mutexName)
 	return index;
 }
 
-static int createMutex(char * mutexName)
+int createMutex(char * mutexName)
 {
 	int pid= getCurrentPid();
 
