@@ -6,7 +6,7 @@
 #include "naiveConsole.h"
 //Constants of the System
 #define PAGE_SIZE ((1024)*4)
-#define MEMORY (PAGE_SIZE*16)
+#define MEMORY (PAGE_SIZE*1024)
 #define NUMBER_OF_PAGES (MEMORY/PAGE_SIZE)
 #define HEAPSIZE ((NUMBER_OF_PAGES*2)-1) //this size is the number of elements in the array
 /* Moving and marking the Heap */

@@ -126,7 +126,6 @@ int deallocPage(char * page)
 	int ans;
 	if(isValid(page)){
 		int index = (page - baseMemory)/PAGE_SIZE;
-		ncPrintDec(index);
 		buddyArray.occupied[index+(HEAPSIZE/2)] = EMPTY;
 		freeUpRecursive((index+(HEAPSIZE/2))+1);
 		ans = 0;	

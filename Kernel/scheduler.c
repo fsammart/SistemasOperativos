@@ -119,18 +119,7 @@ StackFrame * switchKernelToUser(){
 	schedule();
 	int index = nextThread();
 
-	Process * p = getCurrentProcess();
-	if(p->pid == 1 )
-	{
-		ncPrint("Hola");
-		ncPrintDec(index);
-		ncPrintHex(p->thread[index]->userStack);
-		ncPrint('&&&');
-
-	}
-
-
-		
+	Process * p = getCurrentProcess();		
 	
 	current->process->activeThread = index;
 	return current->process->thread[index]->userStack;

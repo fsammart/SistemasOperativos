@@ -11,6 +11,7 @@
 #include <scheduler.h>
 #include "IPC.h"
 #include "buddyAllocator.h"
+#include "mutex.h"
 
 extern uint8_t text;
 extern uint8_t rodata;
@@ -115,7 +116,7 @@ int givenAvariable();
 
 void whenTwoProcessTryToAccesItAtTheSameTime();
 
-int test; 
+int testMutex; 
 
 int main()
 {	
@@ -140,10 +141,11 @@ int main()
 	createProcess(init, "init");
 	//createProcess(processA, "process A");
 	//createProcess(processB, "process B");
-	//createProcess(currentAddress, "SHELL");
+	createProcess(currentAddress, "SHELL");
 
+	initializeMutexes();
 
-	test = givenAvariable();
+	testMutex = givenAvariable();
 
 	whenTwoProcessTryToAccesItAtTheSameTime();
 
@@ -155,31 +157,47 @@ int main()
 	
 }
 
+int value=0;
+
+
 void test1(){
-	lock();
+	sleep(10);
+
+	int mutex = getMutex("hola");
+	while(1){
+
+	lockMutex(mutex);
 	ncPrint("*");
-	ncPrintDec(test);
+	ncPrintDec(testMutex);
 	ncPrint("*");
-	freeLock();
+	freeMutex(mutex);
+	}
 }
 
 void test2(){
-	lock();
-	test--;
-	sleep(10);
+
+	int mutex = getMutex("hola");
+	while(1){
+
+	lockMutex(mutex);
+
+
+	if(testMutex>0)testMutex--;
+	sleep(100);
 	ncPrint("+");
-	ncPrint(test);
+	ncPrintDec(testMutex);
 	ncPrint("+");
-	freeLock();
+	freeMutex(mutex);
+	}	
 }
 
 int givenAvariable(){
-	return 4;
+	return 100;
 }
 
 void whenTwoProcessTryToAccesItAtTheSameTime(){
-	createProcess("test1" , test1 );
-	createProcess("test2" , test2 );
+	createProcess( test1 ,"test1"  );
+	createProcess( test2 , "test2" );
 
 
 

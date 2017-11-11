@@ -33,9 +33,11 @@ extern next_process
 global readCR2
 extern sys_call_kill
 
-global lock
+global lockMutex
 
-global freeLock
+global testAndSet
+
+global freeMutex
 
 global _yield
 global _halt
@@ -100,6 +102,7 @@ finishStartup:
 readCR2:
 	mov rax,cr2
 	ret
+
 updateCR3:
 
 	mov rax, cr3
@@ -361,11 +364,6 @@ to_next:
 _halt:
     hlt
     ret
-    
-lock:
-	ret
-
-
 
 section .data
 
