@@ -18,6 +18,7 @@ typedef struct Pipe_s {
 	int connected;
 	char * pipe;
 	int readFlag;
+	int mutex;
 }Pipe;
 
 typedef struct StackFrame_s{

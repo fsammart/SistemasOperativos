@@ -14,21 +14,38 @@
 #include "structs.h"
 #include "lib.h"
 #include "constants.h"
+#include "mutex.h"
 
-Pipe *  createPipe(int pid , char * name);
 Pipe * createPipeStruct(Process * pro,char * name);
+
 void assignPipe(Pipe * pipe, Process * p);
-int write(Pipe * p , char * message);
-int read ( Pipe * p , char * result, int bytes);
+
 char * next( char * aux, Pipe * pipe);
-Pipe *  openPipe(char * name);
+
 Process *  getProcessById(int pid);
+
 void unlockProcesses(char * name);
+
 void changeProcessState(int pid, processState state);
+
 int getCurrentPid();
+
 int getIndexForPipeStructure(Process * pro);
+
 void freeSpace(char * name , Process * pro);
-void closePipe(Pipe * pipe);
+
 int getPipeNameIndex(char * name);
+
+//API-FOR-USERS
+
+int write(Pipe * p , char * message);
+
+int read ( Pipe * p , char * result, int bytes);
+
+void closePipe(Pipe * pipe);
+
+Pipe *  createPipe( char * name);
+
+Pipe *  openPipe(char * name);
 
 #endif
