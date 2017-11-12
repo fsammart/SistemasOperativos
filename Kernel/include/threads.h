@@ -1,7 +1,7 @@
 #ifndef THREADS_H
 #define THREADS_H
 
-#define MAX_THREADS 3
+#define MAX_THREADS 10
 #include "structs.h"
 #include "constants.h"
 
