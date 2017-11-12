@@ -1,11 +1,25 @@
 #include "IPC.h"
-
 #include "naiveConsole.h"
 #include "stdio.h"
 
  char *  pipeNames[MAX_PIPES];
  Pipe *  pipes[MAX_PIPES];
  int lastPipeName=0;
+ int ipcAdminMutex; 
+
+
+void initializePipes()
+{
+	int i ; 
+
+	for(i = 0 ; i < MAX_PIPES ; i++){
+		pipeNames[i] = "/n";
+		pipes[i] = NULL;
+	}
+
+	ipcAdminMutex = getMutex("ipcAdminMutex");
+
+}
 
 int getPipeNameIndex(char * name){
 
@@ -26,6 +40,8 @@ Pipe *  openPipe(char * name)
 
 	int i=0;
 
+	lockMutex(ipcAdminMutex);
+
 	i = getPipeNameIndex(name);
 
 	if(i == PIPE_NOT_FOUND) return NULL;
@@ -33,31 +49,44 @@ Pipe *  openPipe(char * name)
 	pipes[i]->pipePids[pipes[i]->connected]=getCurrentPid();
 	pipes[i]->connected++;
 
+	freeMutex(ipcAdminMutex);
+
 	return pipes[i];
 
 }
 
 int write(Pipe * p , char * message)
 {
-	if(p->position == p->end && p->readFlag == 1){
-		changeProcessState(getCurrentPid(), BLOCKED);
-		return 0;
-	}
 	char * aux= p->pipe +p->end;
 	char * current= message;
 	int bytes = 0;
+
+	lockMutex(p->mutex);
+
+	if(p->position == p->end && p->readFlag == 1){
+		changeProcessState(getCurrentPid(), BLOCKED);
+
+		freeMutex(p->mutex);
+
+		return 0;
+	}
+
 	while(*current && (((p->end + bytes)%PIPE_LENGTH != p->position) || bytes==0)  ){
 			*aux = *current;
 			aux=next(aux,p);
 			current++;
 			bytes ++ ;
 	}
+
 	p->end= (int)((p->end + bytes ) % PIPE_LENGTH);
 
 	if(p->end==p->position){
 		p->readFlag=1;
 	}
 	unlockProcesses(p->name);
+
+	freeMutex(p->mutex);
+
 	return bytes;
 }
 
@@ -89,19 +118,26 @@ char * next( char * aux, Pipe * pipe)
 int read ( Pipe * p , char * result, int bytes)
 {
 	int currentPid;
+	char * aux = p->pipe + p->position;
+	int i=0;
+
+	lockMutex(p->mutex);
+
 	if(p->position == p->end && p->readFlag == 0){
 		currentPid = getCurrentPid();
 		changeProcessState(currentPid, BLOCKED);
 		p->blocked[p->cardinalBlocked] = currentPid;
 		p->cardinalBlocked ++ ;
+
+		freeMutex(p->mutex);
+
 		_yield();
 		return 0;
 	}
 	if(bytes==-1){
 		bytes=PIPE_LENGTH;
 	}
-	char * aux = p->pipe + p->position;
-	int i=0;
+
 	while(i<bytes && (((i + p->position)%PIPE_LENGTH != p->end ) || i==0)){
 		result[i]=*aux;
 		i++;
@@ -109,6 +145,8 @@ int read ( Pipe * p , char * result, int bytes)
 	}
 	p->position = ((p->position + i )%PIPE_LENGTH);
 	p->readFlag=0;
+
+	freeMutex(p->mutex);
 
 	return i ;
 }
@@ -125,13 +163,20 @@ int getMiddleSpace(int pid)
 }
 
 void closePipe(Pipe * pipe){
+	char * auxName;
+	Process * pro;
+
 	int currentPid = getCurrentPid();
 	int i = getPipeNameIndex(pipe->name);
+
 	if(i == PIPE_NOT_FOUND) return;
-	Process * pro = getProcessById(pipe->creator);
+	
+	pro = getProcessById(pipe->creator);
 	if(pro->pid == currentPid){
+
+		auxName = pipes[i]->name;
 		pipes[i] = NULL;
-		freeSpace(pipes[i]->name, pro);
+		freeSpace(auxName, pro);
 
 	}
 
@@ -147,8 +192,14 @@ void freeSpace(char * name , Process * pro)
 	pro->occupiedPosition[i] = 0;
 }
 
-Pipe *  createPipe(int pid , char * name)
+Pipe *  createPipe( char * name)
 {
+	Process * p ;
+	Pipe * pipe;
+	int pid;
+
+	lockMutex(ipcAdminMutex);
+
 	pid = getCurrentPid();
 
 	if(lastPipeName>=MAX_PIPES || pipeNames[lastPipeName] != NULL){
@@ -157,8 +208,6 @@ Pipe *  createPipe(int pid , char * name)
 			return NULL;
 		}
 	}
-	Process * p ;
-	Pipe * pipe;
 
 	if(name==NULL) return NULL;
 	p = getProcessById(pid);
@@ -170,9 +219,13 @@ Pipe *  createPipe(int pid , char * name)
 
 	pipe= createPipeStruct( p, name);
 
+	pipe->mutex = getMutex(name);
+
 	pipeNames[lastPipeName]=name;
 	pipes[lastPipeName]=pipe;
 	lastPipeName++;
+
+	freeMutex(ipcAdminMutex);
 
 	return pipe;
 

@@ -53,8 +53,16 @@ int isQueueFull(int mutex);
 int getFreeSpotInBlockedQueue(int * blocked , int length);
 void addToBlocked( int mutex , int pid);
 int getFreeSpotInUsingQueue(int * using , int length);
-void lockMutex(int mutex);
-void freeMutex (int mutex);
 void unblockProcess( int mutex );
+
+//API-FOR-USERS
+
+int getMutex(char * mutexName);
+
+void lockMutex(int mutex);
+
+void freeMutex (int mutex);
+
+void closeMutex(int index);
 
 #endif
