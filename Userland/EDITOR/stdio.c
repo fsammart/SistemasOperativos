@@ -7,14 +7,14 @@
 
 
 int putchar(char c){
-	char  msg[1];
+	char * msg = malloc(1);
 	*msg = c;
 	writeC(msg,1);
 	return 0;
 }
 
 char getchar(){
-	char  buffer[1];
+	char * buffer = malloc(1);
 	*buffer = 0;
 	while( *buffer == 0){
 		readC(buffer,1);
@@ -44,7 +44,14 @@ void putNumber(int n){
 		buffer--;
 		size--;
 	}
-	
+
+}
+
+void print(char * s){
+	while(*s!=0){
+		putchar(*s);
+		s++;
+	}
 }
 
 
@@ -72,9 +79,9 @@ void printFF(const char * format, char ** s, int * n){
 				state = LETTER;
 				format++;
 				break;
-				
+
 				}
-				
+
 			}
 			if(*format == 's'){
 				if(s != NULL){
@@ -87,9 +94,9 @@ void printFF(const char * format, char ** s, int * n){
 				state = LETTER;
 				format++;
 				break;
-				
+
 				}
-				
+
 			}
 			else {
 				putchar('%');
@@ -134,9 +141,9 @@ int scanFF(const char * format, char ** s, int * n){
 				state = LETTER;
 				format++;
 				break;
-				
+
 				}
-				
+
 			}
 			if(*format == 's'){
 				if(s != NULL){
@@ -158,28 +165,27 @@ int scanFF(const char * format, char ** s, int * n){
 						*string = c;
 						string++;
 						bufferindex++;
-					}	
+					}
 				}
 				*string = 0;
 				state = LETTER;
 				format++;
 				break;
-				
+
 				}
-				
+
 			}
 		}
 	}
 	return bufferindex == BUFFERSIZE;
 
 }
+	static char * position = (char*)0x1000000;
 
-void * malloc(int bytes){
-	static void * position = 0x700000;
-	void * aux = position;
-	position+=bytes;
-	return aux;
+void * malloc(long int bytes){
+	return (char *)sys_call(13,bytes,0);
 }
+char * getPosition(){return position;}
 
 int strcmp(char * str1, char * str2){
 	while((*str1 != 0) && (*str2 != 0)){
@@ -224,7 +230,3 @@ int strcmpN(char * str1, char * str2,int number){
 	}
 	return 1;
 }
-
-
-
-

@@ -5,6 +5,17 @@
 #define MAX_PAGES_PER_PROCESS 10
 #include "lib.h"
 
+typedef unsigned int size_t;
+typedef struct t_block * s_block;
+
+typedef struct t_block{
+	size_t size;
+ 	s_block next;
+ 	s_block prev;
+ 	char free;
+ 	char dataStart[1];
+}t_block;
+
 typedef enum processState_t {RUNNING, READY, BLOCKED, DEAD, SLEEPING} processState;
 
 typedef struct Pipe_s {
@@ -70,7 +81,7 @@ typedef struct Process_s{
 	int * blocked;
 	Pipe *  pipesStruct;
 	char *  pipes;
-
+	s_block  heap;
 	void * pages[MAX_PAGES_PER_PROCESS];
 }Process;
 

@@ -3,7 +3,7 @@
 #define LETTER  0
 #define FORMAT  1
 #define NULL 0
-#define BUFFERSIZE 2500
+#define BUFFERSIZE 100
 
 
 int putchar(char c){
@@ -44,7 +44,14 @@ void putNumber(int n){
 		buffer--;
 		size--;
 	}
-	
+
+}
+
+void print(char * s){
+	while(*s!=0){
+		putchar(*s);
+		s++;
+	}
 }
 
 
@@ -72,9 +79,9 @@ void printFF(const char * format, char ** s, int * n){
 				state = LETTER;
 				format++;
 				break;
-				
+
 				}
-				
+
 			}
 			if(*format == 's'){
 				if(s != NULL){
@@ -87,9 +94,9 @@ void printFF(const char * format, char ** s, int * n){
 				state = LETTER;
 				format++;
 				break;
-				
+
 				}
-				
+
 			}
 			else {
 				putchar('%');
@@ -110,7 +117,6 @@ int scanFF(const char * format, char ** s, int * n){
  int bufferindex;
  int state = LETTER;
  int indexS = 0;
- int indexN = 0;
  while(*format != 0){
  	switch(state){
 
@@ -129,16 +135,15 @@ int scanFF(const char * format, char ** s, int * n){
 		case FORMAT:
 			if(*format == 'd'){
 				if(n != NULL){
-					int nummber = n[indexN];
+					int nummber = *n;
 				n++;
-				indexN++;
 				putNumber(nummber);
 				state = LETTER;
 				format++;
 				break;
-				
+
 				}
-				
+
 			}
 			if(*format == 's'){
 				if(s != NULL){
@@ -160,29 +165,27 @@ int scanFF(const char * format, char ** s, int * n){
 						*string = c;
 						string++;
 						bufferindex++;
-					}	
+					}
 				}
 				*string = 0;
 				state = LETTER;
 				format++;
 				break;
-				
+
 				}
-				
+
 			}
 		}
 	}
 	return bufferindex == BUFFERSIZE;
 
 }
-
-static void * position = 0x2000000;
+	static char * position = (char*)0x1000000;
 
 void * malloc(long int bytes){
-	void * aux = position;
-	position+=bytes;
-	return aux;
+	return (char *)sys_call(13,bytes,0);
 }
+char * getPosition(){return position;}
 
 int strcmp(char * str1, char * str2){
 	while((*str1 != 0) && (*str2 != 0)){
@@ -227,7 +230,3 @@ int strcmpN(char * str1, char * str2,int number){
 	}
 	return 1;
 }
-
-
-
-

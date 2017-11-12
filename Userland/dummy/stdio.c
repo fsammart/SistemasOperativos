@@ -47,6 +47,13 @@ void putNumber(int n){
 
 }
 
+void print(char * s){
+	while(*s!=0){
+		putchar(*s);
+		s++;
+	}
+}
+
 
 void printFF(const char * format, char ** s, int * n){
  int state = LETTER;
@@ -173,13 +180,12 @@ int scanFF(const char * format, char ** s, int * n){
 	return bufferindex == BUFFERSIZE;
 
 }
+	static char * position = (char*)0x1000000;
 
-void * malloc(int bytes){
-	static void * position = (void*)0x700000;
-	void * aux = position;
-	position+=bytes;
-	return aux;
+void * malloc(long int bytes){
+	return (char *)sys_call(13,bytes,0);
 }
+char * getPosition(){return position;}
 
 int strcmp(char * str1, char * str2){
 	while((*str1 != 0) && (*str2 != 0)){

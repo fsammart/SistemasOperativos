@@ -183,10 +183,8 @@ int scanFF(const char * format, char ** s, int * n){
 }
 	static char * position = (char*)0x1000000;
 
-char * malloc(long int bytes){
-	char * aux = position;
-	position+=bytes;
-	return aux;
+void * malloc(long int bytes){
+	return (char *)sys_call(13,bytes,0);
 }
 char * getPosition(){return position;}
 

@@ -6,12 +6,13 @@
 #include <naiveConsole.h>
 #include <scheduler.h>
 #include <systemCalls.h>
+#include "malloc.h"
 
 #define DUMMY  1
 #define EDITOR 2
 #define FORTUNE 3
 #define SHELL 4
-#define SYSTEM_CALL_COUNT 12
+#define SYSTEM_CALL_COUNT 15
 
 static void * const dummyAddress = (void*)0xA00000;
 static void * const shellAddress = (void*)0xC00000;
@@ -138,8 +139,13 @@ qword sys_call_createThread(qword qentryPoint, qword qargs,qword rdx, qword rcx,
 	void * args = (void *)qargs;
 	Process * p = getCurrentProcess();
 	createThread(entryPoint, args, p);
+	return 0;
 }
 
+qword sys_call_mallock(qword qnumberOfBytes, qword rsi,qword rdx, qword rcx, qword r8, qword r9){
+	size_t numberOfBytes = (size_t) qnumberOfBytes;
+	return mallock(numberOfBytes);
+}
 
 
 void setUpSystemCalls(){
@@ -153,7 +159,8 @@ void setUpSystemCalls(){
     sysCalls[8] = &sys_call_changeModuleEnvironmetC;
     sysCalls[9] = &sys_call_undoBackwardsC;
     sysCalls[11] = &sys_call_kill;
-    sysCalls[12] = &sys_call_createThread
+    sysCalls[12] = &sys_call_createThread;
+    sysCalls[13] = &sys_call_mallock;
 }
 
 

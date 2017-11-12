@@ -54,11 +54,10 @@ Process * getProcess(void * entryPoint , char * description, void * args){
 	p->pid = pid++;
 	p->state = READY;
 	p->description = description;
-
+	p->heap = (s_block)allocPage(1);
 	initializePipeFields(p , infoPage);
 
 	initiatePipesForProcess(p->occupiedPosition);
-
 	return p;
 
 }
@@ -79,6 +78,7 @@ int freeProcessPages(int pid)
 	deallocPage((char*)p);
 	deallocPage((char*)p->thread[0]->userStack);
 	deallocPage((char*)p->thread[0]->kernelStack);
+	deallocPage((char*)p->heap->dataStart);
 	return 0;
 }
 
