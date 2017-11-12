@@ -1,4 +1,5 @@
-#include "stdioASM.h"
+#include "stdio.h"
+
 
 int main(){
 

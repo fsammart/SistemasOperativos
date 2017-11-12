@@ -44,7 +44,7 @@ void putNumber(int n){
 		buffer--;
 		size--;
 	}
-	
+
 }
 
 
@@ -72,9 +72,9 @@ void printFF(const char * format, char ** s, int * n){
 				state = LETTER;
 				format++;
 				break;
-				
+
 				}
-				
+
 			}
 			if(*format == 's'){
 				if(s != NULL){
@@ -87,9 +87,9 @@ void printFF(const char * format, char ** s, int * n){
 				state = LETTER;
 				format++;
 				break;
-				
+
 				}
-				
+
 			}
 			else {
 				putchar('%');
@@ -134,9 +134,9 @@ int scanFF(const char * format, char ** s, int * n){
 				state = LETTER;
 				format++;
 				break;
-				
+
 				}
-				
+
 			}
 			if(*format == 's'){
 				if(s != NULL){
@@ -158,15 +158,15 @@ int scanFF(const char * format, char ** s, int * n){
 						*string = c;
 						string++;
 						bufferindex++;
-					}	
+					}
 				}
 				*string = 0;
 				state = LETTER;
 				format++;
 				break;
-				
+
 				}
-				
+
 			}
 		}
 	}
@@ -175,7 +175,7 @@ int scanFF(const char * format, char ** s, int * n){
 }
 
 void * malloc(int bytes){
-	static void * position = 0x700000;
+	static void * position = (void*)0x700000;
 	void * aux = position;
 	position+=bytes;
 	return aux;
@@ -224,7 +224,3 @@ int strcmpN(char * str1, char * str2,int number){
 	}
 	return 1;
 }
-
-
-
-

@@ -171,6 +171,7 @@ void test1(){
 	ncPrintDec(testMutex);
 	ncPrint("*");
 	freeMutex(mutex);
+
 	}
 }
 
@@ -183,10 +184,15 @@ void test2(){
 
 
 	if(testMutex>0)testMutex--;
-	sleep(100);
+	sleep(50);
 	ncPrint("+");
 	ncPrintDec(testMutex);
 	ncPrint("+");
+
+	if( testMutex == 97 ){
+		closeMutex(mutex);
+	}
+
 	freeMutex(mutex);
 	}
 }

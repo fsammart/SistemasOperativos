@@ -107,3 +107,9 @@ void sys_call_undoBackwardsC(int from){
 void sys_call_kill(int pid){
 	removeProcess(pid);
 }
+
+void sys_call_createThread(void * entryPoint, void * args)
+{
+	Process * p = getCurrentProcess();
+	createThread(entryPoint, args, p);
+}

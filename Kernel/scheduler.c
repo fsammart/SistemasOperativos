@@ -180,8 +180,8 @@ void printProcesses(){
 		state=getStateFromNumber(s[i]->state);
 		print(state);
 		print("  UserStack:");
-		stack = s[i]->thread[0]->userStack;
-		ncPrintHex(stack);
+		stack = (char*)s[i]->thread[0]->userStack;
+		ncPrintHex((uint64_t)stack);
 
 		putchar('\n');
 	}
