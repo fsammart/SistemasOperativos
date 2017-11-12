@@ -9,12 +9,12 @@
 
 int createThread(void * entryPoint, void * args, Process * p)
 {
-  Thread * t = (Thread*) allocPage(1);
+  Thread * t = (Thread*) allocPage(NUMBER_OF_PAGES_TO_ALLOC(sizeof(Thread)));
   void * page1 = allocPage(2);
   void * page2 = allocPage(2);
 
-  StackFrame * userStack=(StackFrame *)((char*)page1 + 2 * PAGE_SIZE)  ; 
-	StackFrame * kernelStack= (StackFrame *)((char*)page1 + 2 * PAGE_SIZE) ; 
+  StackFrame * userStack=(StackFrame *)((char*)page1 + 2 * PAGE_SIZE)  ;
+	StackFrame * kernelStack= (StackFrame *)((char*)page1 + 2 * PAGE_SIZE) ;
   StackFrame * stack= fillStackFrame(entryPoint, userStack, args);
 
   int index = findNextSpot(p->thread, 3);

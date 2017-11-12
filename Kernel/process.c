@@ -39,8 +39,8 @@ StackFrame * fillStackFrame(void * entryPoint, StackFrame * userStack, void * ar
 
 Process * getProcess(void * entryPoint , char * description, void * args){
 
-	char * infoPage = allocPage(1);
-
+	char * infoPage = allocPage(NUMBER_OF_PAGES_TO_ALLOC(sizeof(Process)));
+	
 	Process * p =(Process *) infoPage;
 
 	infoPage = infoPage + sizeof(Process);

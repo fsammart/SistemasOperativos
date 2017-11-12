@@ -1,11 +1,12 @@
 #include "scheduler.h"
 #include "threads.h"
+#include "buddyAllocator.h"
 
 static int cardinal_processes=0;
 static ProcessSlot * current=NULL;
 
 ProcessSlot * newProcessSlot(Process * process){
-	ProcessSlot * newProcessSlot = (ProcessSlot *) malloc(1000);
+	ProcessSlot * newProcessSlot = (ProcessSlot *) allocPage(NUMBER_OF_PAGES_TO_ALLOC(sizeof(ProcessSlot)));
 	newProcessSlot->process=process;
 	return newProcessSlot;
 }
@@ -128,7 +129,7 @@ void * getCurrentEntryPoint(){
 }
 
 Process * *  getCurrentProcesses(int * a){
-	Process ** processes= (Process * *) malloc(cardinal_processes*sizeof(Process *));
+	Process ** processes= (Process * *) allocPage(NUMBER_OF_PAGES_TO_ALLOC(cardinal_processes*sizeof(Process *)));
 	ProcessSlot  * aux= current;
 	int i=0;
 	processes[i]=aux->process;

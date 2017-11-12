@@ -39,11 +39,11 @@ qword sys_call_writeC(qword qstdout, qword qmsg, qword qlength, qword rcx, qword
 				putChar(*msg);
 			}
 			msg++;
-			length--;	
+			length--;
 		}
 	}
 	return 0;
-		
+
 }
 //lee del file descriptor que le pasen.
 //solo tiene implementado para leer de la entrada estandar
@@ -93,10 +93,10 @@ qword  sys_call_runC(qword qprogram, qword rsi, qword rdx, qword rcx, qword r8, 
 
 		case FORTUNE:
 			moduleAdress=fortuneAddress;
-			break;	
+			break;
 		case SHELL:
 			moduleAdress= shellAddress;
-			break;	
+			break;
 	}
 	mapModulesLogical(moduleAdress);
 	updateCR3();
@@ -134,7 +134,7 @@ qword sys_call_kill(qword qpid, qword rsi,qword rdx, qword rcx, qword r8, qword 
 
 
 qword sys_call_createThread(qword qentryPoint, qword qargs,qword rdx, qword rcx, qword r8, qword r9)
-{	
+{
 	void * entryPoint = (void *)qentryPoint;
 	void * args = (void *)qargs;
 	Process * p = getCurrentProcess();
@@ -166,6 +166,7 @@ void setUpSystemCalls(){
 
 qword syscallHandler(qword rdi,qword rsi, qword rdx, qword rcx, qword r8, qword r9){
 
+
     if(rdi < 0 || rdi >= SYSTEM_CALL_COUNT) {
         return 0;
     }
@@ -176,6 +177,3 @@ void printrsi(qword rsi){
 	ncPrintHex(rsi);
 	while(1);
 }
-
-
-

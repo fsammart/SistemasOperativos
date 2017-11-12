@@ -27,7 +27,7 @@ void processA()
 	{
 		buffer[i] = c++;
 	}
-	thread_create(thread, buffer);
+	sys_call(12,thread, buffer);
 	putchar('a');
 	while(1);
 

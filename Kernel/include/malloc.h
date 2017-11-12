@@ -8,8 +8,6 @@
 #define NULL (void*)0
 #define BLOCK_SIZE 1024*4
 #define BLOCK_STRUCT_SIZE sizeof(t_block)
-#define NUMBER_OF_PAGES_TO_ALLOC(size) (((size)%(PAGE_SIZE))?((size)/(PAGE_SIZE)+1):((size)/(PAGE_SIZE)))
-
 
 #define align4(x) (((((x) -1) >>2) <<2)+4)
 
