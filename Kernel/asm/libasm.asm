@@ -10,14 +10,6 @@ GLOBAL test
 GLOBAL mouse_handler
 EXTERN mouse_handlerC
 GLOBAL sys_callHandler
-EXTERN sys_call_writeC
-EXTERN sys_call_readC
-EXTERN sys_call_clearC
-EXTERN sys_call_echoC
-EXTERN sys_call_runC
-EXTERN sys_call_printProcesses
-EXTERN sys_call_changeModuleEnvironmetC
-EXTERN sys_call_undoBackwardsC
 GLOBAL cli
 GLOBAL updateCR3
 GLOBAL pageFaultHandler
@@ -31,7 +23,9 @@ extern getCurrentEntryPoint
 extern print
 extern next_process
 global readCR2
-extern sys_call_kill
+extern printrsi
+
+EXTERN syscallHandler
 
 global lockMutex
 
@@ -228,67 +222,21 @@ generalProtectionHandler:
 sys_callHandler:
 	push rbp
 	mov rbp, rsp
-	mov rdi,rbx
-	mov rsi,rcx
-	mov rdx,rdx
-	cmp eax, 4
-	jne read
-	call sys_call_writeC
-	jmp finish
-read:
-	cmp eax,3
-	jne clear
-	call sys_call_readC
-	jmp finish
-clear:
-	cmp eax,5
-	jne echo
-	call sys_call_clearC
-	jmp finish
-echo:
-	cmp eax,6
-	jne run
-	mov rdi,rcx
-	call sys_call_echoC
-	jmp finish
-run:
-	cmp eax, 7
-	jne moduleEnvironment
-	mov rdi,rcx
-	call sys_call_runC
+	cmp rdi,7
+	je sysCallRun
+	call syscallHandler
+	mov rsp, rbp
+	pop rbp
+	iretq
+
+sysCallRun:
+	mov rdi,7
+	call syscallHandler
 	mov rsp, rbp
 	pop rbp
 	mov [rsp], rax
 	iretq
 
-moduleEnvironment:
-	cmp eax, 8
-	jne undoBackwards
-	mov rdi,rdx
-	mov rsi,rcx
-	call sys_call_changeModuleEnvironmetC
-	jmp finish
-undoBackwards:
-	cmp eax, 9
-	jne printProcesses
-	mov rdi,rdx
-	call sys_call_undoBackwardsC
-	jmp finish
-printProcesses:
-	cmp eax,10
-	jne kill
-	call sys_call_printProcesses
-	jmp finish
-kill:
-	cmp eax,11
-	jne finish
-	mov rdi,rdx
-	call sys_call_kill
-	jmp finish
-finish:
-	mov rsp, rbp
-	pop rbp
-	iretq
 
 
 master:
