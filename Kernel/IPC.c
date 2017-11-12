@@ -208,12 +208,12 @@ Pipe * createPipeStruct(Process * pro , char * name)
 	p->readFlag=0;
 	p->connected=1;
 	p->creator = pro->pid;
-	p->pipePids = pro->pipePids;
-	p->blocked = pro->blocked + index;
+	p->pipePids = (char *) pro->pipePids + index*MAX_PROCESS_PIPES *sizeof(char);
+	p->blocked = (char * ) pro->blocked + index*MAX_PROCESS_PIPES *sizeof(char);
 	p->pipePids[0] = pro->pid;
 	p->position=0;
 	p->cardinalBlocked = 0;
 	pro->pipesOpened=0;
-	p->pipe= (pro->pipes + index*PIPE_LENGTH);
+	p->pipe= (( char *)pro->pipes + index*PIPE_LENGTH*sizeof(char));
 	return p;
 }

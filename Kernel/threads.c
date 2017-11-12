@@ -13,8 +13,8 @@ int createThread(void * entryPoint, void * args, Process * p)
   void * page1 = allocPage(2);
   void * page2 = allocPage(2);
 
-  StackFrame * userStack=(StackFrame*)(((char *)page1)+ 2*1024*4 - MAX_PIPES*PIPE_LENGTH -1 -10*sizeof(Pipe) -1 -10*sizeof(int) -1);
-	StackFrame * kernelStack= (StackFrame*)(((char *)page2) + 2*1024*4);
+  StackFrame * userStack=(StackFrame *)((char*)page1 + 2 * PAGE_SIZE)  ; 
+	StackFrame * kernelStack= (StackFrame *)((char*)page1 + 2 * PAGE_SIZE) ; 
   StackFrame * stack= fillStackFrame(entryPoint, userStack, args);
 
   int index = findNextSpot(p->thread, 3);

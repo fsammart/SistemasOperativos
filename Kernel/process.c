@@ -39,7 +39,11 @@ StackFrame * fillStackFrame(void * entryPoint, StackFrame * userStack, void * ar
 
 Process * getProcess(void * entryPoint , char * description, void * args){
 
-	Process * p =(Process *) allocPage(1);
+	char * infoPage = allocPage(1);
+
+	Process * p =(Process *) infoPage;
+
+	infoPage = infoPage + sizeof(Process);
 
 	p->activeThread = 0;
 	p->numberOfThreads = 0;
@@ -51,21 +55,22 @@ Process * getProcess(void * entryPoint , char * description, void * args){
 	p->state = READY;
 	p->description = description;
 
-	initializePipeFields(p);
+	initializePipeFields(p , infoPage);
+
 	initiatePipesForProcess(p->occupiedPosition);
 
 	return p;
 
 }
 
-void initializePipeFields(Process * p)
+void initializePipeFields(Process * p , char  * infoPage)
 {
-	p->pipes = (char*) (p->thread[0]->userStack + 1); //array de char  *
+	p->pipes = infoPage; //array de char  *
 	p->pipesOpened = 0;
-	p->pipesStruct = (Pipe*)((char*)p->pipes + MAX_PROCESS_PIPES*PIPE_LENGTH*sizeof(char) + 1); //array de Pipesstruct
-	p->pipePids  = (int*)((char *)p->pipesStruct + MAX_PROCESS_PIPES*sizeof(*p->pipesStruct) +1); //array de pids
-	p->blocked = (int*)((char*)p->pipePids + MAX_PROCESS_PIPES*sizeof(int) +  1); //array de pids
-	p->occupiedPosition = (int*)((char*)p->blocked + MAX_LISTENERS*sizeof(int) +  1); //array de int
+	p->pipesStruct = (Pipe*)((char*)p->pipes + MAX_PROCESS_PIPES*PIPE_LENGTH); //array de Pipesstruct
+	p->pipePids  = (int*)((char *)p->pipesStruct + MAX_PROCESS_PIPES*sizeof(*p->pipesStruct) ); //array de pids
+	p->blocked = (int*)((char*)p->pipePids + MAX_PROCESS_PIPES*MAX_LISTENERS*sizeof(int) ); //array de pids
+	p->occupiedPosition = (int*)((char*)p->blocked + MAX_LISTENERS*MAX_PROCESS_PIPES*sizeof(int) ); //array de int
 }
 
 int freeProcessPages(int pid)

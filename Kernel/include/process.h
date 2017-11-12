@@ -17,6 +17,6 @@ int freeProcessPages(int pid);
 void initializeThreadArray(Thread * t[], int dim);
 Process *  getProcessById(int pid);
 void initiatePipesForProcess(int * occupiedPosition);
-void initializePipeFields(Process * p);
+void initializePipeFields(Process * p , char * infoPage);
 
 #endif
