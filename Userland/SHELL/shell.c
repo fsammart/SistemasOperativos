@@ -157,7 +157,8 @@ void parser(char * buffer){
 		return;
 	}
 	if(!strcmpN("kill", buffer,4)){
-		killProcess(*(buffer + 5) - '0');
+		
+		killProcess(*(buffer + 4) - '0');
 		return;
 
 	}

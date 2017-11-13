@@ -189,6 +189,7 @@ void printProcesses(){
 }
 
 void removeProcess(int pid) {
+	
 	if (current == NULL) {
 		return;
 
@@ -203,12 +204,13 @@ void removeProcess(int pid) {
 
 	ProcessSlot * prevSlot = current;
 	ProcessSlot * slotToRemove = current->next;
-
-	while (slotToRemove->process->pid != pid) {
+	int i = 0;
+	while (slotToRemove->process->pid != pid && i < cardinal_processes) {
 		prevSlot = slotToRemove;
 		slotToRemove = slotToRemove->next;
+		i++;
 	}
-
+	
 	prevSlot->next = slotToRemove->next;
 	cardinal_processes--;
 
