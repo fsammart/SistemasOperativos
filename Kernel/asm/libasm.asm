@@ -223,8 +223,8 @@ generalProtectionHandler:
 sys_callHandler:
 	push rbp
 	mov rbp, rsp
-	cmp rdi,7
-	je sysCallRun
+	;cmp rdi,7
+	;je sysCallRun
 	call syscallHandler
 	mov rsp, rbp
 	pop rbp

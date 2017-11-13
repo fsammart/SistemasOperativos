@@ -3,32 +3,36 @@
 
 int main(void){
 
-	char ** ss = malloc(sizeof(char *));
-	char * string = malloc(2500);
-	ss[0] = string;
-	char * name = "Ingrese su nombre:";
-	printFF("%s",&name, NULL);
+		char ** ss = malloc(sizeof(char *));
+		char * string = malloc(2500);
+		ss[0] = string;
+		char * name = "Ingrese su nombre:";
+		printFF("%s",&name, NULL);
 
-	if(scanFF("%s",ss, NULL)==0){
-			char * yourFortune;
-			int longitud=0;
+		if(scanFF("%s",ss, NULL)==0){
+				char * yourFortune;
+				int longitud=0;
 
-			while(string[longitud]!=0){
-				longitud++;
+				while(string[longitud]!=0){
+					longitud++;
+				}
+				yourFortune= magic(longitud);
+
+
+
+				printFF("%s",&yourFortune, NULL);
+			}else {
+				char ** s = malloc(sizeof(char*));
+				char * help = "ScanFF Buffer OverFlow";
+				s[0]= help;
+				putchar('\n');
+				printFF("%s",s, NULL);
 			}
-			yourFortune= magic(longitud);
-
-
-
-			printFF("%s",&yourFortune, NULL);
-		}else {
-			char ** s = malloc(sizeof(char*));
-			char * help = "ScanFF Buffer OverFlow";
-			s[0]= help;
-			putchar('\n');
-			printFF("%s",s, NULL);
-		}
-
+		// int i=0;
+		// while(1000>i){
+		// 	putchar('f');
+		// 	i++;
+		// }
 
 return 0;
 

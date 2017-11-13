@@ -2,9 +2,10 @@
 
 
 int main(){
-
-while(1){
+int i=0;
+while(1000>i){
 	putchar('d');
+	i++;
 }
 
 }

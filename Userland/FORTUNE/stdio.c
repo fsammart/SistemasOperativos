@@ -180,7 +180,7 @@ int scanFF(const char * format, char ** s, int * n){
 	return bufferindex == BUFFERSIZE;
 
 }
-	static char * position = (char*)0x1000000;
+	static char * position = (char*)0x2000000;
 
 void * malloc(long int bytes){
 	return (char *)sys_call(13,bytes,0);

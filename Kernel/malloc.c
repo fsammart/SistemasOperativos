@@ -42,7 +42,6 @@ void * initializeKernelHeap(){
 
 
 void * mallock(size_t size){
-
 	Process * p = getCurrentProcess();
 	if(p == NULL){
 		void * aux = kernelBase;

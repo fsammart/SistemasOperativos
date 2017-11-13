@@ -86,22 +86,24 @@ qword sys_call_runC(qword qprogram, qword rsi, qword rdx, qword rcx, qword r8, q
 	switch(program){
 
 		case DUMMY:
-			moduleAdress = dummyAddress;
+			 createProcess(dummyAddress, "dummy");
+			 moduleAdress = dummyAddress;
 			break;
 		case EDITOR:
+			createProcess(editorAddress, "editor");
 			moduleAdress = editorAddress;
 			break;
 
 		case FORTUNE:
-			//createProcess(fortuneAddress, "fortune");
+			createProcess(fortuneAddress, "fortune");
 			moduleAdress == fortuneAddress;
 			break;
 		case SHELL:
 			moduleAdress= shellAddress;
 			break;
 	}
-	mapModulesLogical(moduleAdress);
-	updateCR3();
+	// mapModulesLogical(moduleAdress);
+	// updateCR3();
 	return currentAddress;
 
 	//mapModulesLogical(shellAddress);
