@@ -12,7 +12,7 @@ typedef struct t_block{
 	size_t size;
  	s_block next;
  	s_block prev;
- 	char free;
+ 	int free;
  	char dataStart[1];
 }t_block;
 

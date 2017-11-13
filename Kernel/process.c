@@ -54,7 +54,7 @@ Process * getProcess(void * entryPoint , char * description, void * args){
 	p->pid = pid++;
 	p->state = READY;
 	p->description = description;
-	p->heap = (s_block)allocPage(1);
+	p->heap = NULL;
 	initializePipeFields(p , infoPage);
 
 	initiatePipesForProcess(p->occupiedPosition);

@@ -1,10 +1,46 @@
 #include "malloc.h"
+#include "naiveConsole.h"
 
 s_block heapBase;
-void * kernelBase = 40000; 
+s_block kernelBase;
+#define KERNEL_HEAP_START 0x4000
+#define KERNEL_HEAP_SIZE (PAGE_SIZE*9) 
 
 //MALLOC FUNCTIONS-----------------
+void * kmalloc(size_t size){
+	if(size == 0){
+		return NULL;
+	}
+	s_block freeBlock;
+	size_t s = align4(size);
+	freeBlock = findFirstFreeBlock(kernelBase, s);
+	if(freeBlock == NULL){
+		ncPrint("SI EL MENSAJE SE IMPRIME CAGAMOS");
+		//reset the OS the kernel is out of heap
+		return NULL;
+	}
+	//4 is the minimun block size
+	if(freeBlock->size > (s + 4 + BLOCK_STRUCT_SIZE)){
+		split_block(freeBlock, s);
+	}
+	freeBlock->free = 0;
+	return freeBlock->dataStart;
+
+}
+
+void * initializeKernelHeap(){
+	kernelBase = (s_block) KERNEL_HEAP_START;
+	kernelBase->size = KERNEL_HEAP_SIZE;
+	kernelBase->free = 1;
+	kernelBase->next = NULL;
+	kernelBase->prev = NULL;
+}
+
+
+
+
 void * mallock(size_t size){
+
 	Process * p = getCurrentProcess();
 	if(p == NULL){
 		void * aux = kernelBase;
@@ -17,10 +53,14 @@ void * mallock(size_t size){
 	}
 	s_block freeBlock;
 	size_t s = align4(size);
-	freeBlock = findNextFreeBlock(heapBase, s);
+	if(heapBase == NULL){
+		freeBlock = extendHeap(size, p);
+	}
+	freeBlock = findFirstFreeBlock(heapBase, s);
 	if(freeBlock == NULL){
 		freeBlock = extendHeap(size);
 	}
+	//4 is the minimun block size
 	if(freeBlock->size > (s + 4 + BLOCK_STRUCT_SIZE)){
 		split_block(freeBlock, s);
 	}
@@ -29,7 +69,7 @@ void * mallock(size_t size){
 
 }
 
-s_block findNextFreeBlock(s_block block, size_t size){
+s_block findFirstFreeBlock(s_block block, size_t size){
 
 	s_block current = block;
 	while(current != NULL && !(current->free && current->size > size)){
@@ -43,8 +83,9 @@ void split_block(s_block block, size_t size){
 	if(block->size < size){
 		return;
 	}
+	
 	s_block newBlock;
-	newBlock = (s_block)(block->dataStart+size-1);
+	newBlock = (s_block)(block->dataStart+size);
 	newBlock->next = block->next;
 	newBlock->free = 1;
 	newBlock->size = block->size - (size+BLOCK_STRUCT_SIZE);
@@ -62,7 +103,7 @@ s_block findLastInHeap(){
 	return current;
 }
 
-s_block extendHeap(size_t size){
+s_block extendHeap(size_t size, Process * p ){
 
 	s_block newBlock;
 	int numberOfPages = NUMBER_OF_PAGES_TO_ALLOC(size+BLOCK_STRUCT_SIZE);
@@ -71,9 +112,10 @@ s_block extendHeap(size_t size){
 	newBlock->size = ((numberOfPages*PAGE_SIZE)- BLOCK_STRUCT_SIZE);
 	newBlock->free = 1;
 	newBlock->next = NULL;
-	if(heapBase == NULL){	
+	if(heapBase == NULL){
 		heapBase = newBlock;
 		heapBase->prev = NULL;
+		p->heap = newBlock;
 	}else{
 		s_block last = findLastInHeap();
 		last->next = newBlock;

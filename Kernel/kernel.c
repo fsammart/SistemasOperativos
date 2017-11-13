@@ -13,6 +13,7 @@
 #include "buddyAllocator.h"
 #include "mutex.h"
 #include "systemCalls.h"
+#include "malloc.h"
 
 extern uint8_t text;
 extern uint8_t rodata;
@@ -68,7 +69,7 @@ int init(){
 void * initializeKernelBinary()
 {
 	char buffer[10];
-
+	initializeKernelHeap();
 	ncPrint("[x64BareBones]");
 	ncNewline();
 
@@ -125,12 +126,12 @@ int main()
 	clear();
 
 	cli();
+	initializeKernelHeap();
 	setUpSystemCalls();
 	terminalInitializeC();
 	loadIDT();
 	mouse_init();
 	enablePIC();
-
 	printMsg(0,0,"Arquitectura de computadoras",0x0F);
 	ncPrint("H");
 	printMsg(1,0,"La hora local es:",0x0F);
@@ -143,7 +144,7 @@ int main()
 	//createProcess(processA);
 	createProcess(init, "init");
 	createProcess(processA, "process A");
-	//createProcess(processB, "process B");
+	createProcess(processB, "process B");
 	createProcess(currentAddress, "SHELL");
 
 	initializeMutexes();
