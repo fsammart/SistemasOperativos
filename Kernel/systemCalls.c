@@ -7,6 +7,7 @@
 #include <scheduler.h>
 #include <systemCalls.h>
 #include "malloc.h"
+#include "process.h"
 
 #define DUMMY  1
 #define EDITOR 2
@@ -92,7 +93,8 @@ qword sys_call_runC(qword qprogram, qword rsi, qword rdx, qword rcx, qword r8, q
 			break;
 
 		case FORTUNE:
-			moduleAdress=fortuneAddress;
+			//createProcess(fortuneAddress, "fortune");
+			moduleAdress == fortuneAddress;
 			break;
 		case SHELL:
 			moduleAdress= shellAddress;

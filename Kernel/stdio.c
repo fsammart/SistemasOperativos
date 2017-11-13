@@ -1,6 +1,7 @@
 #include "stdio.h"
 #include "stdioASM.h"
 #include <naiveConsole.h>
+#include "malloc.h"
 #define LETTER  0
 #define FORMAT  1
 #define NULL 0
@@ -8,14 +9,14 @@
 
 
 int putchar(char c){
-	char * msg = malloc(1);
+	char * msg = kmalloc(1);
 	*msg = c;
 	writeC(msg,1);
 	return 0;
 }
 
 char getchar(){
-	char * buffer = malloc(1);
+	char * buffer = kmalloc(1);
 	*buffer = 0;
 	while( *buffer == 0){
 		readC(buffer,1);
@@ -26,7 +27,7 @@ char getchar(){
 
 
 void putNumber(int n){
-	char * buffer = malloc(20);
+	char * buffer = kmalloc(20);
 	int size = 0;
 	if(n < 0){
 		putchar('-');
@@ -184,9 +185,10 @@ int scanFF(const char * format, char ** s, int * n){
 	static char * position = (char*)0x1000000;
 
 void * malloc(long int bytes){
-	void * aux = position;
-	position += bytes;
-	return aux;
+	// void * aux = position;
+	// position += bytes;
+	// return aux;
+	return mallock(bytes);
 }
 char * getPosition(){return position;}
 

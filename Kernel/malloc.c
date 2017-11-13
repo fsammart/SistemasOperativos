@@ -4,10 +4,13 @@
 s_block heapBase;
 s_block kernelBase;
 #define KERNEL_HEAP_START 0x4000
-#define KERNEL_HEAP_SIZE (PAGE_SIZE*9) 
+#define KERNEL_HEAP_SIZE (PAGE_SIZE*17) 
 
 //MALLOC FUNCTIONS-----------------
 void * kmalloc(size_t size){
+	if(kernelBase == NULL){
+		return KERNEL_HEAP_START;
+	}
 	if(size == 0){
 		return NULL;
 	}
@@ -15,7 +18,6 @@ void * kmalloc(size_t size){
 	size_t s = align4(size);
 	freeBlock = findFirstFreeBlock(kernelBase, s);
 	if(freeBlock == NULL){
-		ncPrint("SI EL MENSAJE SE IMPRIME CAGAMOS");
 		//reset the OS the kernel is out of heap
 		return NULL;
 	}
