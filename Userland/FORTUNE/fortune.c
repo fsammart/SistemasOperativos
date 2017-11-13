@@ -17,7 +17,7 @@ int main(void){
 				longitud++;
 			}
 			yourFortune= magic(longitud);
-			
+
 
 
 			printFF("%s",&yourFortune, NULL);

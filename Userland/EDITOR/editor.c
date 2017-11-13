@@ -24,7 +24,7 @@ int main(){
 			}
 		}
 	}
-	sys_call(7,0,4);
+	sys_call(7,4,0);
 	return 0;
 }
 
@@ -33,11 +33,3 @@ int main(){
 void clearEditor(){
 	sys_call(5,0,0);
 }
-
-
-
-
-
-
-
-

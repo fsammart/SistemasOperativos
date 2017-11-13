@@ -79,7 +79,7 @@ qword sys_call_echoC(qword qon,qword rsi, qword rdx, qword rcx, qword r8, qword 
 
 }
 
-qword  sys_call_runC(qword qprogram, qword rsi, qword rdx, qword rcx, qword r8, qword r9){
+qword sys_call_runC(qword qprogram, qword rsi, qword rdx, qword rcx, qword r8, qword r9){
 	int program = (int) qprogram;
 	void * moduleAdress;
 	switch(program){

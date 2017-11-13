@@ -10,6 +10,7 @@ GLOBAL test
 GLOBAL mouse_handler
 EXTERN mouse_handlerC
 GLOBAL sys_callHandler
+EXTERN sys_call_runC
 GLOBAL cli
 GLOBAL updateCR3
 GLOBAL pageFaultHandler
@@ -230,8 +231,8 @@ sys_callHandler:
 	iretq
 
 sysCallRun:
-	mov rdi,7
-	call syscallHandler
+	mov rdi, rsi
+	call sys_call_runC
 	mov rsp, rbp
 	pop rbp
 	mov [rsp], rax
