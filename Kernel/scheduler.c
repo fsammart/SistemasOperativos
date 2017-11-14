@@ -14,10 +14,12 @@ ProcessSlot * newProcessSlot(Process * process){
 	return newProcessSlot;
 }
 
-void createProcess(void * entryPoint, char * description , void * args){
+int createProcess(void * entryPoint, char * description , void * args){
 	Process * p = getProcess(entryPoint, description, args);
 	addProcess(p);
 	cardinal_processes++;
+
+	return p->pid;
 }
 
 Process * getProcessById(int pid){

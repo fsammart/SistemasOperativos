@@ -5,9 +5,14 @@
 #define NULL 0
 #define BUFFERSIZE 100
 
-void createProcess(void * entry  , char * name, void * args)
+void removeProcess(int pid)
 {
-	sys_call(23, (qword)entry, (qword)name, (qword)args);
+	//TODOsys_call()
+}
+
+int createProcess(void * entry  , char * name, void * args)
+{
+	return sys_call(23, (qword)entry, (qword)name, (qword)args);
 }
 void wait(int semaphore)
 {

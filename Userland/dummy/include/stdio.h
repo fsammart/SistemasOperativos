@@ -13,7 +13,7 @@ int scanFF(const char * format, char ** s, int * n);
 int strcmpN(char * str1, char * str2,int number);
 int strcmp(char * str1, char * str2);
 void print(char * s);
-void createProcess(void * entry  , char * name, void * args);
+int createProcess(void * entry  , char * name, void * args);
 void wait(int semaphore);
 void signal(int semaphore);
 int semOpen(char * name);

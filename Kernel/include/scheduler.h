@@ -20,7 +20,7 @@ typedef struct ProcessSlotS {
 }ProcessSlot;
 
 ProcessSlot * newProcessSlot(Process * process);
-void createProcess(void * entryPoint, char * description , void * args);
+int createProcess(void * entryPoint, char * description , void * args);
 int getCurrentPid();
 void changeProcessState(int pid, processState state);
 void addProcess(Process * process);
