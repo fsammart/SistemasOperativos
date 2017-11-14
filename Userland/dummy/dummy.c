@@ -115,11 +115,8 @@ void * producer(void * ctx) {
 		sleep(prodSleepTime);
 
 		int item = i++;
-    	int a[1];
-    	a[0] = item;
-    	
-		print("produce: ");
-		print("\n");
+
+		printFF("Produce: %d\n", NULL, &item);
 
 		//Decrement the count of empty slots in the buffer (semaphore goes down)
 		//Locks when the remaining empty slots are zero
@@ -162,9 +159,6 @@ void * consumer(void * ctx) {
 		//Increment the count of empty slots in the buffer (semaphore goes up)
 		signal(emptyC);
 
-    int a[1];
-    a[0] = item;
-	print("consume: ");
-	print("\n");
+    printFF("Consume %d\n", NULL, &item);
 	}
 }
