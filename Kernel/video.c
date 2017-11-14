@@ -21,20 +21,6 @@ static int jStartModule = 3;
 static int stopBackWards = -1;
 
 
-//static int timeCount=0;
-
-// void showCursor(){
-// 	int h= j*WIDTH+ i;
-// 	if(timeCount%20 == 0){
-// 		attributes[h/WIDTH][h%WIDTH]=(char) 0x11;
-// 	}
-// 	if(timeCount%40== 0){
-// 	attributes[h/WIDTH][h%WIDTH]=(char) DEFAULT;
-// 	}
-
-// 	timeCount++;
-
-// }
 
 void changeStartModule(int f, int c){
 	if(f<0 || f>WIDTH || c < 3 || c>HEIGHT){
@@ -132,21 +118,6 @@ void forwardCursor(){
 
 }
 
-/*void forwardCursorB(){
-
-	if(i==WIDTH-1){
-		if(j==HEIGHT-1){
-			 return;
-		}else{
-			j++;
-			i=iStartModule;
-		}
-	}else{
-		i++;
-	}
-
-}*/
-
 void lineJump(){
 	if(j==HEIGHT-1) {
 			scroll();
@@ -171,7 +142,6 @@ void scroll(){
 void copyRow(int from, int to){
 	for(int k=0; k<WIDTH;k++){
 		video[to][k]=video[from][k];
-		//attributes[to][k]=attributes[from][k];
 		clearPosition(from,k);
 	}
 }

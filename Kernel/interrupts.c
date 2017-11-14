@@ -171,13 +171,7 @@ void pageFaultHandlerC(){
 
 	removeProcess(pid);
 
-	/*uint64_t error= readCR2();
-	printMsg(10,0,"Page Fault", 0x11);
-	putchar('+');
-	ncPrintHex(error);
-	putchar('+');
 
-	*/
 }
 
 void sleep(int time){

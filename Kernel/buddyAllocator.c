@@ -23,10 +23,6 @@ typeBuddyArray createHeap()
 		buddyArray.base[i] = getBaseMemoryWithIndex(i+1, maxElementsInLevel, currentElementsInLevel);
 	}
 	buddyArray.heapLevel = level;
-	for (int i = 0; i < HEAPSIZE-1; i++)
-	{
-
-	}
 	return buddyArray;
 }
 
@@ -70,16 +66,6 @@ void * getNextPageRecursive(int index, int currentLevel, int level){
 	buddyArray.occupied[index-1] = PARTIALLY_FULL;
 	return lchild;
 
-
-	// for(i = 0; i<=NUMBER_OF_PAGES; i++){
-
-	// 	if(buddyArray[position].occupied == 0){
-	// 		buddyArray[position].occupied = 1;
-	// 		return buddyArray[position].base;
-	// 	}
-	// 	position++;
-	// }
-	// return NULL;
 }
 
 
@@ -144,11 +130,7 @@ void freeUpRecursive(int index)
 
 	if(index == 1)
 	{
-		// //Special case beacause Sibling is not working for index 1
-		// if(buddyArray.occupied[RCHILD(index)-1] == EMPTY && buddyArray.occupied[LCHILD(index)-1] == EMPTY)
-		// {
-		// 	buddyArray.occupied[index] = EMPTY;
-		// }
+		
 		return;
 	}
 	if(buddyArray.occupied[PARENT(index)-1] == BUDDY_FULL && buddyArray.occupied[SIBLING(index)-1] == EMPTY)
@@ -166,13 +148,3 @@ void freeUpRecursive(int index)
 	freeUpRecursive(PARENT(index));
 }
 
-// void printHeap(typeBuddyArray buddyArray){
-// 	int i;
-// 	printf("Printing Heap: \n");
-// 	for(i = 0; i< HEAPSIZE; i++)
-// 	{
-// 		printf("child %d: occupied: %d  base:%p\n",i,buddyArray.occupied[i],buddyArray.base[i] );
-// 	}
-// 	printf("Heap Height: %d\n",buddyArray.heapLevel );
-// 	printf("Finished Printing Heap\n");
-// }
