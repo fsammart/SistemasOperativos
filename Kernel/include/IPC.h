@@ -13,7 +13,7 @@
 
 #include "structs.h"
 #include "lib.h"
-#include "constants.h"
+#include "types.h"
 #include "mutex.h"
 
 Pipe * createPipeStruct(Process * pro,char * name);

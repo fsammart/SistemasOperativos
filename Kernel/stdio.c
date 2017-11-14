@@ -2,9 +2,9 @@
 #include "stdioASM.h"
 #include <naiveConsole.h>
 #include "malloc.h"
+
 #define LETTER  0
 #define FORMAT  1
-#define NULL 0
 #define BUFFERSIZE 100
 
 

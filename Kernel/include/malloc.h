@@ -1,11 +1,15 @@
+#ifndef MALLOC_H
+#define MALLOC_H
+
 #include <stdint.h>
 #include <lib.h>
 #include "buddyAllocator.h"
 #include "process.h"
 #include "scheduler.h"
 #include "structs.h"
+#include "types.h"
 
-#define NULL (void*)0
+
 #define BLOCK_SIZE 1024*4
 #define BLOCK_STRUCT_SIZE 28
 
@@ -23,3 +27,5 @@ int isValidAddress(void * p);
 s_block mergeBlocks(s_block firstBlock);
 void * kmalloc(size_t size);
 void * initializeKernelHeap();
+
+#endif

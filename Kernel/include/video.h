@@ -1,3 +1,6 @@
+#ifndef VIDEO_H
+#define VIDEO_H
+
 void printMsg(int f, int c, char*msg,  char color);
 void printMsgCursor( char*msg);
 void clear();
@@ -30,7 +33,7 @@ void changeStopBackwards(int from);
 int isBackwardsOn();
 void backInLine();
 
-
+#endif
 
 
 

@@ -1,3 +1,6 @@
+#ifndef INTERRUPTS_H
+#define INTERRUPTS_H
+
 void setIDTEntry(uint64_t offset, int entry);
 void loadIDT();
 void enablePIC();
@@ -14,3 +17,5 @@ void spure();
 void sleep(unsigned int time);
 void doneSleeping(int index);
 void deleteSleep(int index);
+
+#endif

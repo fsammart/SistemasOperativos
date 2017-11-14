@@ -3,7 +3,7 @@
 
 #define MAX_THREADS 10
 #include "structs.h"
-#include "constants.h"
+#include "types.h"
 
 typedef int pthread_t;
 

@@ -6,7 +6,7 @@
 #include "structs.h"
 #include "stdio.h"
 #include "naiveConsole.h"
-#include "constants.h"
+#include "types.h"
 
 #define PIPE_LENGTH 10
 

@@ -1,6 +1,7 @@
 //semaphores.h
 
-#ifndef SEMAPHORE
+#ifndef SEMAPHORE_H
+#define SEMAPHORE_H
 
 #define SEMAPHORE 0
 

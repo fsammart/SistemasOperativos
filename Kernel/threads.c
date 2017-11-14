@@ -4,7 +4,7 @@
 #include "threads.h"
 #include "buddyAllocator.h"
 #include "stdioASM.h"
-#define NULL (void*)0
+
 
 
 int createThread(void * entryPoint, void * args, Process * p)

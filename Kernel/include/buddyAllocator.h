@@ -1,9 +1,10 @@
 
-#ifndef buddyAllocator_H
-#define buddyAllocator_H
+#ifndef BUDDYALLOCATOR_H
+#define BUDDYALLOCATOR_H
 
 #include <lib.h>
 #include "naiveConsole.h"
+#include "types.h"
 //Constants of the System
 #define PAGE_SIZE ((1024)*4)
 #define MEMORY (PAGE_SIZE*1024)

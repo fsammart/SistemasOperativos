@@ -1,5 +1,4 @@
 #include "buddyAllocator.h"
-#include "constants.h"
 
 typeBuddyArray buddyArray;
 char * baseMemory;

@@ -8,7 +8,7 @@
 #include <naiveConsole.h>
 #include "process.h"
 #include "structs.h"
-#include "constants.h"
+#include "types.h"
 
 typedef void (*EntryPointHandler) (void*);
 
