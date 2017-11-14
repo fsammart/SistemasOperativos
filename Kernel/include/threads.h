@@ -5,6 +5,8 @@
 #include "structs.h"
 #include "constants.h"
 
+typedef int pthread_t;
+
 int createThread(void * entryPoint, void * args, Process * p);
 void terminateThread();
 int findNextSpot(Thread * t[], int dim);

@@ -22,6 +22,7 @@ typedef struct {
    	int pidCreator;
 }Semaphore;
 
+typedef int sem_t;
 
 static Semaphore semaphores[MAX_SEMAPHORES];
 

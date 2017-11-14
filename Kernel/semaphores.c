@@ -76,7 +76,7 @@ int semOpen(char * name)
 {
 	int index;
 
-	int pid; 
+	int pid; //creo que esta variable esta al pedo
 
 	index = getSemIndex(name);
 

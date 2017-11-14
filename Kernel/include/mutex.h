@@ -35,6 +35,7 @@ typedef struct {
     int pidCreator;
 }Mutex;
 
+typedef int mutex_t;
 
 static Mutex mutexes[MAX_MUTEXES];
 static int adminMutex ;

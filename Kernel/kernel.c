@@ -14,6 +14,8 @@
 #include "mutex.h"
 #include "systemCalls.h"
 #include "malloc.h"
+#include "philosophers.h"
+#include "prodcons.h"
 
 extern uint8_t text;
 extern uint8_t rodata;
@@ -23,9 +25,6 @@ extern uint8_t endOfKernelBinary;
 extern uint8_t endOfKernel;
 
 int init();
-
-int producerConsumer(void);
-
 
 static const uint64_t PageSize = 0x1000;
 
@@ -160,7 +159,8 @@ int main()
 	createProcess(processB, "process B");
 	createProcess(currentAddress, "SHELL");
 
-	//createProcess(producerConsumer , "PRODCONS");
+	createProcess(mainPC, "PRODCONS");
+	//createProcess(mainP, "PHILOSOPHERS");
 	ncPrint("checkpoint 6");
 
 	

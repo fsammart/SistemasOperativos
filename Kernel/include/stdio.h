@@ -2,6 +2,7 @@
 #define NULL 0
 int putchar(char c);
 char getchar();
+void print(char * s);
 void printFF(const char * format, char ** s, int * n);
 void putNumber(int n);
 void * malloc(long int bytes);
