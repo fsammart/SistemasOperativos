@@ -163,7 +163,6 @@ StackFrame * switchKernelToUser(){
 void * getCurrentEntryPoint(){
 
 	void * ret = current->process->thread[current->process->activeThread]->entryPoint;
-	ncPrintHex(ret);
 	return ret;
 
 }

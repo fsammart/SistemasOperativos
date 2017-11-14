@@ -25,10 +25,6 @@ typedef struct {
 
 typedef int sem_t;
 
-static Semaphore semaphores[MAX_SEMAPHORES];
-
-static int semaphoreMutex; 
-
 void initializeSemaphores();
 
 void cleanSemaphore(int i);

@@ -17,7 +17,7 @@
 #define RCHILD(i) (((i)<<1)+1)
 #define AMILEFT(i) !((i)%2)
 #define SIBLING(i) ((i)%2?((i)-1):((i)+1))
-#define FULL 2
+#define BUDDY_FULL 2
 #define EMPTY 0
 #define PARTIALLY_FULL 1
 

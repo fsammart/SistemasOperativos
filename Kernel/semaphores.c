@@ -2,6 +2,10 @@
 
 #include "semaphores.h"
 
+static Semaphore semaphores[MAX_SEMAPHORES];
+
+static int semaphoreMutex; 
+
 void initializeSemaphores()
 {
 	int i;
