@@ -3,9 +3,9 @@
 #define STRUCTS_H
 
 #define MAX_PAGES_PER_PROCESS 10
-#include "lib.h"
+#include <lib.h>
 
-typedef unsigned int size_t;
+
 typedef struct t_block * s_block;
 
 typedef struct t_block{

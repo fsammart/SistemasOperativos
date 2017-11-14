@@ -10,6 +10,7 @@
 #include <scheduler.h>
 
 
+
 #define MAX_LISTENERS 50
 
 void io_wait();
@@ -165,7 +166,7 @@ void pageFaultHandlerC(){
 	putchar('+');
 }
 
-void sleep(size_t time){
+void sleep(int time){
 	int myPid=getCurrentPid();
     addSleep(myPid,time);
 	changeProcessState(myPid,SLEEPING);

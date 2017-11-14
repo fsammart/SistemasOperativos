@@ -8,6 +8,8 @@
 #include <systemCalls.h>
 #include "malloc.h"
 #include "process.h"
+#include "interrupts.h"
+#include "mutex.h"
 
 #define DUMMY  1
 #define EDITOR 2
@@ -123,7 +125,7 @@ qword sys_call_runC(qword qprogram, qword rsi, qword rdx, qword rcx, qword r8, q
 	removeProcess(pid);
 	 
 	// updateCR3();
-	return currentAddress;
+	return (qword)currentAddress;
 
 	//mapModulesLogical(shellAddress);
 	//updateCR3();
@@ -159,7 +161,7 @@ qword sys_call_getAddressOfModuleC(qword qprogram, qword rsi, qword rdx, qword r
 	// mapModulesLogical(moduleAdress);
 	// updateCR3();
 	//((EntryPoint)moduleAdress)();
-	return moduleAdress;
+	return (qword)moduleAdress;
 
 	//mapModulesLogical(shellAddress);
 	//updateCR3();
@@ -203,19 +205,21 @@ qword sys_call_createThread(qword qentryPoint, qword qargs,qword rdx, qword rcx,
 
 qword sys_call_mallock(qword qnumberOfBytes, qword rsi,qword rdx, qword rcx, qword r8, qword r9){
 	size_t numberOfBytes = (size_t) qnumberOfBytes;
-	return mallock(numberOfBytes);
+	return (qword) mallock(numberOfBytes);
 }
 
 qword sys_call_createProcess(qword qentryPoint , qword description, qword param,qword rcx, qword r8, qword r9)
 {	
 	void * entryPoint = (void *)qentryPoint;
-	createProcess(entryPoint , description , param);
+	createProcess(entryPoint , (char*)description , (void*)param);
+	return 0;
 }
 
 
 qword sys_call_sleep(qword time,qword rsi,qword rdx, qword rcx, qword r8, qword r9)
 {
-	sleep((size_t)time);
+	sleep((int)time);
+	return 0;
 }
 
 
@@ -225,11 +229,13 @@ qword sys_call_sleep(qword time,qword rsi,qword rdx, qword rcx, qword r8, qword 
 qword sys_call_wait(qword semaphore,qword rsi,qword rdx, qword rcx, qword r8, qword r9)
 {
 	wait((int)semaphore);
+	return 0;
 }
 
 qword sys_call_signal(qword semaphore,qword rsi,qword rdx, qword rcx, qword r8, qword r9)
 {
 	signal((int)semaphore);
+	return 0;
 }
 
 qword sys_call_semOpen(qword name,qword rsi,qword rdx, qword rcx, qword r8, qword r9)
@@ -245,6 +251,7 @@ qword sys_call_semCreate(qword name , qword start,qword rsi,qword rdx, qword rcx
 qword sys_call_semClose(qword index,qword rsi,qword rdx, qword rcx, qword r8, qword r9)
 {
 	semClose((int)index);
+	return 0;
 } 
 
 
@@ -256,44 +263,47 @@ qword sys_call_getMutex(qword mutexName,qword rsi,qword rdx, qword rcx, qword r8
 qword sys_call_lockMutex(qword mutex,qword rsi,qword rdx, qword rcx, qword r8, qword r9)
 {
 	lockMutex((int)mutex);
+	return 0;
 }
 
 qword sys_call_freeMutex (qword mutex,qword rsi,qword rdx, qword rcx, qword r8, qword r9)
 {
 	freeMutex((int)mutex);
+	return 0;
 }
 
 qword sys_call_closeMutex(qword index,qword rsi,qword rdx, qword rcx, qword r8, qword r9)
 {
 	closeMutex((int)index);
+	return 0;
 }
 
 
 void setUpSystemCalls(){
 
-	sysCalls[4] = &sys_call_writeC;
-    sysCalls[3] = &sys_call_readC;
-    sysCalls[5] = &sys_call_clearC;
-    sysCalls[6] = &sys_call_echoC;
-    sysCalls[7] = &sys_call_runC;
-    sysCalls[10] = &sys_call_printProcesses;
-    sysCalls[8] = &sys_call_changeModuleEnvironmetC;
-    sysCalls[9] = &sys_call_undoBackwardsC;
-    sysCalls[11] = &sys_call_kill;
-    sysCalls[12] = &sys_call_createThread;
-    sysCalls[13] = &sys_call_mallock;
-    sysCalls[14] = sys_call_getAddressOfModuleC;
-    sysCalls[15] = sys_call_signal;
-    sysCalls[16] = sys_call_semOpen;
-    sysCalls[17] = sys_call_semCreate;
-    sysCalls[18] = sys_call_semClose;
-    sysCalls[19] = sys_call_getMutex;
-    sysCalls[20] = sys_call_lockMutex;
-    sysCalls[21] = sys_call_freeMutex;
-    sysCalls[22] = sys_call_closeMutex;
-    sysCalls[23] = sys_call_createProcess;
-    sysCalls[24] = sys_call_sleep;
-    sysCalls[25] = sys_call_wait;
+	sysCalls[4] = (sys)&sys_call_writeC;
+    sysCalls[3] = (sys)&sys_call_readC;
+    sysCalls[5] = (sys)&sys_call_clearC;
+    sysCalls[6] = (sys)&sys_call_echoC;
+    sysCalls[7] = (sys)&sys_call_runC;
+    sysCalls[10] = (sys)&sys_call_printProcesses;
+    sysCalls[8] = (sys)&sys_call_changeModuleEnvironmetC;
+    sysCalls[9] = (sys)&sys_call_undoBackwardsC;
+    sysCalls[11] = (sys)&sys_call_kill;
+    sysCalls[12] = (sys)&sys_call_createThread;
+    sysCalls[13] = (sys)&sys_call_mallock;
+    sysCalls[14] = (sys)&sys_call_getAddressOfModuleC;
+    sysCalls[15] = (sys)&sys_call_signal;
+    sysCalls[16] = (sys)&sys_call_semOpen;
+    sysCalls[17] = (sys)&sys_call_semCreate;
+    sysCalls[18] = (sys)&sys_call_semClose;
+    sysCalls[19] = (sys)&sys_call_getMutex;
+    sysCalls[20] = (sys)&sys_call_lockMutex;
+    sysCalls[21] = (sys)&sys_call_freeMutex;
+    sysCalls[22] = (sys)&sys_call_closeMutex;
+    sysCalls[23] = (sys)&sys_call_createProcess;
+    sysCalls[24] = (sys)&sys_call_sleep;
+    sysCalls[25] = (sys)&sys_call_wait;
 }
 
 

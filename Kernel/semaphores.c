@@ -76,8 +76,6 @@ int semOpen(char * name)
 {
 	int index;
 
-	int pid; //creo que esta variable esta al pedo
-
 	index = getSemIndex(name);
 
 	if(index == MUTEX_NOT_FOUND){
@@ -92,7 +90,6 @@ int semOpen(char * name)
 void semClose(int index)
 {
 	int pid; 
-	int pidIndex;
 
 	if(!isValidSemaphore(index)) return;
 
