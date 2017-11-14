@@ -137,7 +137,7 @@ int main()
 	printMsg(0,0,"Arquitectura de computadoras",0x0F);
 	ncPrint("H");
 	printMsg(1,0,"La hora local es:",0x0F);
-	mapModulesLogical((void*)0xC00000);
+	mapModulesLogical((void*)shellAddress);
 	updateCR3();
 	ncPrint("checkpoint 1");
 	resetBuffer();
@@ -155,11 +155,11 @@ int main()
 	//Scheduler
 	//createProcess(processA);
 	createProcess(init, "init");
-	createProcess(processA, "process A");
-	createProcess(processB, "process B");
-	createProcess(currentAddress, "SHELL");
+	//createProcess(processA, "process A");
+	//createProcess(processB, "process B");
+	createProcess(shellAddress, "SHELL");
 
-	createProcess(mainPC, "PRODCONS");
+	//createProcess(mainPC, "PRODCONS");
 	//createProcess(mainP, "PHILOSOPHERS");
 	ncPrint("checkpoint 6");
 

@@ -13,7 +13,7 @@
 #define EDITOR 2
 #define FORTUNE 3
 #define SHELL 4
-#define SYSTEM_CALL_COUNT 15
+#define SYSTEM_CALL_COUNT 30
 
 static void * const dummyAddress = (void*)0xA00000;
 static void * const shellAddress = (void*)0xC00000;
@@ -86,23 +86,43 @@ qword sys_call_runC(qword qprogram, qword rsi, qword rdx, qword rcx, qword r8, q
 	switch(program){
 
 		case DUMMY:
-			 createProcess(dummyAddress, "dummy");
+			 
+			 moduleAdress = dummyAddress;
+			 mapModulesLogical(moduleAdress);
+			 updateCR3();
+			 createProcess(currentAddress, "dummy");
 			break;
 		case EDITOR:
-			createProcess(editorAddress, "editor");
+			moduleAdress = editorAddress;
+			mapModulesLogical(moduleAdress);
+			updateCR3();
+			createProcess(currentAddress, "editor");
 			break;
 
 		case FORTUNE:
-			createProcess(fortuneAddress, "fortune");
+			
+			moduleAdress = fortuneAddress;
+			mapModulesLogical(moduleAdress);
+			updateCR3();
+			createProcess(currentAddress, "fortune");
 			break;
 		case SHELL:
-			createProcess(shellAddress, "SHELL");
+			moduleAdress= shellAddress;
+			mapModulesLogical(moduleAdress);
+			updateCR3();
+			createProcess(currentAddress, "Shell");
 			break;
+
+		default:
+			ncPrint("MUERTE");
 	}
-	// mapModulesLogical(moduleAdress);
+
+	int pid = getCurrentPid();
+
+	removeProcess(pid);
+	 
 	// updateCR3();
-	//((EntryPoint)moduleAdress)();
-	return 0;
+	return currentAddress;
 
 	//mapModulesLogical(shellAddress);
 	//updateCR3();
@@ -111,6 +131,8 @@ qword sys_call_runC(qword qprogram, qword rsi, qword rdx, qword rcx, qword r8, q
 }
 
 qword sys_call_getAddressOfModuleC(qword qprogram, qword rsi, qword rdx, qword rcx, qword r8, qword r9){
+	
+
 	int program = (int) qprogram;
 	void * moduleAdress;
 	switch(program){
@@ -126,11 +148,12 @@ qword sys_call_getAddressOfModuleC(qword qprogram, qword rsi, qword rdx, qword r
 
 		case FORTUNE:
 			//createProcess(fortuneAddress, "fortune");
-			moduleAdress == fortuneAddress;
+			moduleAdress = fortuneAddress;
 			break;
 		case SHELL:
 			moduleAdress= shellAddress;
 			break;
+			
 	}
 	// mapModulesLogical(moduleAdress);
 	// updateCR3();
@@ -182,6 +205,67 @@ qword sys_call_mallock(qword qnumberOfBytes, qword rsi,qword rdx, qword rcx, qwo
 	return mallock(numberOfBytes);
 }
 
+qword sys_call_createProcess(qword entryPoint , qword description, qword param)
+{
+	createProcess(entryPoint , description);
+}
+
+
+qword sys_call_sleep(qword time)
+{
+	sleep(time);
+}
+
+
+//SysCall-Sync
+
+
+qword sys_call_wait(qword semaphore)
+{
+	wait(semaphore);
+}
+
+qword sys_call_signal(qword semaphore)
+{
+	signal(semaphore);
+}
+
+qword sys_call_semOpen(qword name)
+{
+	semOpen(name);
+}
+
+qword sys_call_semCreate(qword name , qword start)
+{
+	semCreate(name,start);
+}
+
+qword sys_call_semClose(qword index)
+{
+	semClose(index);
+} 
+
+
+qword sys_call_getMutex(qword mutexName)
+{
+	getMutex(mutexName);
+}
+
+qword sys_call_lockMutex(qword mutex)
+{
+	lockMutex(mutex);
+}
+
+qword sys_call_freeMutex (qword mutex)
+{
+	freeMutex(mutex);
+}
+
+qword sys_call_closeMutex(qword index)
+{
+	closeMutex(index);
+}
+
 
 void setUpSystemCalls(){
 
@@ -197,6 +281,17 @@ void setUpSystemCalls(){
     sysCalls[12] = &sys_call_createThread;
     sysCalls[13] = &sys_call_mallock;
     sysCalls[14] = sys_call_getAddressOfModuleC;
+    sysCalls[15] = sys_call_signal;
+    sysCalls[16] = sys_call_semOpen;
+    sysCalls[17] = sys_call_semCreate;
+    sysCalls[18] = sys_call_semClose;
+    sysCalls[19] = sys_call_getMutex;
+    sysCalls[20] = sys_call_lockMutex;
+    sysCalls[21] = sys_call_freeMutex;
+    sysCalls[22] = sys_call_closeMutex;
+    sysCalls[23] = sys_call_createProcess;
+    sysCalls[24] = sys_call_sleep;
+    sysCalls[25] = sys_call_wait;
 }
 
 

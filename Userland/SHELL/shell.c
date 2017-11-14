@@ -46,6 +46,8 @@ void man(char * buffer){
 
 }
 
+/*
+
 void run(char * c){
 	echoShellOFF();
 	void * returnAdress;
@@ -60,6 +62,23 @@ void run(char * c){
 	else if(!strcmp("fortune",c)){
 		returnAdress = (void*)sys_call(14,3,0);
 		((EntryPoint)returnAdress)();
+	}
+	echoShellON();
+	return;
+}
+*/
+
+void run(char * c){
+	//echoShellOFF();
+	void * returnAdress;
+	if(!strcmp("dummy", c)){
+		sys_call(7,1,0);
+	}
+	else if(!strcmp("editor",c)){
+		sys_call(7,2,0);
+	}
+	else if(!strcmp("fortune",c)){
+		sys_call(7,3,0);
 	}
 	echoShellON();
 	return;

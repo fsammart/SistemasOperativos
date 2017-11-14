@@ -2,6 +2,8 @@
 #include "threads.h"
 #include "buddyAllocator.h"
 
+qword sys_call_runC(qword qprogram, qword rsi, qword rdx, qword rcx, qword r8, qword r9);
+
 static int cardinal_processes=0;
 static ProcessSlot * current=NULL;
 static void * const currentAddress = (void*)0x800000;
@@ -72,17 +74,10 @@ StackFrame * getCurrentUserStack(){
 }
 
 void restartSHELL(){
-	int i;
-	ProcessSlot * slot = current;
 
-	for(i=0; i < cardinal_processes ; i++){
-		if(slot[i].process->description == 'S'){
-			if(slot[i].process->description == 'H'){
-				removeProcess(slot[i].process->pid);
-			}
-		}
-	}
-	createProcess(currentAddress, "SHELL");
+	cli();
+
+	sys_call_runC(4 , NULL , NULL, NULL , NULL , NULL);
 }
 
 

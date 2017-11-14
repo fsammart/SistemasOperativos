@@ -5,22 +5,55 @@
 #define NULL 0
 #define BUFFERSIZE 100
 
+void createProcess(void * entry  , char * name)
+{
+	sys_call(23, entry, name);
+}
+void wait(int semaphore)
+{
+	sys_call(25, semaphore , NULL );
+}
+
+void signal(int semaphore)
+{
+	sys_call(15, semaphore , NULL );
+}
+
+int semOpen(char * name)
+{
+	sys_call(16, name , NULL );
+}
+
+int semCreate(char * name , int start)
+{
+	sys_call(17, name , start );
+}
+
+void semClose(int index)
+{
+	sys_call(18, index , NULL );
+}
+
+void sleep(int time)
+{
+	sys_call(24,time , NULL );
+}
 
 int putchar(char c){
-	char * msg = malloc(1);
-	*msg = c;
-	writeC(msg,1);
+	char  msg ;
+	msg = c;
+	writeC(&msg,1);
 	return 0;
 }
 
 char getchar(){
-	char * buffer = malloc(1);
-	*buffer = 0;
-	while( *buffer == 0){
-		readC(buffer,1);
+	char  buffer;
+	buffer = 0;
+	while( buffer == 0){
+		readC(&buffer,1);
 	}
 
-	return *buffer;
+	return buffer;
 }
 
 
