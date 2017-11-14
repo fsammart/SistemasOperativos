@@ -36,5 +36,6 @@ void removeProcess(int pid);
 void callProcess( void * entryPoint, void * entryPoint2, void * args) ;
 void beginScheduler();
 StackFrame * getCurrentUserStack();
+void restartSHELL();
 
 #endif

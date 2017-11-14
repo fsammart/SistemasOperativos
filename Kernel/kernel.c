@@ -156,11 +156,11 @@ int main()
 	//Scheduler
 	//createProcess(processA);
 	createProcess(init, "init");
-	//createProcess(processA, "process A");
-	//createProcess(processB, "process B");
-	//createProcess(currentAddress, "SHELL");
+	createProcess(processA, "process A");
+	createProcess(processB, "process B");
+	createProcess(currentAddress, "SHELL");
 
-	createProcess(producerConsumer , "PRODCONS");
+	//createProcess(producerConsumer , "PRODCONS");
 	ncPrint("checkpoint 6");
 
 	

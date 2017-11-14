@@ -4,6 +4,7 @@
 
 static int cardinal_processes=0;
 static ProcessSlot * current=NULL;
+static void * const currentAddress = (void*)0x800000;
 
 ProcessSlot * newProcessSlot(Process * process){
 	ProcessSlot * newProcessSlot = (ProcessSlot *) allocPage(NUMBER_OF_PAGES_TO_ALLOC(sizeof(ProcessSlot)));
@@ -69,6 +70,21 @@ void addProcess(Process * process){
 StackFrame * getCurrentUserStack(){
 		return current->process->thread[current->process->activeThread]->userStack;
 }
+
+void restartSHELL(){
+	int i;
+	ProcessSlot * slot = current;
+
+	for(i=0; i < cardinal_processes ; i++){
+		if(slot[i].process->description == 'S'){
+			if(slot[i].process->description == 'H'){
+				removeProcess(slot[i].process->pid);
+			}
+		}
+	}
+	createProcess(currentAddress, "SHELL");
+}
+
 
 void * next_process(void * current_rsp){
 	void * ans;

@@ -13,5 +13,7 @@ void clearShell();
 void printShellComand();
 void changeToUserEnvirnment();
 void changeToSehllEnvironment();
+void runInBackgorund();
+void asyncParser();
 void undoBackwards();
 void parser(char * buffer);

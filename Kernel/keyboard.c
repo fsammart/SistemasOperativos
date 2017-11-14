@@ -2,6 +2,7 @@
 #include <video.h>
 #include <terminal.h>
 #include <stdio.h>
+#include "scheduler.h"
 #define LEFT_SHIFT_MAKE   	(char)0x2A
 #define RIGHT_SHIFT_MAKE    (char)0x36
 #define CAPS_LOCK           (char)0x3A
@@ -127,7 +128,10 @@ void keyboardHandlerC(){
 		shift=OFF;
 		return;
 	}
-	char toSend=kbd_EN[(int)c][1]; 	
+	char toSend=kbd_EN[(int)c][1]; 
+	if(shift==ON && c == 0x3b){
+		restartSHELL();
+	}	
 	if(!(c & 0x80)  && toSend!=NOCHAR)
 	{	
 		if(caps==ON && shift==ON){

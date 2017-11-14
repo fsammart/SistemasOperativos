@@ -1,5 +1,8 @@
 #include "stdio.h"
 #include "shell.h"
+typedef int (*EntryPoint)();
+static int isAsynchronicCall;
+
 
 void helpShell(){
 	char ** s = malloc(sizeof(char *));
@@ -44,14 +47,33 @@ void man(char * buffer){
 }
 
 void run(char * c){
+	echoShellOFF();
+	void * returnAdress;
 	if(!strcmp("dummy", c)){
-		sys_call(7,1,0);
+		returnAdress = (void*)sys_call(14,1,0);
+		((EntryPoint)returnAdress)();
 	}
 	else if(!strcmp("editor",c)){
-		sys_call(7,2,0);
+		returnAdress = (void*)sys_call(14,2,0);
+		((EntryPoint)returnAdress)();
 	}
 	else if(!strcmp("fortune",c)){
-		sys_call(7,3,0);
+		returnAdress = (void*)sys_call(14,3,0);
+		((EntryPoint)returnAdress)();
+	}
+	echoShellON();
+	return;
+}
+
+void runInBackgorund(char * c){
+	if(!strcmp("dummy", c)){
+		(void*)sys_call(7,1,0);
+	}
+	else if(!strcmp("editor",c)){
+		(void*)sys_call(7,2,0);
+	}
+	else if(!strcmp("fortune",c)){
+		(void*)sys_call(7,3,0);
 	}
 	return;
 }
@@ -136,6 +158,12 @@ int main(){
 }
 
 void parser(char * buffer){
+	if(*buffer ==  '&'){
+		isAsynchronicCall = 1;
+		buffer++;
+		asyncParser(buffer);
+	}else{
+
 	if(!strcmp("help", buffer)){
 		helpShell();
 		return;
@@ -162,8 +190,13 @@ void parser(char * buffer){
 		return;
 
 	}
-	if(*buffer == '.' && *(buffer+1) == '\\'){
-		run((buffer+2));
+	if(*buffer == '.' && *(buffer+1) == '/'){
+		if(isAsynchronicCall){
+			runInBackgorund((buffer+2));
+		}else{
+			run((buffer+2));
+		}
+		
 		return;
 	}
 	if(!strcmpN("man", buffer,3)){
@@ -179,4 +212,54 @@ void parser(char * buffer){
 	}
 	error(buffer);
 	
+}
+isAsynchronicCall = 0;	
+
+}
+
+void asyncParser(char * buffer){
+	if(!strcmp("help", buffer)){
+		sys_call(12,helpShell,0);
+		return;
 	}
+	if(!strcmp("clear", buffer)){
+		sys_call(12,clearShell,0);
+		return;
+	}
+	if(!strcmp("ps", buffer)){
+		sys_call(12,printProcesses,0);
+		return;
+	}
+	if(!strcmpN("echo", buffer,4)){
+		if(!strcmp("on", buffer+5)){
+			sys_call(12,echoShellON,0);
+			return;
+		}
+		sys_call(12,echoShellOFF,0);
+		return;
+	}
+	if(!strcmpN("kill", buffer,4)){
+		sys_call(12,killProcess,*(buffer + 4) - '0');
+		return;
+
+	}
+	if(*buffer == '.' && *(buffer+1) == '/'){
+		runInBackgorund((buffer+2));
+		return;
+	}
+	if(!strcmpN("man", buffer,3)){
+		sys_call(12,man,buffer+4);
+		return;
+	}
+	if(!strcmp("ls", buffer)){
+		sys_call(12,ls,0);
+		return;
+	}
+	if(*buffer == '\n'){
+		return;
+	}
+	error(buffer);
+	isAsynchronicCall = 0;	
+}
+
+

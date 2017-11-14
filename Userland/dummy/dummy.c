@@ -3,7 +3,7 @@
 
 int main(){
 int i=0;
-while(1000>i){
+while(1){
 	putchar('d');
 	i++;
 }

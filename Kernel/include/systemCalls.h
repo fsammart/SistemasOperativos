@@ -14,5 +14,5 @@ qword sys_call_undoBackwardsC(qword from, qword j,qword rdx, qword rcx, qword r8
 qword sys_call_kill(qword qpid, qword j,qword rdx, qword rcx, qword r8, qword r9);
 void setUpSystemCalls();
 qword syscallHandler(qword rdi,qword rsi, qword rdx, qword rcx, qword r8, qword r9);
-
+qword sys_call_getAddressOfModuleC(qword qprogram, qword rsi, qword rdx, qword rcx, qword r8, qword r9);
 #endif
