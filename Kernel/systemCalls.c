@@ -24,7 +24,7 @@ static void * const shellAddress = (void*)0xC00000;
 static void * const currentAddress = (void*)0x800000;
 static void * const editorAddress = (void*)0xE00000;
 static void * const fortuneAddress = (void*)0x600000;
-typedef int (*EntryPoint)();
+typedef int (*EntryPoint)(int i);
 
 typedef qword (*sys)(qword rsi, qword rdx, qword rcx, qword r8, qword r9);
 static sys sysCalls[SYSTEM_CALL_COUNT];
@@ -84,7 +84,7 @@ qword sys_call_echoC(qword qon,qword rsi, qword rdx, qword rcx, qword r8, qword 
 
 }
 
-qword sys_call_runC(qword qprogram, qword rsi, qword rdx, qword rcx, qword r8, qword r9){
+qword sys_call_runC(qword qprogram, qword dumyProgram, qword rdx, qword rcx, qword r8, qword r9){
 	resetBuffer();
 	int program = (int) qprogram;
 	void * moduleAdress;
@@ -95,13 +95,13 @@ qword sys_call_runC(qword qprogram, qword rsi, qword rdx, qword rcx, qword r8, q
 			 moduleAdress = dummyAddress;
 			 mapModulesLogical(moduleAdress);
 			 updateCR3();
-			 createProcess(currentAddress, "dummy" , NULL);
+			 createProcess(dummyAddress, "dummy" , NULL);
 			break;
 		case EDITOR:
 			moduleAdress = editorAddress;
 			mapModulesLogical(moduleAdress);
 			updateCR3();
-			createProcess(currentAddress, "editor" , NULL);
+			createProcess(editorAddress, "editor" , NULL);
 			break;
 
 		case FORTUNE:
@@ -109,13 +109,13 @@ qword sys_call_runC(qword qprogram, qword rsi, qword rdx, qword rcx, qword r8, q
 			moduleAdress = fortuneAddress;
 			mapModulesLogical(moduleAdress);
 			updateCR3();
-			createProcess(currentAddress, "fortune" , NULL);
+			createProcess(fortuneAddress, "fortune" , NULL);
 			break;
 		case SHELL:
 			moduleAdress= shellAddress;
 			mapModulesLogical(moduleAdress);
 			updateCR3();
-			createProcess(currentAddress, "Shell" , NULL);
+			createProcess(shellAddress, "Shell" , NULL);
 			break;
 
 		default:
@@ -123,7 +123,7 @@ qword sys_call_runC(qword qprogram, qword rsi, qword rdx, qword rcx, qword r8, q
 	}
 
 	int pid = getCurrentPid();
-
+	
 	removeProcess(pid);
 
 	// updateCR3();

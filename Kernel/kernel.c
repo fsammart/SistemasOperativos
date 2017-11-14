@@ -162,7 +162,7 @@ int main()
 	createProcess(init, "init" , NULL);
 	//createProcess(processA, "process A");
 	//createProcess(processB, "process B");
-	//createProcess(shellAddress, "SHELL" , NULL);
+	createProcess(currentAddress, "SHELL" , NULL);
 	createProcess(testArgs , "test" , printCheckPoint);
 	//createProcess(mainPC, "PRODCONS");
 	//createProcess(mainP, "PHILOSOPHERS");

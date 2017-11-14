@@ -6,7 +6,7 @@ static int isAsynchronicCall;
 
 void helpShell(){
 	char ** s = malloc(sizeof(char *));
-	char * help = "Help\n the commands are clear, help, echo, ls , ps and man\n write man \"comand\" for more information";
+	char * help = "Help\n the commands are clear, help, echo, ls , ps, & and man\n write man \"comand\" for more information";
 	s[0]= help;
 	printFF("%s",s, NULL);
 	putchar('\n');
@@ -14,7 +14,7 @@ void helpShell(){
 }
 void ls(){
 	char ** s = malloc(sizeof(char *));
-	char * ls = "Modules: dummy, editor, shell, fortune";
+	char * ls = "Programs: prodCons, philosophers, pipetest, mallocTest, editor, shell, fortune";
 	s[0]= ls;
 	printFF("%s",s, NULL);
 	putchar('\n');
@@ -32,10 +32,16 @@ void man(char * buffer){
 		man = "ECHO\n Use \"echo on\" to turn on the echo and \"echo off\" to turn it off  ";
 	}
 	else if(!strcmp("ls", buffer)){
-		man = "LS\n display all modules";
+		man = "LS\n display all programs";
 	}
 	else if(!strcmp("ps", buffer)){
 		man= "ps\n list all current processes";
+	}
+	else if(!strcmp("&", buffer)){
+		man= "&\n run a command in background. Use: &command";
+	}
+	else if(!strcmp("./", buffer)){
+		man= "./\n run a program. Use: ./programName";
 	}
 	else{
 		man = "invalid command for man";
@@ -70,8 +76,17 @@ void run(char * c){
 
 void run(char * c){
 	//echoShellOFF();
-	if(!strcmp("dummy", c)){
-		sys_call(7,1,0);
+	if(!strcmp("prodCons", c)){
+		sys_call(7,1,1);
+	}
+	else if(!strcmp("pipeTest", c)){
+		sys_call(7,1,2);
+	}
+	else if(!strcmp("mallocTest", c)){
+		sys_call(7,1,3);
+	}
+	else if(!strcmp("philosophers", c)){
+		sys_call(7,1,4);
 	}
 	else if(!strcmp("editor",c)){
 		sys_call(7,2,0);
@@ -83,18 +98,6 @@ void run(char * c){
 	return;
 }
 
-void runInBackgorund(char * c){
-	if(!strcmp("dummy", c)){
-		sys_call(7,1,0);
-	}
-	else if(!strcmp("editor",c)){
-		sys_call(7,2,0);
-	}
-	else if(!strcmp("fortune",c)){
-		sys_call(7,3,0);
-	}
-	return;
-}
 
 void echoShellON(){
 	sys_call(6,1,0);
@@ -209,11 +212,8 @@ void parser(char * buffer){
 
 	}
 	if(*buffer == '.' && *(buffer+1) == '/'){
-		if(isAsynchronicCall){
-			runInBackgorund((buffer+2));
-		}else{
-			run((buffer+2));
-		}
+		run((buffer+2));
+
 		
 		return;
 	}
@@ -262,7 +262,7 @@ void asyncParser(char * buffer){
 
 	}
 	if(*buffer == '.' && *(buffer+1) == '/'){
-		runInBackgorund((buffer+2));
+		run((buffer+2));
 		return;
 	}
 	if(!strcmpN("man", buffer,3)){
