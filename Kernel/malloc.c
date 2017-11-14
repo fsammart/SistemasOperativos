@@ -3,7 +3,7 @@
 
 s_block heapBase;
 s_block kernelBase;
-#define KERNEL_HEAP_START 0x4000
+#define KERNEL_HEAP_START (void *)0x4000
 #define KERNEL_HEAP_SIZE (PAGE_SIZE*17) 
 
 //MALLOC FUNCTIONS-----------------
@@ -30,7 +30,7 @@ void * kmalloc(size_t size){
 
 }
 
-void * initializeKernelHeap(){
+void initializeKernelHeap(){
 	kernelBase = (s_block) KERNEL_HEAP_START;
 	kernelBase->size = KERNEL_HEAP_SIZE;
 	kernelBase->free = 1;
@@ -155,13 +155,13 @@ s_block getBlock(void * p){
 
 int isValidAddress(void * p){
 	
-	if(p == NULL || p < heapBase->dataStart){
+	if(p == NULL || (char*)p < heapBase->dataStart){
 		return 0;
 	}
 	return 1;
 }
 
-s_block mergeBlocks(s_block firstBlock){
+void mergeBlocks(s_block firstBlock){
 	firstBlock->size += firstBlock->next->size+BLOCK_STRUCT_SIZE;
 	firstBlock->next = firstBlock->next->next;
 }

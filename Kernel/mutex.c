@@ -61,7 +61,7 @@ int createMutex(char * mutexName)
 
 	int index = getFreeSpot();
 
-	if(index == NO_SPACE_LEFT) return ERROR;
+	if(index == NO_SPACE_LEFT_M) return ERROR;
 
 	mutexes[index].used = TRUE;
 
@@ -82,7 +82,7 @@ int getFreeSpot()
 		}
 	}
 
-	return NO_SPACE_LEFT;
+	return NO_SPACE_LEFT_M;
 
 }
 
@@ -139,7 +139,7 @@ int getFreeSpotInBlockedQueue(int * blocked , int length)
 		}
 	}
 
-	return NO_SPACE_LEFT;
+	return NO_SPACE_LEFT_M;
 }
 
 void addToBlocked( int  mutex , int pid)
@@ -147,7 +147,7 @@ void addToBlocked( int  mutex , int pid)
 	Mutex * m = &mutexes[mutex];
 	int index = getFreeSpotInBlockedQueue(m->queue , MAX_BLOCKED_QUEUE_SIZE);
 
-	if( index == NO_SPACE_LEFT){
+	if( index == NO_SPACE_LEFT_M){
 
 		//PROCESS SHOULD BE KILLED
 		ncPrint("MUERTE5");
@@ -168,7 +168,7 @@ int getFreeSpotInUsingQueue(int * using , int length)
 		}
 	}
 
-	return NO_SPACE_LEFT;
+	return NO_SPACE_LEFT_M;
 }
 
 void lockMutex(int mutex)

@@ -24,8 +24,8 @@ s_block findLastInHeap();
 s_block extendHeap();
 s_block getBlock(void * p);
 int isValidAddress(void * p);
-s_block mergeBlocks(s_block firstBlock);
+void mergeBlocks(s_block firstBlock);
 void * kmalloc(size_t size);
-void * initializeKernelHeap();
+void initializeKernelHeap();
 
 #endif

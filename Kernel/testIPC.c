@@ -29,7 +29,7 @@ void processA()
 	{
 		buffer[i] = c++;
 	}
-	sys_call(12,thread, buffer);
+	sys_call(12,(int)thread, (int)buffer);
 	// ncPrint("LLegue");
 	// char * h = kmalloc(5);
 	// ncPrint("#");

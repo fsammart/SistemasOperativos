@@ -1,3 +1,4 @@
+#include "types.h"
 #include <video.h>
 #include <lib.h>
 #include <interrupts.h>
@@ -7,6 +8,7 @@
 #include <naiveConsole.h>
 #include <moduleLoader.h>
 #include <scheduler.h>
+
 
 #define MAX_LISTENERS 50
 
@@ -163,7 +165,7 @@ void pageFaultHandlerC(){
 	putchar('+');
 }
 
-void sleep(unsigned int time){
+void sleep(size_t time){
 	int myPid=getCurrentPid();
     addSleep(myPid,time);
 	changeProcessState(myPid,SLEEPING);

@@ -47,7 +47,7 @@ void addToSemBlocked( int i , int pid)
 	Semaphore * sem = &semaphores[i];
 	int index = getFreeSpotInBlockedQueue(sem->queue , MAX_BLOCKED_QUEUE_SIZE);
 
-	if( index == NO_SPACE_LEFT){
+	if( index == NO_SPACE_LEFT_M){
 
 		//PROCESS SHOULD BE KILLED
 		ncPrint("MUERTE3");
@@ -131,7 +131,7 @@ int createSemaphore(char * semName , int start)
 
 	int index = getFreePositionSemaphores();
 
-	if(index == NO_SPACE_LEFT) return ERROR;
+	if(index == NO_SPACE_LEFT_M) return ERROR;
 
 	semaphores[index].used = TRUE;
 
@@ -156,7 +156,7 @@ int getFreePositionSemaphores()
 		}
 	}
 
-	return NO_SPACE_LEFT;
+	return NO_SPACE_LEFT_M;
 
 }
 
@@ -165,7 +165,7 @@ void addToBlockedQueueSemaphore( int  sem , int pid)
 	Semaphore * s = &semaphores[sem];
 	int index = getFreeSpotInBlockedQueue(s->queue , MAX_BLOCKED_QUEUE_SIZE);
 
-	if( index == NO_SPACE_LEFT){
+	if( index == NO_SPACE_LEFT_M){
 
 		//PROCESS SHOULD BE KILLED
 		ncPrint("MUERTE2");

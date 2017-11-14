@@ -205,65 +205,66 @@ qword sys_call_mallock(qword qnumberOfBytes, qword rsi,qword rdx, qword rcx, qwo
 	return mallock(numberOfBytes);
 }
 
-qword sys_call_createProcess(qword entryPoint , qword description, qword param)
-{
+qword sys_call_createProcess(qword qentryPoint , qword description, qword param,qword rcx, qword r8, qword r9)
+{	
+	void * entryPoint = (void *)qentryPoint;
 	createProcess(entryPoint , description);
 }
 
 
-qword sys_call_sleep(qword time)
+qword sys_call_sleep(qword time,qword rsi,qword rdx, qword rcx, qword r8, qword r9)
 {
-	sleep(time);
+	sleep((size_t)time);
 }
 
 
 //SysCall-Sync
 
 
-qword sys_call_wait(qword semaphore)
+qword sys_call_wait(qword semaphore,qword rsi,qword rdx, qword rcx, qword r8, qword r9)
 {
-	wait(semaphore);
+	wait((int)semaphore);
 }
 
-qword sys_call_signal(qword semaphore)
+qword sys_call_signal(qword semaphore,qword rsi,qword rdx, qword rcx, qword r8, qword r9)
 {
-	signal(semaphore);
+	signal((int)semaphore);
 }
 
-qword sys_call_semOpen(qword name)
+qword sys_call_semOpen(qword name,qword rsi,qword rdx, qword rcx, qword r8, qword r9)
 {
-	semOpen(name);
+	semOpen((char*)name);
 }
 
-qword sys_call_semCreate(qword name , qword start)
+qword sys_call_semCreate(qword name , qword start,qword rsi,qword rdx, qword rcx, qword r8, qword r9)
 {
-	semCreate(name,start);
+	semCreate((char*)name,(int)start);
 }
 
-qword sys_call_semClose(qword index)
+qword sys_call_semClose(qword index,qword rsi,qword rdx, qword rcx, qword r8, qword r9)
 {
-	semClose(index);
+	semClose((int)index);
 } 
 
 
-qword sys_call_getMutex(qword mutexName)
+qword sys_call_getMutex(qword mutexName,qword rsi,qword rdx, qword rcx, qword r8, qword r9)
 {
-	getMutex(mutexName);
+	getMutex((char*)mutexName);
 }
 
-qword sys_call_lockMutex(qword mutex)
+qword sys_call_lockMutex(qword mutex,qword rsi,qword rdx, qword rcx, qword r8, qword r9)
 {
-	lockMutex(mutex);
+	lockMutex((int)mutex);
 }
 
-qword sys_call_freeMutex (qword mutex)
+qword sys_call_freeMutex (qword mutex,qword rsi,qword rdx, qword rcx, qword r8, qword r9)
 {
-	freeMutex(mutex);
+	freeMutex((int)mutex);
 }
 
-qword sys_call_closeMutex(qword index)
+qword sys_call_closeMutex(qword index,qword rsi,qword rdx, qword rcx, qword r8, qword r9)
 {
-	closeMutex(index);
+	closeMutex((int)index);
 }
 
 

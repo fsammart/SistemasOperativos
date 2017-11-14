@@ -77,7 +77,7 @@ void restartSHELL(){
 
 	cli();
 
-	sys_call_runC(4 , NULL , NULL, NULL , NULL , NULL);
+	sys_call_runC(4 , (qword)NULL , (qword)NULL, (qword)NULL , (qword)NULL , (qword)NULL);
 }
 
 

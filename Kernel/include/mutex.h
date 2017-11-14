@@ -18,7 +18,7 @@
 #define FALSE 0
 #define TRUE 1
 #define MUTEX_NOT_FOUND -1
-#define NO_SPACE_LEFT -2
+#define NO_SPACE_LEFT_M -2
 #define NO_BLOCKED_QUEUE_VALUE -1
 #define NO_PID_VALUE -1
 #define ACQUIRED 1

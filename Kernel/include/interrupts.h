@@ -1,6 +1,7 @@
 #ifndef INTERRUPTS_H
 #define INTERRUPTS_H
 
+#include "types.h"
 void setIDTEntry(uint64_t offset, int entry);
 void loadIDT();
 void enablePIC();
@@ -14,7 +15,7 @@ void sys_callHandler();
 void generalProtectionHandler();
 void generalProtectionHandlerC();
 void spure();
-void sleep(unsigned int time);
+void sleep(size_t time);
 void doneSleeping(int index);
 void deleteSleep(int index);
 
