@@ -153,17 +153,31 @@ void doneSleeping(int index){
 
 void generalProtectionHandlerC(){
 
+	ncPrint("RECOVERING GENERAL PROTECTION FAULT");
+
+	int pid = getCurrentPid();
+
+	removeProcess(pid);
+
 	printMsg(20,0,"General Protection", 0x11);
 
 }
 
 void pageFaultHandlerC(){
 
-	uint64_t error= readCR2();
+	ncPrint("RECOVERING FROMPAGE FAULT");
+
+	int pid = getCurrentPid();
+
+	removeProcess(pid);
+
+	/*uint64_t error= readCR2();
 	printMsg(10,0,"Page Fault", 0x11);
 	putchar('+');
 	ncPrintHex(error);
 	putchar('+');
+
+	*/
 }
 
 void sleep(int time){

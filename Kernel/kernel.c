@@ -162,7 +162,7 @@ int main()
 	createProcess(init, "init" , NULL);
 	//createProcess(processA, "process A");
 	//createProcess(processB, "process B");
-	createProcess(shellAddress, "SHELL" , NULL);
+	//createProcess(shellAddress, "SHELL" , NULL);
 	createProcess(testArgs , "test" , printCheckPoint);
 	//createProcess(mainPC, "PRODCONS");
 	//createProcess(mainP, "PHILOSOPHERS");
@@ -184,7 +184,11 @@ int main()
 
 void testArgs(void (* entry) (void))
 {
+	print("ENTROOO");
 	entry();
+	void (* a) (void)= 0 ;
+	a();
+	
 	while(1);
 }
 
