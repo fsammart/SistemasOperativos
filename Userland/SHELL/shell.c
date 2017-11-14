@@ -70,7 +70,6 @@ void run(char * c){
 
 void run(char * c){
 	//echoShellOFF();
-	void * returnAdress;
 	if(!strcmp("dummy", c)){
 		sys_call(7,1,0);
 	}
@@ -86,13 +85,13 @@ void run(char * c){
 
 void runInBackgorund(char * c){
 	if(!strcmp("dummy", c)){
-		(void*)sys_call(7,1,0);
+		sys_call(7,1,0);
 	}
 	else if(!strcmp("editor",c)){
-		(void*)sys_call(7,2,0);
+		sys_call(7,2,0);
 	}
 	else if(!strcmp("fortune",c)){
-		(void*)sys_call(7,3,0);
+		sys_call(7,3,0);
 	}
 	return;
 }
@@ -121,16 +120,16 @@ void clearShell(){
 }
 
 void changeToUserEnvirnment(){
-	sys_call(8,6,4);
+	sys_call(8,(qword)6,(qword)4);
 	undoBackwards();
 }
 
 void changeToSehllEnvironment(){
-	sys_call(8,0,4);
+	sys_call(8,0,(qword)4);
 }
 
 void undoBackwards(){
-	sys_call(9,7,0);
+	sys_call(9,(qword)7,0);
 }
 
 void printProcesses(){
@@ -138,7 +137,7 @@ void printProcesses(){
 }
 
 void killProcess(int pid){
-	sys_call(11,pid,0);
+	sys_call(11,(qword)pid,0);
 }
 
 
@@ -238,27 +237,27 @@ isAsynchronicCall = 0;
 
 void asyncParser(char * buffer){
 	if(!strcmp("help", buffer)){
-		sys_call(12,helpShell,0);
+		sys_call(12,(qword)helpShell,0);
 		return;
 	}
 	if(!strcmp("clear", buffer)){
-		sys_call(12,clearShell,0);
+		sys_call(12,(qword)clearShell,0);
 		return;
 	}
 	if(!strcmp("ps", buffer)){
-		sys_call(12,printProcesses,0);
+		sys_call(12,(qword)printProcesses,0);
 		return;
 	}
 	if(!strcmpN("echo", buffer,4)){
 		if(!strcmp("on", buffer+5)){
-			sys_call(12,echoShellON,0);
+			sys_call(12,(qword)echoShellON,0);
 			return;
 		}
-		sys_call(12,echoShellOFF,0);
+		sys_call(12,(qword)echoShellOFF,0);
 		return;
 	}
 	if(!strcmpN("kill", buffer,4)){
-		sys_call(12,killProcess,*(buffer + 4) - '0');
+		sys_call(12,(qword)killProcess,(qword)(*(buffer + 4) - '0'));
 		return;
 
 	}
@@ -267,11 +266,11 @@ void asyncParser(char * buffer){
 		return;
 	}
 	if(!strcmpN("man", buffer,3)){
-		sys_call(12,man,buffer+4);
+		sys_call(12,(qword)man,(qword)(buffer+4));
 		return;
 	}
 	if(!strcmp("ls", buffer)){
-		sys_call(12,ls,0);
+		sys_call(12,(qword)ls,0);
 		return;
 	}
 	if(*buffer == '\n'){

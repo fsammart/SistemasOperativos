@@ -186,7 +186,7 @@ void * malloc(long int bytes){
 	// void * aux = position;
 	// position += bytes;
 	// return aux;
-	return sys_call(13,bytes,0);
+	return (void*)sys_call(13,bytes,0);
 }
 char * getPosition(){return position;}
 
