@@ -6,7 +6,8 @@
 //__________________________________________________________________________
 //FUNCTIONS RELATED TO ADMINISTRATION OF MUTEXES
 
-
+static Mutex mutexes[MAX_MUTEXES];
+static int adminMutex ;
 void initializeMutexes()
 {
 	int i;
@@ -37,7 +38,6 @@ int getIndex(char * mutexName)
 
 int getMutex(char * mutexName)
 {
-	int pid;
 	int index;
 
 	lockMutex(adminMutex);
@@ -240,7 +240,6 @@ void unblockProcess( int mutex )
 void closeMutex(int index)
 {
 	int pid; 
-	int pidIndex;
 
 	if(!isValidMutex(index)) return;
 

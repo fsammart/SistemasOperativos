@@ -37,8 +37,7 @@ typedef struct {
 
 typedef int mutex_t;
 
-static Mutex mutexes[MAX_MUTEXES];
-static int adminMutex ;
+
 
 
 void initializeMutexes();
