@@ -87,11 +87,20 @@ section .text
 
 finishStartup:
 
+	push rbp 
+	mov rbp, rsp
+
 	call getCurrentEntryPoint
+
+	mov rsp, rbp
+	pop rbp
+
+	mov [rsp] , rax
 
 	sti
 
-	jmp rax
+	ret
+
 
 
 readCR2:

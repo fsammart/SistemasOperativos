@@ -24,6 +24,8 @@ extern uint8_t endOfKernel;
 
 int init();
 
+int producerConsumer(void);
+
 
 static const uint64_t PageSize = 0x1000;
 
@@ -120,6 +122,7 @@ void whenTwoProcessTryToAccesItAtTheSameTime();
 
 int testMutex;
 
+
 int main()
 {
 
@@ -137,21 +140,34 @@ int main()
 	printMsg(1,0,"La hora local es:",0x0F);
 	mapModulesLogical((void*)0xC00000);
 	updateCR3();
+	ncPrint("checkpoint 1");
 	resetBuffer();
+	ncPrint("checkpoint 2");
 	createHeap();
+	ncPrint("checkpoint 3");
+
+	initializeMutexes();
+	ncPrint("checkpoint 4");
+
+	initializeSemaphores();
+	ncPrint("checkpoint 5");
+
 
 	//Scheduler
 	//createProcess(processA);
 	createProcess(init, "init");
-	createProcess(processA, "process A");
-	createProcess(processB, "process B");
-	createProcess(currentAddress, "SHELL");
+	//createProcess(processA, "process A");
+	//createProcess(processB, "process B");
+	//createProcess(currentAddress, "SHELL");
 
-	initializeMutexes();
+	createProcess(producerConsumer , "PRODCONS");
+	ncPrint("checkpoint 6");
 
-	testMutex = givenAvariable();
+	
 
-	whenTwoProcessTryToAccesItAtTheSameTime();
+	//testMutex = givenAvariable();
+
+	//whenTwoProcessTryToAccesItAtTheSameTime();
 
 	finishStartup();
 
@@ -159,6 +175,11 @@ int main()
 
 
 
+}
+
+void printCheckPoint()
+{
+	ncPrint("checkpoint 3");
 }
 
 int value=0;

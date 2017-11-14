@@ -9,20 +9,19 @@
 
 
 int putchar(char c){
-	char * msg = kmalloc(1);
-	*msg = c;
-	writeC(msg,1);
+	char msg = c;
+	writeC(&msg,1);
 	return 0;
 }
 
 char getchar(){
-	char * buffer = kmalloc(1);
-	*buffer = 0;
-	while( *buffer == 0){
-		readC(buffer,1);
+	char  buffer ;
+	buffer = 0;
+	while( buffer == 0){
+		readC(&buffer,1);
 	}
 
-	return *buffer;
+	return buffer;
 }
 
 

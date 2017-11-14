@@ -182,8 +182,6 @@ void lockMutex(int mutex)
 
 	if(lock != ACQUIRED){
 
-		lockMutex(adminMutex);
-
 		if(isQueueFull(mutex)){
 			//ERROR DEBERIAMOS MATAR EL PROCESO
 		}else{
@@ -193,8 +191,7 @@ void lockMutex(int mutex)
 
 		}
 
-		freeMutex(adminMutex);
-
+		
 		//MUTEX
 
 		changeProcessState(pid, BLOCKED);
