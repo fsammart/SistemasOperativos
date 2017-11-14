@@ -14,8 +14,8 @@ ProcessSlot * newProcessSlot(Process * process){
 	return newProcessSlot;
 }
 
-void createProcess(void * entryPoint, char * description){
-	Process * p = getProcess(entryPoint, description, NULL);
+void createProcess(void * entryPoint, char * description , void * args){
+	Process * p = getProcess(entryPoint, description, args);
 	addProcess(p);
 	cardinal_processes++;
 }
@@ -74,9 +74,6 @@ StackFrame * getCurrentUserStack(){
 }
 
 void restartSHELL(){
-
-	cli();
-
 	sys_call_runC((qword)4 , (qword)NULL , (qword)NULL, (qword)NULL , (qword)NULL , (qword)NULL);
 }
 
@@ -233,9 +230,11 @@ void removeProcess(int pid) {
 	}
 }
 
-void callProcess(void * entryPoint, void * entryPoint2, void * args){
+//entryPoint and args are spureous parameters, use the second
 
-	((EntryPointHandler)entryPoint2)(args);
+void callProcess(void * entryPoint, void * entryPoint2, void * args , void * args2){
+
+	((EntryPointHandler)entryPoint2)(args2);
 
 	terminateThread();
 

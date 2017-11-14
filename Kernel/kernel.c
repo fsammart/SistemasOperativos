@@ -45,6 +45,10 @@ void test2();
 void lock();
 void freeLock();
 
+void testArgs(void (* entry) (void));
+
+void printCheckPoint();
+
 
 
 
@@ -155,11 +159,11 @@ int main()
 
 	//Scheduler
 	//createProcess(processA);
-	createProcess(init, "init");
+	createProcess(init, "init" , NULL);
 	//createProcess(processA, "process A");
 	//createProcess(processB, "process B");
-	createProcess(shellAddress, "SHELL");
-
+	createProcess(shellAddress, "SHELL" , NULL);
+	createProcess(testArgs , "test" , printCheckPoint);
 	//createProcess(mainPC, "PRODCONS");
 	//createProcess(mainP, "PHILOSOPHERS");
 	ncPrint("checkpoint 6");
@@ -176,6 +180,11 @@ int main()
 
 
 
+}
+
+void testArgs(void (* entry) (void))
+{
+	entry();
 }
 
 void printCheckPoint()
@@ -228,8 +237,8 @@ int givenAvariable(){
 }
 
 void whenTwoProcessTryToAccesItAtTheSameTime(){
-	createProcess( test1 ,"test1"  );
-	createProcess( test2 , "test2" );
+	createProcess( test1 ,"test1" ,NULL );
+	createProcess( test2 , "test2",NULL );
 
 
 

@@ -23,7 +23,7 @@ StackFrame * fillStackFrame(void * entryPoint, StackFrame * userStack, void * ar
 	frame->rdi =	(uint64_t)entryPoint; //entryPoint;
 	frame->rbp =	0x00D;
 	frame->rdx =	(uint64_t)args;
-	frame->rcx =	0x00F;
+	frame->rcx =	(uint64_t)args;
 	frame->rbx =	0x010;
 	frame->rax =	0x011;
 	frame->rip =	(uint64_t) &callProcess;

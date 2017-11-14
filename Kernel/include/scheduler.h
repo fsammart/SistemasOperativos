@@ -18,7 +18,7 @@ typedef struct ProcessSlotS {
 }ProcessSlot;
 
 ProcessSlot * newProcessSlot(Process * process);
-void createProcess(void * entryPoint, char * description);
+void createProcess(void * entryPoint, char * description , void * args);
 int getCurrentPid();
 void changeProcessState(int pid, processState state);
 void addProcess(Process * process);
@@ -33,7 +33,7 @@ int eqProcess(Process * a, Process * b);
 char * getStateFromNumber(int state);
 void printProcesses();
 void removeProcess(int pid);
-void callProcess( void * entryPoint, void * entryPoint2, void * args) ;
+void callProcess( void * entryPoint, void * entryPoint2, void * args , void * args2) ;
 void beginScheduler();
 StackFrame * getCurrentUserStack();
 void restartSHELL();

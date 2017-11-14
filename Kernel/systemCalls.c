@@ -81,6 +81,7 @@ qword sys_call_echoC(qword qon,qword rsi, qword rdx, qword rcx, qword r8, qword 
 }
 
 qword sys_call_runC(qword qprogram, qword rsi, qword rdx, qword rcx, qword r8, qword r9){
+	resetBuffer();
 	int program = (int) qprogram;
 	void * moduleAdress;
 	switch(program){
@@ -90,13 +91,13 @@ qword sys_call_runC(qword qprogram, qword rsi, qword rdx, qword rcx, qword r8, q
 			 moduleAdress = dummyAddress;
 			 mapModulesLogical(moduleAdress);
 			 updateCR3();
-			 createProcess(currentAddress, "dummy");
+			 createProcess(currentAddress, "dummy" , NULL);
 			break;
 		case EDITOR:
 			moduleAdress = editorAddress;
 			mapModulesLogical(moduleAdress);
 			updateCR3();
-			createProcess(currentAddress, "editor");
+			createProcess(currentAddress, "editor" , NULL);
 			break;
 
 		case FORTUNE:
@@ -104,13 +105,13 @@ qword sys_call_runC(qword qprogram, qword rsi, qword rdx, qword rcx, qword r8, q
 			moduleAdress = fortuneAddress;
 			mapModulesLogical(moduleAdress);
 			updateCR3();
-			createProcess(currentAddress, "fortune");
+			createProcess(currentAddress, "fortune" , NULL);
 			break;
 		case SHELL:
 			moduleAdress= shellAddress;
 			mapModulesLogical(moduleAdress);
 			updateCR3();
-			createProcess(currentAddress, "Shell");
+			createProcess(currentAddress, "Shell" , NULL);
 			break;
 
 		default:
@@ -208,7 +209,7 @@ qword sys_call_mallock(qword qnumberOfBytes, qword rsi,qword rdx, qword rcx, qwo
 qword sys_call_createProcess(qword qentryPoint , qword description, qword param,qword rcx, qword r8, qword r9)
 {	
 	void * entryPoint = (void *)qentryPoint;
-	createProcess(entryPoint , description);
+	createProcess(entryPoint , description , param);
 }
 
 
@@ -233,12 +234,12 @@ qword sys_call_signal(qword semaphore,qword rsi,qword rdx, qword rcx, qword r8, 
 
 qword sys_call_semOpen(qword name,qword rsi,qword rdx, qword rcx, qword r8, qword r9)
 {
-	semOpen((char*)name);
+	return semOpen((char*)name);
 }
 
 qword sys_call_semCreate(qword name , qword start,qword rsi,qword rdx, qword rcx, qword r8, qword r9)
 {
-	semCreate((char*)name,(int)start);
+	return semCreate((char*)name,(int)start);
 }
 
 qword sys_call_semClose(qword index,qword rsi,qword rdx, qword rcx, qword r8, qword r9)
@@ -249,7 +250,7 @@ qword sys_call_semClose(qword index,qword rsi,qword rdx, qword rcx, qword r8, qw
 
 qword sys_call_getMutex(qword mutexName,qword rsi,qword rdx, qword rcx, qword r8, qword r9)
 {
-	getMutex((char*)mutexName);
+	return getMutex((char*)mutexName);
 }
 
 qword sys_call_lockMutex(qword mutex,qword rsi,qword rdx, qword rcx, qword r8, qword r9)
