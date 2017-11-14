@@ -30,27 +30,6 @@ void processA()
 		buffer[i] = c++;
 	}
 	sys_call(12,(qword)thread, (qword)buffer);
-	// ncPrint("LLegue");
-	// char * h = kmalloc(5);
-	// ncPrint("#");
-	// ncPrintDec(h);
-	// ncPrint("#");
-	// ncPrint("------");
-	// char * g = kmalloc(8);
-	// g[0] = 'H';
-	// g[1] = 'o';
-	// g[2] = 'l';
-	// g[3] = 'a';
-	// g[4] = 0;
-	// ncPrint("#");
-	// ncPrintDec(g);
-	// ncPrint("#");
-	// ncPrint("------");
-	// h = kmalloc(15);
-	// ncPrint("#");
-	// ncPrintDec(h);
-	// ncPrint("#");
-	// ncPrint("Paso");
 	while(1);
 
 }

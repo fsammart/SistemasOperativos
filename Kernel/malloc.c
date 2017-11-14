@@ -18,7 +18,6 @@ void * kmalloc(size_t size){
 	size_t s = align4(size);
 	freeBlock = findFirstFreeBlock(kernelBase, s);
 	if(freeBlock == NULL){
-		//reset the OS the kernel is out of heap
 		return NULL;
 	}
 	//4 is the minimun block size
