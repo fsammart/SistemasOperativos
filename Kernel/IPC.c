@@ -261,8 +261,8 @@ Pipe * createPipeStruct(Process * pro , char * name)
 	p->readFlag=0;
 	p->connected=1;
 	p->creator = pro->pid;
-	p->pipePids = (char *) pro->pipePids + index*MAX_PROCESS_PIPES *sizeof(char);
-	p->blocked = (char * ) pro->blocked + index*MAX_PROCESS_PIPES *sizeof(char);
+	p->pipePids = (int*)((char *) pro->pipePids + index*MAX_PROCESS_PIPES *sizeof(char));
+	p->blocked = (int*)((char * ) pro->blocked + index*MAX_PROCESS_PIPES *sizeof(char));
 	p->pipePids[0] = pro->pid;
 	p->position=0;
 	p->cardinalBlocked = 0;

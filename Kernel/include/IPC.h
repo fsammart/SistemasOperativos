@@ -6,7 +6,7 @@
 #define PIPE_LENGTH 10
 #define MAX_PIPES 50
 #define MAX_PROCESS_PIPES 3
-#define MAX_LISTENERS 2
+#define MAX_LISTENERS_IPC 2
 
 #define NO_SPACE_LEFT -1
 #define PIPE_NOT_FOUND -2

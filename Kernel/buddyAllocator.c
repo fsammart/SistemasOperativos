@@ -39,7 +39,7 @@ void * getBaseMemoryWithIndex(int i, int maxElementsInLevel, int elementNumber)
 
 void * getNextPageRecursive(int index, int currentLevel, int level){
 
-	if(buddyArray.occupied[index-1] == FULL){
+	if(buddyArray.occupied[index-1] == BUDDY_FULL){
 		return NULL;
 	}
 
@@ -48,7 +48,7 @@ void * getNextPageRecursive(int index, int currentLevel, int level){
 			return NULL;
 		}
 
-		buddyArray.occupied[index-1] = FULL;
+		buddyArray.occupied[index-1] = BUDDY_FULL;
 		return buddyArray.base[index-1];
 	}
 
@@ -61,8 +61,8 @@ void * getNextPageRecursive(int index, int currentLevel, int level){
 		{
 			return NULL;
 		}
-		if(buddyArray.occupied[RCHILD(index)-1] == FULL){
-			buddyArray.occupied[index-1] = FULL;
+		if(buddyArray.occupied[RCHILD(index)-1] == BUDDY_FULL){
+			buddyArray.occupied[index-1] = BUDDY_FULL;
 		}
 		return rchild;
 	}
@@ -151,11 +151,11 @@ void freeUpRecursive(int index)
 		// }
 		return;
 	}
-	if(buddyArray.occupied[PARENT(index)-1] == FULL && buddyArray.occupied[SIBLING(index)-1] == EMPTY)
+	if(buddyArray.occupied[PARENT(index)-1] == BUDDY_FULL && buddyArray.occupied[SIBLING(index)-1] == EMPTY)
 	{
 		buddyArray.occupied[PARENT(index)-1] = EMPTY;
 	}
-	else if(buddyArray.occupied[PARENT(index)-1] == FULL && buddyArray.occupied[SIBLING(index)-1] == FULL)
+	else if(buddyArray.occupied[PARENT(index)-1] == BUDDY_FULL && buddyArray.occupied[SIBLING(index)-1] == BUDDY_FULL)
 	{
 		buddyArray.occupied[PARENT(index)-1] = PARTIALLY_FULL;
 	}

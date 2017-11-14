@@ -68,8 +68,8 @@ void initializePipeFields(Process * p , char  * infoPage)
 	p->pipesOpened = 0;
 	p->pipesStruct = (Pipe*)((char*)p->pipes + MAX_PROCESS_PIPES*PIPE_LENGTH); //array de Pipesstruct
 	p->pipePids  = (int*)((char *)p->pipesStruct + MAX_PROCESS_PIPES*sizeof(*p->pipesStruct) ); //array de pids
-	p->blocked = (int*)((char*)p->pipePids + MAX_PROCESS_PIPES*MAX_LISTENERS*sizeof(int) ); //array de pids
-	p->occupiedPosition = (int*)((char*)p->blocked + MAX_LISTENERS*MAX_PROCESS_PIPES*sizeof(int) ); //array de int
+	p->blocked = (int*)((char*)p->pipePids + MAX_PROCESS_PIPES*MAX_LISTENERS_IPC*sizeof(int) ); //array de pids
+	p->occupiedPosition = (int*)((char*)p->blocked + MAX_LISTENERS_IPC*MAX_PROCESS_PIPES*sizeof(int) ); //array de int
 }
 
 int freeProcessPages(int pid)
