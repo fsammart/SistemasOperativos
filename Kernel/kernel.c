@@ -185,6 +185,7 @@ int main()
 void testArgs(void (* entry) (void))
 {
 	entry();
+	while(1);
 }
 
 void printCheckPoint()

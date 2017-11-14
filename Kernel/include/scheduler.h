@@ -10,6 +10,8 @@
 #include "structs.h"
 #include "types.h"
 
+#define INIT_PID 0
+
 typedef void (*EntryPointHandler) (void*);
 
 typedef struct ProcessSlotS {
@@ -37,5 +39,7 @@ void callProcess( void * entryPoint, void * entryPoint2, void * args , void * ar
 void beginScheduler();
 StackFrame * getCurrentUserStack();
 void restartSHELL();
+
+void killAllExceptCurrent();
 
 #endif

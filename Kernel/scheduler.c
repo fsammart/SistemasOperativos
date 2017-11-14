@@ -73,7 +73,36 @@ StackFrame * getCurrentUserStack(){
 		return current->process->thread[current->process->activeThread]->userStack;
 }
 
+void killAllExceptCurrent()
+{
+	ProcessSlot * aux;
+
+	int pid = getCurrentPid();
+
+	int currPid;
+
+	aux = current->next;
+
+	while(aux != current){
+		currPid = aux->process->pid;
+
+		if(currPid != pid && currPid != INIT_PID){
+			removeProcess(currPid);
+		}
+
+		aux = aux->next;
+
+
+	}
+
+
+
+}
+
 void restartSHELL(){
+
+	killAllExceptCurrent();
+
 	sys_call_runC((qword)4 , (qword)NULL , (qword)NULL, (qword)NULL , (qword)NULL , (qword)NULL);
 }
 
