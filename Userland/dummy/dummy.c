@@ -1,25 +1,11 @@
 #include "stdio.h"
+#include "dummy.h"
 
-void insertItem(char c);
-char removeItem();
-void * producer(void * ctx);
-void * consumer(void * ctx);
-void control();
+int consumerID[MAX_CONSUMER+1];
+int producerID[MAX_PRODUCER+1];
 
-void createProcess(void * entry  , char * name);
-void wait(int semaphore);
-void signal(int semaphore);
-
-int semOpen(char * name);
-
-int semCreate(char * name , int start);
-
-void semClose(int index);
-
-void sleep(int time);
-
-
-
+int producers = 1;
+int consumers = 1;
 
 int itemMutex;
 int emptyCount;
@@ -51,40 +37,22 @@ char removeItem() {
 int main(void) {
 	//Mutexes buffer access
 	itemMutex = semCreate("itemMutex", 1 );
-  //
-	// if (itemMutex == SEM_FAILED) {
-	// 	printf("Failed to create itemMutex\n");
-	// 	perror("Error: ");
-	// }
 
 	//Counts full buffer slots
 	fullCount = semCreate("fullCount", 0);
 
-	// if (fullCount == SEM_FAILED) {
-	// 	printf("Failed to create fullCount\n");
-	// 	perror("Error: ");
-	// }
-
 	//Counts empty buffer slots
 	emptyCount = semCreate("emptyCount", bufferSize);
 
-	// if (emptyCount == SEM_FAILED){
-	// 	printf("Failed to create emptyCount\n");
-	// 	perror("Error: ");
-	// }
-
-	//Semaphore initialization
-
-	print("Press enter to start\n");
-
-
 	//Create processes
-	createProcess(producer, "PRODUCER");
+	consumerID[0] = 0;
+	producerID[0] = 0;
+	createProcess(producer, "PRODUCER", &producerID[producers-1]);
+	createProcess(consumer, "CONSUMER", &consumerID[consumers-1]);
 
-	createProcess(consumer, "CONSUMER");
-
- 	 while(1);
+ 	control();
 	//Control thread speed
+	return 0;
 
 }
 
@@ -92,36 +60,30 @@ int a = 10;
 int i = 0;
 void * producer(void * ctx) {
 
-	print("SOY PRODUCER");
-
-
 	int itemP;
 	int fullP;
 	int emptyP;
 
 	itemP = semOpen("itemMutex");
-
 	fullP = semOpen("fullCount");
 
 	emptyP = semOpen("emptyCount");
 
-	print("ya abri");
-
 	while (1) {
+
 		sleep(prodSleepTime);
-
 		int item = i++;
+		int a[2];
+		a[0] = *(int*)ctx;
+		a[1] = item;
 
-		printFF("Produce: %d\n", NULL, &item);
-
+		printFF("Producer %d producing: %d\n", NULL, a);
 		//Decrement the count of empty slots in the buffer (semaphore goes down)
 		//Locks when the remaining empty slots are zero
 		wait(emptyP);
 		wait(itemP);
-
 		insertItem(item);
 		signal(itemP);
-
 		//Increment the count of full slots in the buffer (semaphore goes up)
 		signal(fullP);
 	}
@@ -129,32 +91,57 @@ void * producer(void * ctx) {
 
 void * consumer(void * ctx) {
 	int item;
-
-
 	int itemC;
 	int fullC;
 	int emptyC;
 
 	itemC = semOpen("itemMutex");
-
 	fullC = semOpen("fullCount");
-
 	emptyC = semOpen("emptyCount");
 
 	while (1) {
 		sleep(consSleepTime);
-
 		//Decrement the count of full slots in the buffer (semaphore goes down)
 		//Locks when there is no more information in the buffer
 		wait(fullC);
 		wait(itemC);
-
 		item = removeItem();
 		signal(itemC);
-
 		//Increment the count of empty slots in the buffer (semaphore goes up)
 		signal(emptyC);
 
-    printFF("Consume %d\n", NULL, &item);
+		int a[2];
+		a[0] = *(int*)ctx;
+		a[1] = item;
+
+		printFF("Consumer %d consuming: %d\n", NULL, a);
+
 	}
+}
+
+void control() {
+	int end = 0;
+
+	while(!end) {
+		int c = getchar();
+		switch(c) {
+			case 'c':
+				if(consumers + 1 <= MAX_CONSUMER)
+				{
+					consumerID[consumers] = consumers;
+					consumers++;
+					createProcess(consumer, "CONSUMER", &consumerID[consumers-1]);
+				}
+				break;
+
+			case 'p':
+				if(producers + 1 <= MAX_PRODUCER)
+				{
+					producerID[producers] = producers;
+					producers++;
+					createProcess(producer, "PRODUCER", &producerID[producers-1]);
+				}
+		}
+	}
+
 }

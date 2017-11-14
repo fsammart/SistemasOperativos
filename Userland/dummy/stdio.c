@@ -5,38 +5,38 @@
 #define NULL 0
 #define BUFFERSIZE 100
 
-void createProcess(void * entry  , char * name)
+void createProcess(void * entry  , char * name, void * args)
 {
-	sys_call(23, (qword)entry, (qword)name);
+	sys_call(23, (qword)entry, (qword)name, (qword)args);
 }
 void wait(int semaphore)
 {
-	sys_call(25, (qword)semaphore , (qword)NULL );
+	sys_call(25, (qword)semaphore , (qword)NULL, (qword)NULL );
 }
 
 void signal(int semaphore)
 {
-	sys_call(15, (qword)semaphore , (qword)NULL );
+	sys_call(15, (qword)semaphore , (qword)NULL,(qword)NULL );
 }
 
 int semOpen(char * name)
 {
-	return (int)sys_call(16, (qword)name , (qword)NULL );
+	return (int)sys_call(16, (qword)name , (qword)NULL,  (qword)NULL);
 }
 
 int semCreate(char * name , int start)
 {
-	return (int)sys_call(17, (qword)name , (qword)start );
+	return (int)sys_call(17, (qword)name , (qword)start, (qword)NULL);
 }
 
 void semClose(int index)
 {
-	sys_call(18, (qword)index , (qword)NULL );
+	sys_call(18, (qword)index , (qword)NULL, (qword)NULL);
 }
 
 void sleep(int time)
 {
-	sys_call(24, (qword)time , (qword)NULL );
+	sys_call(24, (qword)time , (qword)NULL,  (qword)NULL);
 }
 
 int putchar(char c){
@@ -216,7 +216,7 @@ int scanFF(const char * format, char ** s, int * n){
 	static char * position = (char*)0x1000000;
 
 void * malloc(long int bytes){
-	return (char *)sys_call(13,bytes,0);
+	return (char *)sys_call(13,bytes,0, NULL);
 }
 char * getPosition(){return position;}
 

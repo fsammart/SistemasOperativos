@@ -1,5 +1,9 @@
-#include <stdioASM.h>
+#ifndef STDIO_H
+#define STDIO_H
+
+#include "stdioASM.h"
 #define NULL 0
+
 int putchar(char c);
 char getchar();
 void printFF(const char * format, char ** s, int * n);
@@ -9,3 +13,12 @@ int scanFF(const char * format, char ** s, int * n);
 int strcmpN(char * str1, char * str2,int number);
 int strcmp(char * str1, char * str2);
 void print(char * s);
+void createProcess(void * entry  , char * name, void * args);
+void wait(int semaphore);
+void signal(int semaphore);
+int semOpen(char * name);
+int semCreate(char * name , int start);
+void semClose(int index);
+void sleep(int time);
+
+#endif
