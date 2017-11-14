@@ -49,9 +49,6 @@ char removeItem() {
 }
 
 int main(void) {
-	int i = 0;
-
-
 	//Mutexes buffer access
 	itemMutex = semCreate("itemMutex", 1 );
   //
@@ -97,7 +94,6 @@ void * producer(void * ctx) {
 
 	print("SOY PRODUCER");
 
-	int item;
 
 	int itemP;
 	int fullP;

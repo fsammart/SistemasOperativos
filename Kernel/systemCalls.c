@@ -10,6 +10,8 @@
 #include "process.h"
 #include "interrupts.h"
 #include "mutex.h"
+#include "threads.h"
+#include "semaphores.h"
 
 #define DUMMY  1
 #define EDITOR 2
@@ -89,7 +91,7 @@ qword sys_call_runC(qword qprogram, qword rsi, qword rdx, qword rcx, qword r8, q
 	switch(program){
 
 		case DUMMY:
-			 
+
 			 moduleAdress = dummyAddress;
 			 mapModulesLogical(moduleAdress);
 			 updateCR3();
@@ -103,7 +105,7 @@ qword sys_call_runC(qword qprogram, qword rsi, qword rdx, qword rcx, qword r8, q
 			break;
 
 		case FORTUNE:
-			
+
 			moduleAdress = fortuneAddress;
 			mapModulesLogical(moduleAdress);
 			updateCR3();
@@ -123,7 +125,7 @@ qword sys_call_runC(qword qprogram, qword rsi, qword rdx, qword rcx, qword r8, q
 	int pid = getCurrentPid();
 
 	removeProcess(pid);
-	 
+
 	// updateCR3();
 	return (qword)currentAddress;
 
@@ -134,7 +136,7 @@ qword sys_call_runC(qword qprogram, qword rsi, qword rdx, qword rcx, qword r8, q
 }
 
 qword sys_call_getAddressOfModuleC(qword qprogram, qword rsi, qword rdx, qword rcx, qword r8, qword r9){
-	
+
 
 	int program = (int) qprogram;
 	void * moduleAdress;
@@ -156,7 +158,7 @@ qword sys_call_getAddressOfModuleC(qword qprogram, qword rsi, qword rdx, qword r
 		case SHELL:
 			moduleAdress= shellAddress;
 			break;
-			
+
 	}
 	// mapModulesLogical(moduleAdress);
 	// updateCR3();
@@ -209,7 +211,7 @@ qword sys_call_mallock(qword qnumberOfBytes, qword rsi,qword rdx, qword rcx, qwo
 }
 
 qword sys_call_createProcess(qword qentryPoint , qword description, qword param,qword rcx, qword r8, qword r9)
-{	
+{
 	void * entryPoint = (void *)qentryPoint;
 	createProcess(entryPoint , (char*)description , (void*)param);
 	return 0;
@@ -252,7 +254,7 @@ qword sys_call_semClose(qword index,qword rsi,qword rdx, qword rcx, qword r8, qw
 {
 	semClose((int)index);
 	return 0;
-} 
+}
 
 
 qword sys_call_getMutex(qword mutexName,qword rsi,qword rdx, qword rcx, qword r8, qword r9)

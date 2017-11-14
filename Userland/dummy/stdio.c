@@ -7,36 +7,36 @@
 
 void createProcess(void * entry  , char * name)
 {
-	sys_call(23, entry, name);
+	sys_call(23, (qword)entry, (qword)name);
 }
 void wait(int semaphore)
 {
-	sys_call(25, semaphore , NULL );
+	sys_call(25, (qword)semaphore , (qword)NULL );
 }
 
 void signal(int semaphore)
 {
-	sys_call(15, semaphore , NULL );
+	sys_call(15, (qword)semaphore , (qword)NULL );
 }
 
 int semOpen(char * name)
 {
-	sys_call(16, name , NULL );
+	return (int)sys_call(16, (qword)name , (qword)NULL );
 }
 
 int semCreate(char * name , int start)
 {
-	sys_call(17, name , start );
+	return (int)sys_call(17, (qword)name , (qword)start );
 }
 
 void semClose(int index)
 {
-	sys_call(18, index , NULL );
+	sys_call(18, (qword)index , (qword)NULL );
 }
 
 void sleep(int time)
 {
-	sys_call(24,time , NULL );
+	sys_call(24, (qword)time , (qword)NULL );
 }
 
 int putchar(char c){
