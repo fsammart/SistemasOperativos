@@ -26,4 +26,9 @@ qword sys_call_getMutex(qword mutexName,qword rsi,qword rdx, qword rcx, qword r8
 qword sys_call_lockMutex(qword mutex,qword rsi,qword rdx, qword rcx, qword r8, qword r9);
 qword sys_call_freeMutex (qword mutex,qword rsi,qword rdx, qword rcx, qword r8, qword r9);
 qword sys_call_closeMutex(qword index,qword rsi,qword rdx, qword rcx, qword r8, qword r9);
+qword sys_call_openPipe(qword name,qword rsi,qword rdx, qword rcx, qword r8, qword r9);
+qword sys_call_createPipe(qword name,qword rsi,qword rdx, qword rcx, qword r8, qword r9);
+qword sys_call_closePipe(qword pipe,qword rsi,qword rdx, qword rcx, qword r8, qword r9);
+qword sys_call_read(qword pipe,qword result,qword bytes, qword rcx, qword r8, qword r9);
+qword sys_call_write(qword pipe,qword message,qword rdx, qword rcx, qword r8, qword r9);
 #endif

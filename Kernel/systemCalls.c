@@ -18,7 +18,7 @@
 #define FORTUNE 3
 #define SHELL 4
 #define PAGE_FAULT_MODULE 5
-#define SYSTEM_CALL_COUNT 30
+#define SYSTEM_CALL_COUNT 35
 
 static void * const dummyAddress = (void*)0xA00000;
 static void * const shellAddress = (void*)0xC00000;
@@ -315,9 +315,34 @@ void setUpSystemCalls(){
     sysCalls[23] = (sys)&sys_call_createProcess;
     sysCalls[24] = (sys)&sys_call_sleep;
     sysCalls[25] = (sys)&sys_call_wait;
+		sysCalls[26] = (sys)&sys_call_openPipe;
+		sysCalls[27] = (sys)&sys_call_createPipe;
+		sysCalls[28] = (sys)&sys_call_closePipe;
+		sysCalls[29] = (sys)&sys_call_read;
+		sysCalls[30] = (sys)&sys_call_write;
 }
 
-
+qword sys_call_openPipe(qword name,qword rsi,qword rdx, qword rcx, qword r8, qword r9)
+{
+	 return (qword)openPipe((char *)name);
+}
+qword sys_call_createPipe(qword name,qword rsi,qword rdx, qword rcx, qword r8, qword r9)
+{
+	return (qword)createPipe((char *)name);
+}
+qword sys_call_closePipe(qword pipe,qword rsi,qword rdx, qword rcx, qword r8, qword r9)
+{
+	closePipe((Pipe *)pipe);
+	return 0;
+}
+qword sys_call_read(qword pipe,qword result,qword bytes, qword rcx, qword r8, qword r9)
+{
+	return (qword)read((Pipe *)pipe , (char*)result,(int) bytes);
+}
+qword sys_call_write(qword pipe,qword message,qword rdx, qword rcx, qword r8, qword r9)
+{
+	return (qword)write((Pipe *)pipe , (char*) message);
+}
 qword syscallHandler(qword rdi,qword rsi, qword rdx, qword rcx, qword r8, qword r9){
 
 
