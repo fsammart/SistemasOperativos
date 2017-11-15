@@ -10,6 +10,21 @@ void removeProcess(int pid)
 	//TODOsys_call()
 }
 
+void lockMutex(int mut)
+{
+	sys_call(20 , mut , NULL, NULL);
+}
+
+void freeMutex(int mut)
+{
+	sys_call(21 , mut , NULL, NULL);
+}
+
+int getMutex(char * name)
+{
+	return sys_call(19 , name, NULL, NULL);
+}
+
 int createProcess(void * entry  , char * name, void * args)
 {
 	return sys_call(23, (qword)entry, (qword)name, (qword)args);

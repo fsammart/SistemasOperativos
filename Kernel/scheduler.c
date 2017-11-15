@@ -105,6 +105,9 @@ void restartSHELL(){
 
 	killAllExceptCurrent();
 
+	initializeMutexes();
+	initializeSemaphores();
+
 	sys_call_runC((qword)4 , (qword)NULL , (qword)NULL, (qword)NULL , (qword)NULL , (qword)NULL);
 }
 

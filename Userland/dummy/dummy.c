@@ -1,6 +1,9 @@
 #include "stdio.h"
 #include "dummy.h"
 
+void prodCons();
+void philosophers();
+
 int consumerID[MAX_CONSUMER+1];
 int producerID[MAX_PRODUCER+1];
 
@@ -26,6 +29,14 @@ int w = 0;
 int bufferLength = 0;
 
 char buffer[50];
+
+void intToString(int n, char*buffer, int digits)
+{
+	*buffer = ((n/10)%10)+'0';
+	*(buffer+1)=(n%10)+'0';
+	*(buffer+2)=0;
+}
+
 
 void insertItem(char c) {
 	buffer[w] = c;
@@ -56,16 +67,19 @@ int main(int program){
 	putNumber(program);
 	switch(program)
 	{
-		case PROD_CONS: philosophers();
+		case PROD_CONS: prodCons();
 			break;
-		case PHILOSOPHERS:
+		case PHILOSOPHERS: philosophers();
 				break;
 		case MALLOC_TEST: break;
 		
 		case PIPE_TEST:	break;	
 	}
 }
-int philosophers(void) {
+
+void prodCons(void) {
+
+	print("PRODCONS");
 
 	int pid1,pid2;
 
@@ -275,4 +289,263 @@ void control() {
 		}
 	}
 
+}
+
+
+int * state;
+
+int strlen(char * c){
+	int len = 0;
+
+	while(c[len] != 0)
+		len++;
+
+	return len;
+}
+
+int isdigit(char c){
+	int ch = c - '0';
+	if((ch <= 9) && (ch >= 0))
+		return 1;
+
+	return 0;
+}
+
+int isNotInteger(char * c){
+    char current;
+    int i = 0;
+    int integer = 0;
+    int length = strlen(c);
+
+    while(i < length){
+        current = *(c + i);
+
+        if(!isdigit(current))
+            return -1;
+
+        integer = (integer * 10) + (current - '0');
+
+        i++;
+    }
+
+    return integer;
+}
+
+int validateParameters(int cant, char *toValidate[], int * input){
+    if(cant > 2){
+        print("Cantidad de parametros invalido");
+		putchar('\n');
+		return -1;
+    }
+
+    if(cant == 1)
+        *input = DEFAULTP;
+    else
+        *input = isNotInteger(toValidate[1]);
+
+    if((* input) == -1){
+        print("Error de parametros");
+		putchar('\n');
+		return -1;
+    }
+
+    if((*input) >= 100){
+        print("La cantidad de filosofos no puede ser mayor o igual a 100");
+		putchar('\n');
+		return -1;
+    }
+
+    return 0;
+}
+
+int startSemaphores(mutex_t * mutex, sem_t * semaphores[], int cant){
+	int i = 0;
+
+	if((*mutex = getMutex("mutexp")) == ERROR)
+    {
+        print("AQUI");
+        return -1;
+    }
+
+	while(i < cant){
+        if(i < 10){
+            char *  buffer  = malloc(3);
+
+            intToString(i, buffer, 1);
+
+            //buffer[1]=0;
+            //print(buffer);
+		    if((*semaphores[i] = semCreate(buffer, 0)) == ERROR)
+            {
+                print("AQUI2");
+
+                ncPrintDec(i);
+                return -1;
+            }
+
+        }else{
+            char *  buffer  = malloc(3);
+            //buffer[2]=0;
+            intToString(i, buffer, 2);
+		    if((*semaphores[i] = semCreate(buffer, 0)) == ERROR)
+            {
+                print("AQUI3");
+                return -1;
+            }
+        }
+
+		i++;
+	}
+
+    return 0;
+}
+
+void testP(int number, int total, sem_t * sem){
+    if (state[number] == HUNGRY && state[(number + 4) % total] != EATING && state[(number + 1) % total] != EATING){
+        state[number] = EATING;
+
+        sleep(10);
+
+        print("Philosopher ");
+        putNumber(number + 1);
+        print(" takes fork ");
+        putNumber(((number + 4) % total) + 1);
+        print(" and ");
+        putNumber(number + 1);
+        putchar('\n');
+
+        print("Philosopher ");
+        putNumber(number + 1);
+        print(" is Eating\n");
+
+        signal(*sem);
+
+    }
+}
+
+void take_fork(threadArgument * arg){
+    lockMutex(*(arg->mutex));
+
+    state[arg->value] = HUNGRY;
+
+    print("Philosopher ");
+    putNumber(arg->value + 1);
+    print(" is Hungry\n");
+
+    testP(arg->value, arg->cant, arg->sems + arg->value);
+
+    freeMutex(*(arg->mutex));
+            sleep(50);
+    wait(*(arg->sems + arg->value));
+
+
+}
+
+void put_fork(threadArgument * arg){
+    lockMutex(*(arg->mutex));
+
+    state[arg->value] = THINKING;
+
+    print("Philosopher ");
+    putNumber(arg->value + 1);
+    print(" putting fork ");
+    putNumber((arg->value + 4) % arg->cant + 1);
+    print(" and ");
+    putNumber(arg->value + 1);
+    print(" down");
+    putchar('\n');
+
+    print("Philosopher ");
+    putNumber(arg->value + 1);
+    print(" is thinking");
+    putchar('\n');
+
+    testP((arg->value + 4) % arg->cant, arg->cant, arg->sems + ((arg->value + 4) % arg->cant));
+    testP((arg->value + 1) % arg->cant, arg->cant, arg->sems + ((arg->value + 1) % arg->cant));
+
+    freeMutex(*(arg->mutex));
+}
+
+void * philospher(void * args){
+	threadArgument * arg = (threadArgument *)args;
+
+    print("argument received");
+    ncPrint("<");
+    ncPrintDec(arg->sems[0]);
+    ncPrint(">");
+
+    while(1){
+        sleep(1);
+		take_fork(arg);
+        sleep(1);
+        put_fork(arg);
+    }
+}
+
+void createThreads(int total, sem_t * semaphores[], mutex_t * mutex){
+    int i = 0;
+
+	threadArgument * args [total];
+
+    while(i < total){
+    	args[i] = malloc(sizeof(*args[i]));
+
+    	args[i]->sems = semaphores;
+    	args[i]->mutex = mutex;
+    	args[i]->cant = total;
+    	args[i]->value = i;
+
+       createProcess(philospher,"PHILO"  , (void*) args[i]);
+        print("Philosopher ");
+        putNumber(i + 1);
+        print(" is thinking");
+        putchar('\n');
+
+        i++;
+    }
+}
+
+void initializeArray(sem_t * array[], int dim){
+	int i;
+
+	for(i = 0; i < dim; i++)
+		array[i] = malloc(sizeof(array[i]));
+}
+
+int dPhilosphers(int number){
+	mutex_t mutex;
+	sem_t * semaphores[number];
+    int st[number];
+
+    state = st;
+
+    initializeArray(semaphores, number);
+
+    if(startSemaphores(&mutex, semaphores, number) == -1)
+    {
+        print("FALLO");
+        return -1;
+    }
+
+    createThreads(number, semaphores, &mutex);
+
+    while(1);
+}
+
+void philosophers(){
+
+	print("FILOSODOS");
+    int philosphers = DEFAULTP;
+
+    /*if(validateParameters(argc, argv, &philosphers) == -1)
+        return -1;
+*/
+    if(dPhilosphers(philosphers) == -1)
+        return -1;
+
+	//terminateThread();
+
+    while(1);
+
+    return 0;
 }
