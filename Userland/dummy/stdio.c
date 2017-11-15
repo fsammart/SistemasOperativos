@@ -5,9 +5,23 @@
 #define NULL 0
 #define BUFFERSIZE 100
 
+
+void intToString(int n, char*buffer, int digits)
+{
+	*buffer = ((n/10)%10)+'0';
+	*(buffer+1)=(n%10)+'0';
+	*(buffer+2)=0;
+}
+
+
+void printProcesses()
+{
+	sys_call(10, NULL, NULL , NULL);
+}
+
 void removeProcess(int pid)
 {
-	//TODOsys_call()
+	sys_call(11, pid, NULL , NULL);
 }
 
 void lockMutex(int mut)
@@ -27,7 +41,7 @@ int getMutex(char * name)
 
 int createProcess(void * entry  , char * name, void * args)
 {
-	return sys_call(23, (qword)entry, (qword)name, (qword)args);
+	return (int)sys_call(23, (qword)entry, (qword)name, (qword)args);
 }
 void wait(int semaphore)
 {

@@ -7,9 +7,8 @@ void philosophers();
 int consumerID[MAX_CONSUMER+1];
 int producerID[MAX_PRODUCER+1];
 
-int consumerPids[MAX_CONSUMER + 1];
-
-int producerPids[MAX_PRODUCER + 1];
+int consumerPid[MAX_CONSUMER+1];
+int producerPid[MAX_PRODUCER+1];
 
 int producers = 1;
 int consumers = 1;
@@ -18,7 +17,7 @@ int itemMutex;
 int emptyCount;
 int fullCount;
 
-int prodSleepTime = 1;
+int prodSleepTime = 10;
 int consSleepTime = 100;
 
 const int bufferSize = 50;
@@ -29,14 +28,6 @@ int w = 0;
 int bufferLength = 0;
 
 char buffer[50];
-
-void intToString(int n, char*buffer, int digits)
-{
-	*buffer = ((n/10)%10)+'0';
-	*(buffer+1)=(n%10)+'0';
-	*(buffer+2)=0;
-}
-
 
 void insertItem(char c) {
 	buffer[w] = c;
@@ -49,41 +40,7 @@ char removeItem() {
 	return result;
 }
 
-void initializeArrays()
-{
-	int i;
-
-	for (i = 0 ; i < MAX_PRODUCER + 1 ; i++){
-		producerPids[i] = -1;
-	}
-
-	for (i = 0 ; i < MAX_CONSUMER + 1 ; i++){
-		consumerPids[i] = -1;
-	}
-}
-
-int main(int program){
-
-	putNumber(program);
-	switch(program)
-	{
-		case PROD_CONS: prodCons();
-			break;
-		case PHILOSOPHERS: philosophers();
-				break;
-		case MALLOC_TEST: break;
-		
-		case PIPE_TEST:	break;	
-	}
-}
-
-void prodCons(void) {
-
-	print("PRODCONS");
-
-	int pid1,pid2;
-
-	initializeArrays();
+int main(void) {
 	//Mutexes buffer access
 	itemMutex = semCreate("itemMutex", 1 );
 
@@ -95,14 +52,12 @@ void prodCons(void) {
 
 	//Create processes
 	consumerID[0] = 0;
-	producerID[0] = 0; 
-	pid1 = createProcess(producer, "PRODUCER", &producerID[producers-1]);
-	pid2 = createProcess(consumer, "CONSUMER", &consumerID[consumers-1]);
-
-	addToProducer(pid1);
-	addToConsumer(pid2);
+	producerID[0] = 0;
+	producerPid[producers-1] = createProcess(producer, "PRODUCER", &producerID[producers-1]);
+	consumerPid[consumers-1] = createProcess(consumer, "CONSUMER", &consumerID[consumers-1]);
 
  	control();
+
 	//Control thread speed
 	return 0;
 
@@ -111,7 +66,6 @@ void prodCons(void) {
 int a = 10;
 int i = 0;
 void * producer(void * ctx) {
-
 	int itemP;
 	int fullP;
 	int emptyP;
@@ -141,72 +95,6 @@ void * producer(void * ctx) {
 	}
 }
 
-int getProducerPid()
-{
-	int i ; 
-	int aux;
-
-	for (i = 0 ; i < MAX_PRODUCER + 1 ; i++)
-	{
-		if(producerPids[i] != -1)
-		{
-			aux = producerPids[i];
-			producerPids[i] = -1 ;
-
-			return aux;
-		} 
-	}
-
-	return -1;
-
-}
-
-int getConsumerPid()
-{
-	int i ; 
-	int aux;
-
-	for (i = 0 ; i < MAX_CONSUMER + 1 ; i++)
-	{
-		if(consumerPids[i] != -1)
-		{
-			aux = consumerPids[i];
-			consumerPids[i] = -1 ;
-			
-			return aux;
-		} 
-	}
-
-	return -1;
-}
-
-void addToProducer(int pid )
-{
-	int i ;
-
-	for (i = 0  ; i < MAX_PRODUCER + 1 ; i++)
-	{
-		if(producerPids[i] == -1)
-		{
-			producerPids[i] = pid;
-			return;
-		}
-	}
-}
-
-void addToConsumer(int pid )
-{
-	int i ;
-
-	for (i = 0  ; i < MAX_CONSUMER + 1 ; i++)
-	{
-		if(consumerPids[i] == -1)
-		{
-			consumerPids[i] = pid;
-			return;
-		}
-	}
-}
 void * consumer(void * ctx) {
 	int item;
 	int itemC;
@@ -237,10 +125,8 @@ void * consumer(void * ctx) {
 	}
 }
 
-
 void control() {
 	int end = 0;
-	int pid;
 
 	while(!end) {
 		int c = getchar();
@@ -250,9 +136,7 @@ void control() {
 				{
 					consumerID[consumers] = consumers;
 					consumers++;
-					pid = createProcess(consumer, "CONSUMER", &consumerID[consumers-1]);
-					ncPrintDec(pid);
-					addToConsumer(pid);
+					consumerPid[consumers-1] = createProcess(consumer, "CONSUMER", &consumerID[consumers-1]);
 				}
 				break;
 
@@ -261,34 +145,46 @@ void control() {
 				{
 					producerID[producers] = producers;
 					producers++;
-					pid = createProcess(producer, "PRODUCER", &producerID[producers-1]);
-					ncPrintDec(pid);
-					addToProducer(pid);
+					producerPid[producers-1] = createProcess(producer, "PRODUCER", &producerID[producers-1]);
 				}
 				break;
-			case 'q':
-				if(consumers > 0)
+			case 'z':
+					if(producers-1 >= 0)
+					{
+							removeProcess(producerPid[producers-1]);
+							producers--;
+					}
+
+				break;
+			case 'x':
+				if(consumers-1 >= 0)
 				{
-					pid = getConsumerPid();
-					print("REMOVING");
-					ncPrintDec(pid);
-					//removeProcess(pid);
+					removeProcess(consumerPid[consumers-1]);
 					consumers--;
 				}
 				break;
-			case 'd' :
-				if(producers > 0)
-				{
-					pid = getProducerPid();
-					print("REMOVING");
-					ncPrintDec(pid);
-					//removeProcess(pid);
-					producers--;
-				}	
+			case 'q':
+				killAllProcesses();
+				//printProcesses();
+				end = 1;
+				print("PASOOO");
 				break;
 		}
 	}
 
+}
+
+void killAllProcesses()
+{
+	int i;
+	for(i = 0; i < producers; i++)
+	{
+		removeProcess(producerPid[i]);
+	}
+	for(i = 0; i < consumers; i++)
+	{
+		removeProcess(consumerPid[i]);
+	}
 }
 
 
@@ -549,3 +445,5 @@ void philosophers(){
 
     return 0;
 }
+
+

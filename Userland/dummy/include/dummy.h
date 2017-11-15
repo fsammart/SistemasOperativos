@@ -9,6 +9,7 @@
 #define MALLOC_TEST 3
 #define PHILOSOPHERS 4
 
+
 #define DEFAULTP 5
 #define THINKING 0
 #define HUNGRY 1
@@ -21,7 +22,7 @@ typedef int sem_t;
 typedef int mutex_t;
 
 typedef struct{
-	int cant;
+    int cant;
     sem_t * sems;
     sem_t * mutex;
     int value;
@@ -42,6 +43,7 @@ int dPhilosphers(int number);
 
 //para la prueba
 int philosphers();
+
 
 void insertItem(char c);
 char removeItem();

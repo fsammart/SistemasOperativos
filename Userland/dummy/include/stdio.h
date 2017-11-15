@@ -21,4 +21,8 @@ int semCreate(char * name , int start);
 void semClose(int index);
 void sleep(int time);
 
+void intToString(int n, char*buffer, int digits);
+
+void printProcesses();
+
 #endif
