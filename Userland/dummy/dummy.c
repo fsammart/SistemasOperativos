@@ -1,7 +1,7 @@
 #include "stdio.h"
 #include "dummy.h"
 
-void prodCons();
+int prodCons();
 void philosophers();
 
 int consumerID[MAX_CONSUMER+1];
@@ -39,8 +39,23 @@ char removeItem() {
 	r = (r + 1) % bufferSize;
 	return result;
 }
+int main(int program)
+{
+	switch(program)
+		{
+			case PROD_CONS: prodCons();
+				break;
+			case PHILOSOPHERS: philosophers();
+					break;
+			case MALLOC_TEST: break;
 
-int main(void) {
+			case PIPE_TEST:	break;
+		}
+		return 0;
+}
+
+
+int prodCons(void) {
 	//Mutexes buffer access
 	itemMutex = semCreate("itemMutex", 1 );
 
@@ -365,11 +380,6 @@ void put_fork(threadArgument * arg){
 void * philospher(void * args){
 	threadArgument * arg = (threadArgument *)args;
 
-    print("argument received");
-    ncPrint("<");
-    ncPrintDec(arg->sems[0]);
-    ncPrint(">");
-
     while(1){
         sleep(1);
 		take_fork(arg);
@@ -429,8 +439,6 @@ int dPhilosphers(int number){
 }
 
 void philosophers(){
-
-	print("FILOSODOS");
     int philosphers = DEFAULTP;
 
     /*if(validateParameters(argc, argv, &philosphers) == -1)
@@ -445,5 +453,3 @@ void philosophers(){
 
     return 0;
 }
-
-

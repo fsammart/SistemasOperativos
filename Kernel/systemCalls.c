@@ -123,7 +123,7 @@ qword sys_call_runC(qword qprogram, qword dumyProgram, qword rdx, qword rcx, qwo
 	}
 
 	int pid = getCurrentPid();
-	
+
 	removeProcess(pid);
 
 	// updateCR3();
@@ -213,8 +213,7 @@ qword sys_call_mallock(qword qnumberOfBytes, qword rsi,qword rdx, qword rcx, qwo
 qword sys_call_createProcess(qword qentryPoint , qword description, qword param,qword rcx, qword r8, qword r9)
 {
 	void * entryPoint = (void *)qentryPoint;
-	createProcess(entryPoint , (char*)description , (void*)param);
-	return 0;
+	return createProcess(entryPoint , (char*)description , (void*)param);
 }
 
 
