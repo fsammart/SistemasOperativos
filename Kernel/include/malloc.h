@@ -8,6 +8,7 @@
 #include "scheduler.h"
 #include "structs.h"
 #include "types.h"
+#include "process.h"
 
 
 #define BLOCK_SIZE 1024*4

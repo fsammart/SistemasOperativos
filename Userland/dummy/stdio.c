@@ -16,27 +16,27 @@ void intToString(int n, char*buffer, int digits)
 
 void printProcesses()
 {
-	sys_call(10, NULL, NULL , NULL);
+	sys_call(10, (qword)NULL, (qword)NULL , (qword)NULL);
 }
 
 void removeProcess(int pid)
 {
-	sys_call(11, pid, NULL , NULL);
+	sys_call(11, (qword)pid, (qword)NULL , (qword)NULL);
 }
 
 void lockMutex(int mut)
 {
-	sys_call(20 , mut , NULL, NULL);
+	sys_call(20 , (qword)mut , (qword)NULL, (qword)NULL);
 }
 
 void freeMutex(int mut)
 {
-	sys_call(21 , mut , NULL, NULL);
+	sys_call(21 , (qword)mut , (qword)NULL, (qword)NULL);
 }
 
 int getMutex(char * name)
 {
-	return sys_call(19 , name, NULL, NULL);
+	return sys_call(19 , (qword)name, (qword)NULL, (qword)NULL);
 }
 
 int createProcess(void * entry  , char * name, void * args)
