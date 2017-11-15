@@ -18,7 +18,7 @@ void while1(){
 
 void ls(){
 	char ** s = malloc(sizeof(char *));
-	char * ls = "Programs: prodCons, philosophers, pipetest, mallocTest, editor, shell, fortune";
+	char * ls = "Programs: prodCons, philosophers, pipetest, editor, shell, fortune";
 	s[0]= ls;
 	printFF("%s",s, NULL);
 	putchar('\n');
@@ -56,38 +56,13 @@ void man(char * buffer){
 
 }
 
-/*
 
 void run(char * c){
-	echoShellOFF();
-	void * returnAdress;
-	if(!strcmp("dummy", c)){
-		returnAdress = (void*)sys_call(14,1,0);
-		((EntryPoint)returnAdress)();
-	}
-	else if(!strcmp("editor",c)){
-		returnAdress = (void*)sys_call(14,2,0);
-		((EntryPoint)returnAdress)();
-	}
-	else if(!strcmp("fortune",c)){
-		returnAdress = (void*)sys_call(14,3,0);
-		((EntryPoint)returnAdress)();
-	}
-	echoShellON();
-	return;
-}
-*/
-
-void run(char * c){
-	//echoShellOFF();
 	if(!strcmp("prodCons", c)){
 		sys_call(7,1,1);
 	}
 	else if(!strcmp("pipeTest", c)){
 		sys_call(7,1,2);
-	}
-	else if(!strcmp("mallocTest", c)){
-		sys_call(7,1,3);
 	}
 	else if(!strcmp("philosophers", c)){
 		sys_call(7,1,4);
@@ -208,10 +183,6 @@ void parser(char * buffer){
 
 	if(!strcmp("help", buffer)){
 		helpShell();
-		return;
-	}
-	if(!strcmp("cli", buffer)){
-		cli();
 		return;
 	}
 	if(!strcmp("clear", buffer)){
