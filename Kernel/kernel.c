@@ -155,8 +155,8 @@ int main()
 	ncPrint("Initializing Semaphores: OK");
 	ncPrint("FinishStartup: OK");
 	clear();
-	printMsg(0,0,"Arquitectura de computadoras",0x0F);
-	printMsg(1,0,"La hora local es:",0x0F);
+	printMsg(0,0,"Sistemas Operativos",0x0F);
+	printMsg(1,0,"La hora en UTC es:",0x0F);
 	//Scheduler
 	//createProcess(processA);
 	createProcess(init, "init" , NULL);
@@ -166,8 +166,8 @@ int main()
 	//createProcess(testArgs , "test" , printCheckPoint);
 	//createProcess(mainPC, "PRODCONS");
 	//createProcess(mainP, "PHILOSOPHERS");
-	
-	
+
+
 
 	//testMutex = givenAvariable();
 
@@ -187,7 +187,7 @@ void testArgs(void (* entry) (void))
 	entry();
 	void (* a) (void)= 0 ;
 	a();
-	
+
 	while(1);
 }
 
