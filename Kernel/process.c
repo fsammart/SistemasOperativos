@@ -55,6 +55,7 @@ Process * getProcess(void * entryPoint , char * description, void * args){
 	p->state = READY;
 	p->description = description;
 	p->heap = NULL;
+	p->pagesIndex = 0;
 	initializePipeFields(p , infoPage);
 
 	initiatePipesForProcess(p->occupiedPosition);
@@ -74,11 +75,17 @@ void initializePipeFields(Process * p , char  * infoPage)
 
 int freeProcessPages(int pid)
 {
+	int i;
 	Process  * p = getProcessById(pid);
 	deallocPage((char*)p);
-	deallocPage((char*)p->thread[0]->userStack);
-	deallocPage((char*)p->thread[0]->kernelStack);
+	for(i=0; i<p->numberOfThreads; i++){
+		deallocPage((char*)p->thread[i]->userStack);
+		deallocPage((char*)p->thread[i]->kernelStack);
+	}
 	deallocPage((char*)p->heap->dataStart);
+	for (i = 0; i < p->pagesIndex; ++i){
+		deallocPage((char*)p->pages[i]);
+	}
 	return 0;
 }
 
@@ -88,6 +95,15 @@ void initiatePagesForProcess(void * pages[] , int length)
 	for(i = 0; i < length; i++){
 		pages[i] = NULL;
 	}
+}
+
+void addPagesToProcess(void * pageBase,int pid){
+	Process  * p = getProcessById(pid);
+	if(p == NULL || p->pagesIndex >= MAX_PAGES_PER_PROCESS){
+		return;
+	}
+	p->pages[p->pagesIndex] = pageBase;
+	p->pagesIndex++;
 }
 
 void initiatePipesForProcess(int * occupiedPosition)

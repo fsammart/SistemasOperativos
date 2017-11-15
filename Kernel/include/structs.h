@@ -83,6 +83,7 @@ typedef struct Process_s{
 	Pipe *  pipesStruct;
 	char *  pipes;
 	s_block  heap;
+	int pagesIndex;
 	void * pages[MAX_PAGES_PER_PROCESS];
 }Process;
 

@@ -121,6 +121,7 @@ s_block extendHeap(size_t size, Process * p ){
 		last->next = newBlock;
 		newBlock->prev = last;
 	}
+	addPagesToProcess((void*)newBlock,p->pid);
 	return newBlock;
 }
 
