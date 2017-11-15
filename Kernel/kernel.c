@@ -120,13 +120,6 @@ void * initializeKernelBinary()
 	return getStackBase();
 }
 
-int givenAvariable();
-
-void whenTwoProcessTryToAccesItAtTheSameTime();
-
-int testMutex;
-
-
 int main()
 {
 
@@ -158,91 +151,12 @@ int main()
 	printMsg(0,0,"Sistemas Operativos",0x0F);
 	printMsg(1,0,"La hora en UTC es:",0x0F);
 	//Scheduler
-	//createProcess(processA);
 	createProcess(init, "init" , NULL);
-	//createProcess(processA, "process A");
-	//createProcess(processB, "process B");
 	createProcess(currentAddress, "SHELL" , NULL);
-	//createProcess(testArgs , "test" , printCheckPoint);
-	//createProcess(mainPC, "PRODCONS");
-	//createProcess(mainP, "PHILOSOPHERS");
-
-
-
-	//testMutex = givenAvariable();
-
-	//whenTwoProcessTryToAccesItAtTheSameTime();
 
 	finishStartup();
 
 	while(1);
-
-
-
-}
-
-void testArgs(void (* entry) (void))
-{
-	print("ENTROOO");
-	entry();
-	void (* a) (void)= 0 ;
-	a();
-
-	while(1);
-}
-
-void printCheckPoint()
-{
-	ncPrint("checkpoint 3");
-}
-
-int value=0;
-
-
-void test1(){
-	sleep(10);
-
-	int mutex = getMutex("hola");
-	while(1){
-
-	lockMutex(mutex);
-	ncPrint("*");
-	ncPrintDec(testMutex);
-	ncPrint("*");
-	freeMutex(mutex);
-
-	}
-}
-
-void test2(){
-
-	int mutex = getMutex("hola");
-	while(1){
-
-	lockMutex(mutex);
-
-
-	if(testMutex>0)testMutex--;
-	sleep(50);
-	ncPrint("+");
-	ncPrintDec(testMutex);
-	ncPrint("+");
-
-	if( testMutex == 97 ){
-		closeMutex(mutex);
-	}
-
-	freeMutex(mutex);
-	}
-}
-
-int givenAvariable(){
-	return 100;
-}
-
-void whenTwoProcessTryToAccesItAtTheSameTime(){
-	createProcess( test1 ,"test1" ,NULL );
-	createProcess( test2 , "test2",NULL );
 
 
 
