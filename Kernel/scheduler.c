@@ -141,11 +141,11 @@ int nextThread()
 {
 	int i = 1;
 	Process * p = getCurrentProcess();
-	while( p->thread[(p->activeThread + i )%(3)] == NULL){
+	while( p->thread[(p->activeThread + i )%(MAX_THREADS)] == NULL){
 		i++;
 	}
 
-	return (p->activeThread + i )%(3);
+	return (p->activeThread + i )%(MAX_THREADS);
 }
 /* returns kernel stack*/
 StackFrame * switchUserToKernel(void * esp){
@@ -212,7 +212,7 @@ char * getStateFromNumber(int state){
 
 void printProcesses(){
 	int c=0;
-	int i;
+	int i,j;
 	char * state;
 	char * stack;
 	Process ** s= getCurrentProcesses(&c);
@@ -227,6 +227,14 @@ void printProcesses(){
 		print("  UserStack:");
 		stack = (char*)s[i]->thread[0]->userStack;
 		ncPrintHex((uint64_t)stack);
+		for(j=0; j<s[i]->numberOfThreads; j++){
+			putchar('\n');
+			print("         thread: ");
+			putNumber(j);
+			print("   UserStack:");
+			stack = (char*)s[i]->thread[0]->userStack;
+			ncPrintHex((uint64_t)stack);
+		}
 
 		putchar('\n');
 	}
@@ -234,6 +242,10 @@ void printProcesses(){
 
 void removeProcess(int pid) {
 	
+	if(pid == 0){
+		_yield();
+	}
+
 	if (current == NULL) {
 		return;
 
@@ -254,7 +266,7 @@ void removeProcess(int pid) {
 		slotToRemove = slotToRemove->next;
 		i++;
 	}
-	
+
 	prevSlot->next = slotToRemove->next;
 	cardinal_processes--;
 

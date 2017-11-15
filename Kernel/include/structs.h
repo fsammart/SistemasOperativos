@@ -3,6 +3,7 @@
 #define STRUCTS_H
 
 #define MAX_PAGES_PER_PROCESS 10
+#define MAX_THREAD 10
 #include <lib.h>
 
 
@@ -74,7 +75,7 @@ typedef struct Process_s{
 	int activeThread;
 	int numberOfThreads;
 
-	Thread * thread[3];
+	Thread * thread[MAX_THREAD];
 
 	int pipesOpened;
  	int * occupiedPosition;
@@ -83,6 +84,7 @@ typedef struct Process_s{
 	Pipe *  pipesStruct;
 	char *  pipes;
 	s_block  heap;
+	int pagesIndex;
 	void * pages[MAX_PAGES_PER_PROCESS];
 }Process;
 

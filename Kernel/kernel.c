@@ -139,36 +139,35 @@ int main()
 	loadIDT();
 	mouse_init();
 	enablePIC();
-	printMsg(0,0,"Arquitectura de computadoras",0x0F);
-	ncPrint("H");
-	printMsg(1,0,"La hora local es:",0x0F);
+	ncPrint("SetUp Kernel: OK");
 	mapModulesLogical((void*)shellAddress);
 	updateCR3();
-	ncPrint("checkpoint 1");
+	ncPrint("Starting SHELL: OK");
 	resetBuffer();
-	ncPrint("checkpoint 2");
+	ncPrint("Reset Buffer: OK");
 	createHeap();
-	ncPrint("checkpoint 3");
+	ncPrint("Maping Memory: OK");
 
 	initializeMutexes();
-	ncPrint("checkpoint 4");
+	ncPrint("Initializing Mutex: OK");
 
 	initializeSemaphores();
-	ncPrint("checkpoint 5");
-
-
+	ncPrint("Initializing Semaphores: OK");
+	ncPrint("FinishStartup: OK");
+	clear();
+	printMsg(0,0,"Sistemas Operativos",0x0F);
+	printMsg(1,0,"La hora en UTC es:",0x0F);
 	//Scheduler
 	//createProcess(processA);
 	createProcess(init, "init" , NULL);
 	//createProcess(processA, "process A");
 	//createProcess(processB, "process B");
 	createProcess(currentAddress, "SHELL" , NULL);
-	createProcess(testArgs , "test" , printCheckPoint);
+	//createProcess(testArgs , "test" , printCheckPoint);
 	//createProcess(mainPC, "PRODCONS");
 	//createProcess(mainP, "PHILOSOPHERS");
-	ncPrint("checkpoint 6");
 
-	
+
 
 	//testMutex = givenAvariable();
 
@@ -188,7 +187,7 @@ void testArgs(void (* entry) (void))
 	entry();
 	void (* a) (void)= 0 ;
 	a();
-	
+
 	while(1);
 }
 

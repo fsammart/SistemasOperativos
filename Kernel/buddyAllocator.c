@@ -4,14 +4,14 @@ typeBuddyArray buddyArray;
 char * baseMemory;
 
 
-
+//creates a Heap in baseMemory (char*)0x1000000 for memory book keeping
 typeBuddyArray createHeap()
 {
 	int i;
 	int currentElementsInLevel;
 	int level;
 	int maxElementsInLevel;
-	baseMemory = (char*)0x10000000;
+	baseMemory = (char*)0x1000000;
 	for(i = 0, level = 1, currentElementsInLevel = 0, maxElementsInLevel = 1; i< HEAPSIZE; i++, currentElementsInLevel++)
 	{
 		if(maxElementsInLevel == currentElementsInLevel){
@@ -86,6 +86,7 @@ void * allocPage(uint64_t pages)
 
 }
 
+//calculatesin what level of the tree the amount of pages fit in
 int getLevel(uint64_t pages)
 {
 	int i = 0;

@@ -6,8 +6,8 @@
 #include "naiveConsole.h"
 #include "types.h"
 //Constants of the System
-#define PAGE_SIZE ((1024)*4)
-#define MEMORY (PAGE_SIZE*1024)
+#define PAGE_SIZE ((1024)*4)  //4KB
+#define MEMORY (PAGE_SIZE*1024) //8MB
 #define NUMBER_OF_PAGES (MEMORY/PAGE_SIZE)
 #define HEAPSIZE ((NUMBER_OF_PAGES*2)-1) //this size is the number of elements in the array
 #define NUMBER_OF_PAGES_TO_ALLOC(size) (((size)%(PAGE_SIZE))?((size)/(PAGE_SIZE)+1):((size)/(PAGE_SIZE)))

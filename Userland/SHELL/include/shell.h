@@ -16,3 +16,5 @@ void changeToSehllEnvironment();
 void asyncParser();
 void undoBackwards();
 void parser(char * buffer);
+void runError(char * buffer);
+void asyncError(char * buffer);
