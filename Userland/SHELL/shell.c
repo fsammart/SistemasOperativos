@@ -12,6 +12,10 @@ void helpShell(){
 	putchar('\n');
 	
 }
+void while1(){
+	while(1);
+}
+
 void ls(){
 	char ** s = malloc(sizeof(char *));
 	char * ls = "Programs: prodCons, philosophers, pipetest, mallocTest, editor, shell, fortune";
@@ -93,9 +97,23 @@ void run(char * c){
 	}
 	else if(!strcmp("fortune",c)){
 		sys_call(7,3,0);
+	}else{
+		runError(c);
 	}
 	echoShellON();
 	return;
+}
+
+void runError(char * buffer){
+	char ** s = malloc(sizeof(char *));
+	s[0] = buffer;
+	printFF("%s", s, NULL);
+	putchar(':');
+	putchar(' ');
+	char * error = "is not a valid program";
+	s[0]= error;
+	printFF("%s",s, NULL);
+	putchar('\n');
 }
 
 
@@ -221,6 +239,10 @@ void parser(char * buffer){
 			man(buffer+4);
 			return;
 	}
+	if(!strcmp("while1", buffer)){
+			while1();
+			return;
+	}
 	if(!strcmp("ls", buffer)){
 		ls();
 		return;
@@ -273,11 +295,25 @@ void asyncParser(char * buffer){
 		sys_call(12,(qword)ls,0);
 		return;
 	}
+	if(!strcmp("while1", buffer)){
+			sys_call(12,(qword)while1,0);
+			return;
+	}
 	if(*buffer == '\n'){
 		return;
 	}
-	error(buffer);
+	asyncError(buffer);
 	isAsynchronicCall = 0;	
 }
 
-
+void asyncError(char * buffer){
+	char ** s = malloc(sizeof(char *));
+	s[0] = buffer;
+	printFF("%s", s, NULL);
+	putchar(':');
+	putchar(' ');
+	char * error = "is not a valid comand for &";
+	s[0]= error;
+	printFF("%s",s, NULL);
+	putchar('\n');
+}
