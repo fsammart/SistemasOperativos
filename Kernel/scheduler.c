@@ -141,11 +141,11 @@ int nextThread()
 {
 	int i = 1;
 	Process * p = getCurrentProcess();
-	while( p->thread[(p->activeThread + i )%(3)] == NULL){
+	while( p->thread[(p->activeThread + i )%(MAX_THREADS)] == NULL){
 		i++;
 	}
 
-	return (p->activeThread + i )%(3);
+	return (p->activeThread + i )%(MAX_THREADS);
 }
 /* returns kernel stack*/
 StackFrame * switchUserToKernel(void * esp){
@@ -266,7 +266,7 @@ void removeProcess(int pid) {
 		slotToRemove = slotToRemove->next;
 		i++;
 	}
-	
+
 	prevSlot->next = slotToRemove->next;
 	cardinal_processes--;
 
