@@ -2,6 +2,7 @@
 GLOBAL readC
 GLOBAL writeC
 GLOBAL sys_call
+GLOBAL cli
 
 section .text
 
@@ -31,6 +32,14 @@ sys_call:
 	push rbp
 	mov rbp, rsp
 	int 80h
+	mov rsp, rbp
+	pop rbp
+	ret
+
+cli:
+	push rbp
+	mov rbp, rsp
+	cli
 	mov rsp, rbp
 	pop rbp
 	ret

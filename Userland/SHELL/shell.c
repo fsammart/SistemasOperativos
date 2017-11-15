@@ -207,6 +207,11 @@ void parser(char * buffer){
 		helpShell();
 		return;
 	}
+	if(!strcmp("cli", buffer)){
+		while(1);
+		cli();
+		return;
+	}
 	if(!strcmp("clear", buffer)){
 		clearShell();
 		return;
