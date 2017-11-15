@@ -50,5 +50,6 @@ char removeItem();
 void * producer(void * ctx);
 void * consumer(void * ctx);
 void control();
+void killAllProcesses();
 
 #endif

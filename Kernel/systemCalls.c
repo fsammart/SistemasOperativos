@@ -95,7 +95,7 @@ qword sys_call_runC(qword qprogram, qword dumyProgram, qword rdx, qword rcx, qwo
 			 moduleAdress = dummyAddress;
 			 mapModulesLogical(moduleAdress);
 			 updateCR3();
-			 createProcess(dummyAddress, "dummy" , dumyProgram);
+			 createProcess(dummyAddress, "dummy" , (void*)dumyProgram);
 			break;
 		case EDITOR:
 			moduleAdress = editorAddress;

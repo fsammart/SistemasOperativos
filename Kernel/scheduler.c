@@ -1,6 +1,7 @@
 #include "scheduler.h"
 #include "threads.h"
 #include "buddyAllocator.h"
+#include "semaphores.h"
 
 qword sys_call_runC(qword qprogram, qword rsi, qword rdx, qword rcx, qword r8, qword r9);
 
@@ -241,7 +242,7 @@ void printProcesses(){
 }
 
 void removeProcess(int pid) {
-	
+
 	if(pid == 0){
 		_yield();
 		return;

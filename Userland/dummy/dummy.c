@@ -1,5 +1,6 @@
 #include "stdio.h"
 #include "dummy.h"
+#include "naiveConsole.h"
 
 int prodCons();
 void philosophers();
@@ -396,7 +397,7 @@ void createThreads(int total, sem_t * semaphores[], mutex_t * mutex){
     while(i < total){
     	args[i] = malloc(sizeof(*args[i]));
 
-    	args[i]->sems = semaphores;
+    	args[i]->sems = (sem_t*)semaphores;
     	args[i]->mutex = mutex;
     	args[i]->cant = total;
     	args[i]->value = i;
@@ -445,11 +446,11 @@ void philosophers(){
         return -1;
 */
     if(dPhilosphers(philosphers) == -1)
-        return -1;
+        return;
 
 	//terminateThread();
 
     while(1);
 
-    return 0;
+    return;
 }

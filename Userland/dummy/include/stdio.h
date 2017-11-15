@@ -20,7 +20,10 @@ int semOpen(char * name);
 int semCreate(char * name , int start);
 void semClose(int index);
 void sleep(int time);
-
+void removeProcess(int pid);
+int getMutex(char * name);
+void lockMutex(int mut);
+void freeMutex(int mut);
 void intToString(int n, char*buffer, int digits);
 
 void printProcesses();
