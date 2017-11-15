@@ -244,8 +244,8 @@ void removeProcess(int pid) {
 	
 	if(pid == 0){
 		_yield();
+		return;
 	}
-
 	if (current == NULL) {
 		return;
 
@@ -255,6 +255,7 @@ void removeProcess(int pid) {
        freeProcessPages(pid);
        current = NULL;
        cardinal_processes--;
+
        return;
 	}
 
