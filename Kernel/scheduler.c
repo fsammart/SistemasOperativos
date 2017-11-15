@@ -267,7 +267,9 @@ void removeProcess(int pid) {
 		slotToRemove = slotToRemove->next;
 		i++;
 	}
-
+	if(i == cardinal_processes){
+		return;
+	}
 	prevSlot->next = slotToRemove->next;
 	cardinal_processes--;
 
