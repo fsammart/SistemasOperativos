@@ -17,6 +17,7 @@
 #define EDITOR 2
 #define FORTUNE 3
 #define SHELL 4
+#define PAGE_FAULT_MODULE 5
 #define SYSTEM_CALL_COUNT 30
 
 static void * const dummyAddress = (void*)0xA00000;
@@ -24,6 +25,7 @@ static void * const shellAddress = (void*)0xC00000;
 static void * const currentAddress = (void*)0x800000;
 static void * const editorAddress = (void*)0xE00000;
 static void * const fortuneAddress = (void*)0x600000;
+static void * const sampleCodeModuleAddress = (void*)0x400000;
 typedef int (*EntryPoint)(int i);
 
 typedef qword (*sys)(qword rsi, qword rdx, qword rcx, qword r8, qword r9);
@@ -117,7 +119,15 @@ qword sys_call_runC(qword qprogram, qword dumyProgram, qword rdx, qword rcx, qwo
 			updateCR3();
 			createProcess(shellAddress, "Shell" , NULL);
 			break;
-
+		case PAGE_FAULT_MODULE:
+			 moduleAdress = sampleCodeModuleAddress;
+			 mapModulesLogical(moduleAdress);
+			 updateCR3();
+			 int pid = createProcess(sampleCodeModuleAddress, "pagefaul" , NULL);
+			 Process * p = getProcessById(pid);
+			 Thread * t = p->thread[0];
+			 t->userStack->cs = 0x00D;
+			break;
 		default:
 			ncPrint("MUERTE");
 	}

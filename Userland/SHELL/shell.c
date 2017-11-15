@@ -97,6 +97,9 @@ void run(char * c){
 	}
 	else if(!strcmp("fortune",c)){
 		sys_call(7,3,0);
+	}
+	else if(!strcmp("pagefault",c)){
+		sys_call(7,5,0);
 	}else{
 		runError(c);
 	}
@@ -208,7 +211,6 @@ void parser(char * buffer){
 		return;
 	}
 	if(!strcmp("cli", buffer)){
-		while(1);
 		cli();
 		return;
 	}

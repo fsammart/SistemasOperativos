@@ -39,7 +39,7 @@ sys_call:
 cli:
 	push rbp
 	mov rbp, rsp
-	cli
+	sti
 	mov rsp, rbp
 	pop rbp
 	ret

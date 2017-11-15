@@ -28,11 +28,6 @@ int main(void){
 				putchar('\n');
 				printFF("%s",s, NULL);
 			}
-		// int i=0;
-		// while(1000>i){
-		// 	putchar('f');
-		// 	i++;
-		// }
 
 return 0;
 
