@@ -167,9 +167,7 @@ void pageFaultHandlerC(){
 
 	ncPrint("RECOVERING FROMPAGE FAULT");
 
-	int pid = getCurrentPid();
-
-	removeProcess(pid);
+	sys_call_runC((qword) 4, (qword)0, (qword)0,(qword) 0, (qword)0, (qword)0);
 
 
 }
